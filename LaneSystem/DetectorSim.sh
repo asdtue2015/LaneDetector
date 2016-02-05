@@ -10,15 +10,8 @@
 
 # command
 #LANE_DETECTOR, LANE_ANALYZER, SEND_DATA, DATA_RECORD, StartFrame, EndFrame, YAW_ANGLE, PITCH_ANGLE
-command1="./LaneSystem/LaneSystem64 1 1 0 0 1 18468 0 0.1"
+command1="./LaneSystem64 1 1 0 1 1 60 0 0.1"
 echo $command1
-
-#FACE_DETECTOR, FACE_ANALYZER, SEND_DATA, DATA_RECORD, StartFrame, EndFrame
-command2="./FaceSystem/FaceSystem64 1 1 0 0 11 18533" 
-echo $command2
-
-# command3="./FusionSystem/FusionSystem64 1"
-# echo $command3
 
 #run
 $command1 #& 
