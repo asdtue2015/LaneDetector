@@ -26,17 +26,17 @@ extern const int    WIN_ROWS            = 3;
 /* Run applicaiton */
 extern const int    IMAGE_RECORD        = 1;
 /* Record docs */
-extern const char   LANE_RECORD_FILE[]  = "/home/gseifu/Desktop/tomtom/DriverAssist-master/DataRecord/LaneFeatures_22-03-2014_13h05m12s.txt";
-extern const char   FILE_LANE_FEATURE[] = "/home/gseifu/Desktop/tomtom/DriverAssist-master/DataRecord/Sim_LaneFeatures_22-03-2014_13h05m12s.txt";
+extern const char   LANE_RECORD_FILE[]  = "./inputdata/outputdata/LaneFeatures_22-03-2014_13h05m12s.txt";
+extern const char   FILE_LANE_FEATURE[] = "./inputdata/outputdata/Sim_LaneFeatures_22-03-2014_13h05m12s.txt";
 //extern const char   LANE_RECORD_IMAGE[]  = "/home/gseifu/Desktop/tomtom/DriverAssist-master/DataRecord/Images/lane_%d.png";
-extern const char   LANE_RECORD_IMAGE[]    = "/home/gseifu/Desktop/DriverAssist-master/LaneSystem/inputdata/outputdata/lane_%d.png";
+extern const char   LANE_RECORD_IMAGE[]    = "./inputdata/outputdata/lane_%d.png";
 /* Data Source */
 //extern const char   LANE_RAW_NAME[]     = "/home/gseifu/Desktop/tomtom/DriverAssist-master/DataRecord/lane_%d.png";
 //extern const char   LANE_RAW_NAME[]     = "/home/gseifu/Desktop/DriverAssist-master/LaneSystem/inputdata/clips/lane_%d.png";
-extern const char   LANE_RAW_NAME[]     = "/home/gseifu/Desktop/DriverAssist-master/LaneSystem/inputdata/washington/lane_%d.png";
+extern const char   LANE_RAW_NAME[]     = "./inputdata/washington/lane_%d.png";
 // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/KIT/2011_09_26/2011_09_26_drive_0015_sync/image_00/data/%010d.png";
 // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/Data/LaneRaw_10-07-2013_18h30m21s/lane_%d.jpg";
-extern const char   KEY_PATH[] 		= "/home/gseifu/Desktop/tomtom/DriverAssist-master/key.txt";
+extern const char   KEY_PATH[] 		= "../key.txt";
 
 extern const int    TH_KALMANFILTER     = 1; //frames
 
