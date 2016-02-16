@@ -17,7 +17,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <cmath>
-
+#include <stdio.h>
 namespace LaneDetector{	 
     //! The function creates matrices giving the x and y locations in the world
     //! frame where the pixels in the bottom portion of the camera image map

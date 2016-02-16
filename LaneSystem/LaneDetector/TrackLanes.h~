@@ -21,35 +21,39 @@ namespace LaneDetector{
     /********************************************************************/
     /* Kalman Filter */
     /********************************************************************/
-    void InitLaneKalmanFilter(cv::KalmanFilter &laneKalmanFilter, cv::Mat &laneKalmanMeasureMat, int &laneKalmanIdx);
+    void InitLaneKalmanFilter(cv::KalmanFilter &laneKalmanFilter, 
+			cv::Mat &laneKalmanMeasureMat, 
+			int &laneKalmanIdx);
     
-    /*
-	 * This function tracks lanes in the input image. 
-     * Input is the parameters from hough transform: rho and theta.
-     * Output is the predicted lane. 
-	 * \param image the input image
-	 * \param kalman filter
-     * \param process noise
-     * \param measurement
-     * \param lane detected in current frame
-     * \param lane detected from last frame
-     * \param lane tracked
-	 */
+    	/* * This function tracks lanes in the input image. 
+     	* Input is the parameters from hough transform: rho and theta.
+     	* Output is the predicted lane. 
+	* \param image the input image
+	* \param kalman filter
+	* \param process noise
+     	* \param measurement
+     	* \param lane detected in current frame
+     	* \param lane detected from last frame
+     	* \param lane tracked */
+
 	void TrackLanes_KF(const cv::Mat &laneMat, 
-                       cv::KalmanFilter &laneKalmanFilter, cv::Mat &laneKalmanMeasureMat, 
-                       const std::vector<cv::Vec2f> &hfLanes, const std::vector<cv::Vec2f> &lastHfLanes, 
-                       std::vector<cv::Vec2f> &preHfLanes, std::vector<cv::Vec2f> &postHfLanes,
-                       const double &PITCH_ANGLE);
+                      	cv::KalmanFilter &laneKalmanFilter, 
+			cv::Mat &laneKalmanMeasureMat, 
+                       	const std::vector<cv::Vec2f> &hfLanes, 
+			const std::vector<cv::Vec2f> &lastHfLanes, 
+                       	std::vector<cv::Vec2f> &preHfLanes, 
+			std::vector<cv::Vec2f> &postHfLanes,
+                       	const double &PITCH_ANGLE);
     
     /********************************************************************/
     /* Particle Filter */
     /********************************************************************/
     //! struct of particles
     typedef struct particle {
-        double weight;
-        double a0;
-        double a1;
-        double a2;
+        		double weight;
+        		double a0;
+        		double a1;
+        		double a2;
     }PARTICLE_LANE;
     
     bool particle_cmp(const PARTICLE_LANE &p1, const PARTICLE_LANE &p2);

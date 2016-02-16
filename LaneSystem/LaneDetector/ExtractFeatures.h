@@ -1,10 +1,3 @@
-//
-//  ExtractFeatures.h
-//  LaneDetector1.2
-//
-//  Created by XUANPENG LI on 01/07/13.
-//  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
-//
 
 #ifndef LaneDetector_ExtractFeatures_h
 #define LaneDetector_ExtractFeatures_h
@@ -22,6 +15,7 @@ namespace LaneDetector{
     //! nonfree: SIFT, SURF
     //! legacy: RandomizedTree
     //! ocl: BruteForceMatcher, HOGDescriptor
+
     void ExtractFeatures(const cv::Mat &mat, 
                          const std::string &detectorMethod, std::vector<cv::KeyPoint> &keypoints,
                          const std::string &extractorMethod, cv::Mat &descriptor, cv::Mat &outMat);
@@ -30,9 +24,7 @@ namespace LaneDetector{
                        const cv::Mat &descriptor1,
                        const cv::Mat &descriptor2,
                        std::vector< cv::DMatch > &good_matches);
-    
-    
-    
+        
     //! The function extracts the HOG descriptors.
     void ExtractHOG(const cv::Mat &mat);
 

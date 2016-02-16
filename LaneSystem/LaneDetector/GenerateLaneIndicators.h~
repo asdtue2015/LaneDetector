@@ -14,7 +14,7 @@
 #include <iostream>
 #include <deque>
 #include <opencv2/opencv.hpp>
-
+#include <stdio.h>
 namespace LaneDetector{
     typedef struct _LaneFeature{
         int frame;

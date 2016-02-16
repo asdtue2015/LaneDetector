@@ -1,10 +1,3 @@
-//
-//  Process.h
-//  LaneDetectorSim1.2
-//
-//  Created by LI XUANPENG on 09/13.
-//  Copyright (c) 2013 ESIEE-Amiens. All rights reserved.
-//
 
 #ifndef LaneDetectorSim_Process_h
 #define LaneDetectorSim_Process_h

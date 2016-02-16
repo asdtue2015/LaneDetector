@@ -1,10 +1,3 @@
-//
-//  GenerateLaneIndicators.h
-//  LaneDetector1.2
-//
-//  Created by Xuanpeng Li on 03/13.
-//  Copyright (c) 2012 ESIEE-AMIENS. All rights reserved.
-//
 
 #ifndef LaneDetector_GenerateLaneIndicators_h
 #define LaneDetector_GenerateLaneIndicators_h
@@ -15,6 +8,7 @@
 #include <deque>
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
+
 namespace LaneDetector{
     typedef struct _LaneFeature{
         int frame;
@@ -36,10 +30,8 @@ namespace LaneDetector{
         double TOT;                 //Time on task
     } LaneFeature;
 
-    /*
-    * laneFeatures initialize
-    */
-    void InitlaneFeatures(LaneFeature &laneFeatures);
+    /* * laneFeatures initialize */
+    	void InitlaneFeatures(LaneFeature &laneFeatures);
     
     typedef struct _InfoCar{
         double lateralOffset;   //lane lateral offset
@@ -54,16 +46,16 @@ namespace LaneDetector{
         double winTime;
     }InfoTLC;
     
-    bool TLC_cmp(const InfoTLC &val1, const InfoTLC &val2);
-    bool LATSD_cmp(const double &val1, const double &val2);
+    	bool TLC_cmp(const InfoTLC &val1, const InfoTLC &val2);
+    	bool LATSD_cmp(const double &val1, const double &val2);
    
-    void GetEWMA(const int &sampleIdx, int &muWindowSize, const double &inputParam, double &outputEWMA);
+    	void GetEWMA(const int &sampleIdx, int &muWindowSize, const double &inputParam, double &outputEWMA);
     
-    void GetEWVAR(const int &sampleIdx, int &sigmaWindowSize, const double &inputParam, const double &inputEWMAParam, double &outputEWVAR);
+    	void GetEWVAR(const int &sampleIdx, int &sigmaWindowSize, const double &inputParam, const double &inputEWMAParam, double &outputEWVAR);
     
-    void GetStandardDeviation(const std::deque<InfoCar> &inputParam, double &deviation);
+    	void GetStandardDeviation(const std::deque<InfoCar> &inputParam, double &deviation);
     
-    void GetMeanSquareError(const std::deque<InfoCar> &inputParam, double &deviation);
+    	void GetMeanSquareError(const std::deque<InfoCar> &inputParam, double &deviation);
     
 	void GetLaneBaseline(const int &sampleIdx, 
                          const int &SAMPLING_TIME,
@@ -76,7 +68,7 @@ namespace LaneDetector{
                          LaneFeature &laneFeatures,
                          const double &intervalTime);
     
-    void GenerateLaneIndicators(const int &sampleIdx, 
+    	void GenerateLaneIndicators(const int &sampleIdx, 
                           const int &TIME_SAMPLING_WINDOW,
                           int &muWindowSize, int &sigmaWindowSize,
                           const double &lateralOffset,

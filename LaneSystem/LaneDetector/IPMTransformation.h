@@ -1,13 +1,5 @@
-//
-//  IPMTransformation.h
-//  LaneDetector1.2
-//
-//  Created by XUANPENG LI on 21/06/13.
-//  Copyright (c) 2013 __MyCompanyName__. All rights reserved.
-//
 //  /* The work is based on the MATLAB code from Eric Johnson and Randy Hamburger */
 //  /* More information can be referenced from our notes */
-//
 
 #ifndef LaneDetector_IPMTransformation_h
 #define LaneDetector_IPMTransformation_h
@@ -18,6 +10,7 @@
 #include <iostream>
 #include <cmath>
 #include <stdio.h>
+
 namespace LaneDetector{	 
     //! The function creates matrices giving the x and y locations in the world
     //! frame where the pixels in the bottom portion of the camera image map
@@ -26,6 +19,7 @@ namespace LaneDetector{
     //                      the pixels in the last p rows of the image map in the 
     //                      world coordinate frame. (meter)
     //  \param rHorizon : based on the pitch angle, some region in raw image could be cropped.
+
     void IPMpixelsToWorld(LaneDetectorConf &laneDetectorConf, cv::Mat &xMap, cv::Mat &yMap);
     
     void IPMworldToPixels(const LaneDetectorConf &laneDetectorConf, const cv::Point2d &inPoint, cv::Point2d &outPoint);

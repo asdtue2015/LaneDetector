@@ -1,10 +1,3 @@
-//
-//  LaneDetectorTools.h
-//  LaneDetector1.2
-//
-//  Created by XUANPENG LI on 06/06/13.
-//  Copyright (c) 2013 ESIEE-Amiens. All rights reserved.
-//
 
 #ifndef LaneDetector_LaneDetectorTools_h
 #define LaneDetector_LaneDetectorTools_h
@@ -14,8 +7,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
-namespace LaneDetector {
-    
+
+namespace LaneDetector {    
     
     void PrintMat(const cv::Mat &mat);
     
@@ -23,7 +16,6 @@ namespace LaneDetector {
     
     void imShowSub(const std::string &winname, const cv::Mat &mat, 
                    const int &Cols, const int &Rows, const int &winPos);
-    
     
 }
 
