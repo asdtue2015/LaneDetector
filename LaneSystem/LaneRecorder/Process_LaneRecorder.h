@@ -1,10 +1,3 @@
-//
-//  Process.h
-//  LaneRecorder1.1
-//
-//  Created by LI XUANPENG on 10/13.
-//  Copyright (c) 2012 ESIEE-Amiens. All rights reserved.
-//
 
 #ifndef LaneRecorder_Process_h
 #define LaneRecorder_Process_h

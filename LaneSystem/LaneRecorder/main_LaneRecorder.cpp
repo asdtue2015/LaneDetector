@@ -25,24 +25,14 @@ extern const int        WIN_ROWS                = 3;
 extern const int        FRAME_START             = 1; 
 extern const int        FRAME_END               = INFINITY;
 
-#ifdef __APPLE__
 /// Record images
-extern const char       FILE_TEMP_NAME[]        = "/Users/xuanpengli/DriveAssist/Data/snap/snap.png";  
-extern const char       LANE_PATH_NAME[]        = "/Users/xuanpengli/DriveAssist/Data/LaneRaw_%02d-%02d-%d_%02dh%02dm%02ds";
+extern const char       FILE_TEMP_NAME[]        = "./inputdata/snap/snap.png";  
+//extern const char       LANE_PATH_NAME[]        = "./inputdata/washington/lane_%d.png";
+extern const char  	LANE_PATH_NAME[]    	= "./inputdata/clips/lane_%d.png";
 extern const char       LANE_IMG_NAME[]         = "/lane_%d.jpg";
 /// Record docs
-extern const char       FILE_LANE_FEATURES[]    = "/Users/xuanpengli/DriveAssist/Data/LaneFeatures_%02d-%02d-%d_%02dh%02dm%02ds.txt";
-extern const char       KEY_PATH[]              = "/Users/xuanpengli/DriveAssist/key.txt";
-
-#elif defined __linux
-/// Record images
-extern const char       FILE_TEMP_NAME[]        = "/home/lixp/Developer/Data/snap/snap.png";  
-extern const char       LANE_PATH_NAME[]        = "/home/lixp/Developer/Data/LaneRaw_%02d-%02d-%d_%02dh%02dm%02ds";
-extern const char       LANE_IMG_NAME[]         = "/lane_%d.jpg";
-/// Record docs
-extern const char       FILE_LANE_FEATURES[]    = "/home/lixp/Developer/Record/LaneFeatures_%02d-%02d-%d_%02dh%02dm%02ds.txt";
-extern const char       KEY_PATH[]              = "/home/lixp/Developer/key.txt";
-#endif
+extern const char       FILE_LANE_FEATURES[]    = "./inputdata/outputdata/LaneFeatures_22-03-2014_13h05m12s.txt";
+extern const char       KEY_PATH[]              = "../key.txt";
 
 extern const int        TH_KALMANFILTER         = 1;
 namespace LaneRecorder{

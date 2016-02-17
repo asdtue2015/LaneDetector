@@ -1,10 +1,3 @@
-//
-//  CameraConfigure.h
-//  LaneRecorder1.1
-//
-//  Created by Xuanpeng Li on 03/13.
-//  Copyright (c) 2012 ESIEE-AMIENS. All rights reserved.
-//
 
 #ifndef LaneRecorder_CameraConfigure_h
 #define LaneRecorder_CameraConfigure_h
@@ -50,18 +43,12 @@ namespace LaneRecorder{
         double imageHeight;
     }CameraInfo;
     
-    /**
-     * This function does initialization of Camera Info due to lack of 
-     * Camera Setting
-     */
+    /* * This function does initialization of Camera Info due to lack of Camera Setting */
     void InitCameraInfoDefault(CameraInfo *cameraInfo);
     
 
     
-    /**
-     * Structure and function related with PROSILICA WEBCAMERA
-     *
-     */    
+    /* * Structure and function related with PROSILICA WEBCAMERA */    
     typedef struct _Camera
     {
         unsigned long   UID;
