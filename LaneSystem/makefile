@@ -1,9 +1,3 @@
-#
-# Make file for Lane Detector
-#
-# Author: LI XUANPENG <marshallixp@gmail.com>
-# Date: 15/02/2014
-
 OCVFLAGS 	= `pkg-config --cflags opencv`
 OCVLIBS 	= `pkg-config --libs opencv` -lstdc++
 
