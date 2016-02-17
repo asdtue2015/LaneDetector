@@ -933,7 +933,7 @@ namespace LaneDetector{
         	// laneDetectorConf.theta0 = CV_PI*(5.5/180);   //Camera tilted angle below the horizontal(positive)
         
         	//! \params for lane (data_130710)
-        	laneDetectorConf.theta0 = CV_PI * (108/180.0); //the pitch angle init 8.5
+        	laneDetectorConf.theta0 = CV_PI * (8.5/180.0); //the pitch angle init 8.5
         
         	laneDetectorConf.ipmX_max = 60.0;  //meters
         	laneDetectorConf.ipmY_max = 12.0;  //meters
@@ -956,7 +956,7 @@ namespace LaneDetector{
 		{
             		case KIT:
                 		laneDetectorConf.thetaMin = CV_PI * 0.25;//45 degree
-                		laneDetectorConf.thetaMax = CV_PI * 0.30; //72 degree 0.36 init
+                		laneDetectorConf.thetaMax = CV_PI * 0.36; //72 degree 0.36 init
                 		laneDetectorConf.top_range = 20; //20 init
                 		laneDetectorConf.bottom_range = 70; //70 init
 
@@ -976,7 +976,7 @@ namespace LaneDetector{
                 		laneDetectorConf.vpTop = -laneMat.rows * 0.2 * COEF;
                 		laneDetectorConf.vpBottom = laneMat.rows * 0.3 * COEF;
                 		laneDetectorConf.distCornerMin = laneMat.cols * 0.5 * COEF;
-                		laneDetectorConf.distCornerMax = laneMat.cols * COEF * 2.5;
+                		laneDetectorConf.distCornerMax = laneMat.cols * COEF * 2.5; //2.5
                
 				break;
 
