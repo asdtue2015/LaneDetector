@@ -14,13 +14,13 @@ extern const int    WIN_COLS            = 3;
 extern const int    WIN_ROWS            = 3;
 
 /* Run applicaiton */
-extern const int    IMAGE_RECORD        = 1;
+
 /* Record docs */
 extern const char   LANE_RECORD_FILE[]  = "./inputdata/outputdata/LaneFeatures_22-03-2014_13h05m12s.txt";
 extern const char   FILE_LANE_FEATURE[] = "./inputdata/outputdata/Sim_LaneFeatures_22-03-2014_13h05m12s.txt";
 extern const char   LANE_RECORD_IMAGE[]    = "./inputdata/outputdata/lane_%d.png";
 /* Data Source */
-extern const char   LANE_RAW_NAME[]     = "./inputdata/cropped_images/cropped_%d.png";
+extern const char   LANE_RAW_NAME[]     = "./inputdata/all_new_data_cropped/cropped_%d.png";
 //extern const char   LANE_RAW_NAME[]     = "./inputdata/washington/lane_%d.png";
 // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/KIT/2011_09_26/2011_09_26_drive_0015_sync/image_00/data/%010d.png";
 // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/Data/LaneRaw_10-07-2013_18h30m21s/lane_%d.jpg";
@@ -28,27 +28,11 @@ extern const char   LANE_RAW_NAME[]     = "./inputdata/cropped_images/cropped_%d
 
 extern const int    TH_KALMANFILTER     = 1; // originally 1
 
-namespace LaneDetectorSim {
 
-	int Process(int argc, const char* argv[])
-	{
-        	if(argc < 5)
-            	std::cout << "Not enough parameters" << std::endl;
 
-		int	LANE_DETECTOR  	= atoi(argv[1]);
-		int	StartFrame    	= atoi(argv[2]); // FRAME_START
-		int EndFrame	    	= atoi(argv[3]); // FRAME_END
-    double YAW_ANGLE    = atof(argv[4]); // yaw - X
-    double PITCH_ANGLE  = atof(argv[5]); // pitch - Y
-
-		std::cout << "/*************************************/" << std::endl;
-		std::cout << "Input LANE_DETECTOR" << LANE_DETECTOR << std::endl;
-		std::cout << "Input StartFrame" << StartFrame << std::endl;
-		std::cout << "Input EndFrame" << EndFrame << std::endl;
-		std::cout << "Input YAW_ANGLE" << YAW_ANGLE << std::endl;
-		std::cout << "Input PITCH_ANGLE" << PITCH_ANGLE << std::endl;
-		std::cout << "/*************************************/" << std::endl;
-
+//**********************************
+class LDW{
+    extern const int    IMAGE_RECORD        = 1;
 
 		int  idx            = StartFrame;  //index for image sequence
 		int  sampleIdx      = 1;    //init sampling index
@@ -89,6 +73,36 @@ namespace LaneDetectorSim {
 		cv::KalmanFilter laneKalmanFilter(8, 8, 0);//(rho, theta, delta_rho, delta_theta)x2
 		cv::Mat laneKalmanMeasureMat(8, 1, CV_32F, cv::Scalar::all(0));//(rho, theta, delta_rho, delta_theta)
 		int    laneKalmanIdx     = 0;    //Marker of start kalmam
+
+		int LANE_DETECTOR;
+		int StartFrame;
+		int EndFrame;
+		double YAW_ANGLE;
+	  double PITCH_ANGLE;
+
+public:
+		int Process(int, int, int, double, double);
+
+}
+
+
+
+//*********************************
+
+
+namespace LaneDetectorSim {
+
+	int LDW::Process(int LANE_DETECTOR, int StartFrame, int EndFrame, double YAW_ANGLE, double PITCH_ANGLE)
+	{
+
+
+		std::cout << "/*************************************/" << std::endl;
+		std::cout << "Input LANE_DETECTOR" << LANE_DETECTOR << std::endl;
+		std::cout << "Input StartFrame" << StartFrame << std::endl;
+		std::cout << "Input EndFrame" << EndFrame << std::endl;
+		std::cout << "Input YAW_ANGLE" << YAW_ANGLE << std::endl;
+		std::cout << "Input PITCH_ANGLE" << PITCH_ANGLE << std::endl;
+		std::cout << "/*************************************/" << std::endl;
 
 		InitlaneFeatures(laneFeatures);
 
@@ -148,14 +162,7 @@ namespace LaneDetectorSim {
 
             		cv::imshow("Lane System", laneMat);
             		//cv::moveWindow("Lane System", 790, 30);
-            		key = cv::waitKey(delay);
-            		if (key == 'q' || key == 'Q' || 27 == (int)key) //Esc q\Q\key to stop
-                		break;
-            		else if(key == 's' || key == 'S')
-                    		delay = 0;
-            		else
-                		delay = 1;
-
+            	  cv::waitKey(1);
             		/* Update the sampling index */
             //		sampleIdx++;//update the sampling index
             		idx++;
@@ -171,9 +178,18 @@ namespace LaneDetectorSim {
 
 #endif //__cplusplus
 
-using LaneDetectorSim::Process;
-int main(int argc, const char * argv[])
+
+int main()
 {
 
-    	return Process(argc, argv);
+	int LANE_DETECTOR = 1;
+	int StartFrame = 1;
+	int EndFrame = 611;
+	double YAW_ANGLE = 0.0;
+  double PITCH_ANGLE = 0.1;
+
+	LDW object_ldw;
+	object_ldw.Process(LANE_DETECTOR, StartFrame, EndFrame, YAW_ANGLE, PITCH_ANGLE);
+
+  return 0;
 }
