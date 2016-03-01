@@ -6,10 +6,6 @@
 #ifdef __cplusplus
 
 /* Time */
-extern const double SAMPLING_TIME       = 60;   //sec for sampling lane features
-//uncommented the SAMPLING_FREQ
- extern const double SAMPLING_FREQ      = 10;  //Hz for camera: 8.4 for my database
-extern const double TIME_BASELINE       = 300;  //sec (300)
 extern const int    NUM_WINDOW_EWM      = 5;    //EWMA, EWVAR Init (times)
 /* Size of Image */
 extern const double COEF                = 1;
@@ -28,7 +24,7 @@ extern const char   LANE_RAW_NAME[]     = "./inputdata/cropped_images/cropped_%d
 //extern const char   LANE_RAW_NAME[]     = "./inputdata/washington/lane_%d.png";
 // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/KIT/2011_09_26/2011_09_26_drive_0015_sync/image_00/data/%010d.png";
 // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/Data/LaneRaw_10-07-2013_18h30m21s/lane_%d.jpg";
-extern const char   KEY_PATH[] 		= "../key.txt";
+
 
 extern const int    TH_KALMANFILTER     = 1; // originally 1
 
@@ -161,7 +157,7 @@ namespace LaneDetectorSim {
                 		delay = 1;
 
             		/* Update the sampling index */
-            		sampleIdx++;//update the sampling index
+            //		sampleIdx++;//update the sampling index
             		idx++;
 
         	}//end while loop
