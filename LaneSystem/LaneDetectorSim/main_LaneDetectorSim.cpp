@@ -32,15 +32,6 @@ extern const char   KEY_PATH[] 		= "../key.txt";
 
 extern const int    TH_KALMANFILTER     = 1; // originally 1
 
-/* Frame 10-07-2013_18h30m21s */
-// extern const int    FRAME_START         = 1840;      //18:34:00
-// extern const int    FRAME_STOP1         = 14007;    //18:57:59
-// extern const int    FRAME_RESTART1      = 15031;    //19:00:00
-// extern const int    FRAME_STOP2         = 17507;    //19:04:59
-// extern const int    FRAME_RESTART2      = 19497;    //19:09:00
-// extern const int    FRAME_END           = 20994;    //19:11:59
-
-
 namespace LaneDetectorSim {
 
 	int Process(int argc, const char* argv[])
@@ -49,9 +40,6 @@ namespace LaneDetectorSim {
             	std::cout << "Not enough parameters" << std::endl;
 
 		int	LANE_DETECTOR  	= atoi(argv[1]);
-	//	int	LANE_ANALYZER 	= atoi(argv[2]);
-	//	int	SEND_DATA     	= atoi(argv[3]);
-	//	int	DATA_RECORD   	= atoi(argv[2]);
 		int	StartFrame    	= atoi(argv[2]); // FRAME_START
 		int EndFrame	    	= atoi(argv[3]); // FRAME_END
     double YAW_ANGLE    = atof(argv[4]); // yaw - X
@@ -107,10 +95,9 @@ namespace LaneDetectorSim {
 		int    laneKalmanIdx     = 0;    //Marker of start kalmam
 
 		InitlaneFeatures(laneFeatures);
-		GetSamplingTime(LANE_RECORD_FILE, samplingTime);
 
         	if (LANE_DETECTOR)
-		{
+	      	{
              		/* Lane detect and tracking */
             		sprintf(laneImg, LANE_RAW_NAME , idx);
             		laneMat = cv::imread(laneImg);
@@ -148,35 +135,18 @@ namespace LaneDetectorSim {
 			            	lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE);
             		}
 
-            		intervalTime = (startTime - lastStartTime)/ cv::getTickFrequency();//get the time between two continuous frames
-            		lastStartTime = startTime;
-            		//std::cout << "intervalTime: "<< intervalTime << std::endl;
-
 
             		if(IMAGE_RECORD)
-	         		{
+	         	  	{
                 		char *text = new char[100];
                 		sprintf(text, LANE_RECORD_IMAGE, idx);
                 		cv::imwrite(text, laneMat);
                 		delete text;
             		}
 
-
-            		/* Adjust the interval time within fixed frequency */
-			double execFreq;
-            		do
-		              {
-                		execFreq = 1.0 / (((double)cv::getTickCount() - startTime)/cv::getTickFrequency());
-                		pastTime = ((double)cv::getTickCount() - initTime)/cv::getTickFrequency() + delayTime;
-           		//	} while ( pastTime < samplingTime.at(idx-1) );
-             			} while(execFreq > SAMPLING_FREQ);
-             		//	} while(pastTime < (double)sampleIdx/SAMPLING_FREQ);
-
             		char *text = new char[30];
             		sprintf(text, "past time: %.2f sec", pastTime);
             		cv::putText(laneMat, text, cv::Point(0, laneMat.rows-5), cv::FONT_HERSHEY_SIMPLEX, 0.8, CV_RGB(0,255,0));
-
-            		sprintf(text, "Adjusted Freq: %.2f Hz", execFreq);
             		cv::putText(laneMat, text, cv::Point(0, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, CV_RGB(0, 255, 0));
             		delete text;
 
@@ -194,10 +164,6 @@ namespace LaneDetectorSim {
             		sampleIdx++;//update the sampling index
             		idx++;
 
-            		// if(idx == FRAME_STOP1)
-            		// 	idx = FRAME_RESTART1;
-            		// if(idx == FRAME_STOP2)
-            		//	idx = FRAME_RESTART2;
         	}//end while loop
 
         	laneFeatureFile.close();
