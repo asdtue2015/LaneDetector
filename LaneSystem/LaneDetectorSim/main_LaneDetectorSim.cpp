@@ -12,6 +12,7 @@ extern const double COEF                = 1;
 /* Multi-Image Show */
 extern const int    WIN_COLS            = 3;
 extern const int    WIN_ROWS            = 3;
+extern const int    IMAGE_RECORD = 1;
 
 /* Run applicaiton */
 
@@ -20,7 +21,7 @@ extern const char   LANE_RECORD_FILE[]  = "./inputdata/outputdata/LaneFeatures_2
 extern const char   FILE_LANE_FEATURE[] = "./inputdata/outputdata/Sim_LaneFeatures_22-03-2014_13h05m12s.txt";
 extern const char   LANE_RECORD_IMAGE[]    = "./inputdata/outputdata/lane_%d.png";
 /* Data Source */
-extern const char   LANE_RAW_NAME[]     = "./inputdata/all_new_data_cropped/cropped_%d.png";
+extern const char   LANE_RAW_NAME[]     = "./inputdata/Newdatasets/left_rect_18/cropped_%d.png";
 //extern const char   LANE_RAW_NAME[]     = "./inputdata/washington/lane_%d.png";
 // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/KIT/2011_09_26/2011_09_26_drive_0015_sync/image_00/data/%010d.png";
 // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/Data/LaneRaw_10-07-2013_18h30m21s/lane_%d.jpg";
@@ -32,19 +33,20 @@ extern const int    TH_KALMANFILTER     = 1; // originally 1
 
 //**********************************
 class LDW{
-    extern const int    IMAGE_RECORD        = 1;
 
-		int  idx            = StartFrame;  //index for image sequence
-		int  sampleIdx      = 1;    //init sampling index
+
+		int  idx;  //index for image sequence
+		int  sampleIdx;//    = 1;    //init sampling index
 		char laneImg[100];
 
-		double initTime         = (double)cv::getTickCount();
-		double intervalTime     = 0;
-		double execTime         = 0;  // Execute Time for Each Frame
-		double pastTime         = 0;
-		double lastStartTime    = (double)cv::getTickCount();
+		double initTime;
+		double intervalTime;
+		double execTime;  // Execute Time for Each Frame
+		double pastTime;
+		double lastStartTime;
 		char key;
-		double delay = 1;
+		double delay;
+		int IM_RECORD;
 
 		std::ofstream laneFeatureFile;
 
@@ -60,40 +62,52 @@ class LDW{
 		std::deque<LaneDetector::InfoCar> LANEXDeque;
 		std::deque<LaneDetector::InfoTLC> TLCDeque;
 		LaneDetector::LaneFeature laneFeatures;
-		double lastLateralOffset = 0;
-		double lateralOffset     = 0;    // Lateral Offset
-		int    detectLaneFlag    = -1;   // init state -> normal state 0
-		int    isChangeLane      = 0;    // Whether lane change happens
-		int    changeDone        = 0;    // Finish lane change
-		int    muWindowSize      = 5;    // Initial window size: 5 (sample)
-		int    sigmaWindowSize   = 5;    // Initial window size: 5 (sample)
+		double lastLateralOffset;
+		double lateralOffset;    // Lateral Offset
+		int    detectLaneFlag;   // init state -> normal state 0
+		int    isChangeLane;    // Whether lane change happens
+		int    changeDone;    // Finish lane change
+		int    muWindowSize;    // Initial window size: 5 (sample)
+		int    sigmaWindowSize;    // Initial window size: 5 (sample)
 		std::vector<float> samplingTime;
 
-		/* Initialize Lane Kalman Filter */
-		cv::KalmanFilter laneKalmanFilter(8, 8, 0);//(rho, theta, delta_rho, delta_theta)x2
-		cv::Mat laneKalmanMeasureMat(8, 1, CV_32F, cv::Scalar::all(0));//(rho, theta, delta_rho, delta_theta)
-		int    laneKalmanIdx     = 0;    //Marker of start kalmam
 
-		int LANE_DETECTOR;
-		int StartFrame;
-		int EndFrame;
-		double YAW_ANGLE;
-	  double PITCH_ANGLE;
+		int    laneKalmanIdx;    //Marker of start kalmam
 
 public:
 		int Process(int, int, int, double, double);
 
-}
+};
 
 
 
 //*********************************
 
-
-namespace LaneDetectorSim {
-
 	int LDW::Process(int LANE_DETECTOR, int StartFrame, int EndFrame, double YAW_ANGLE, double PITCH_ANGLE)
 	{
+		 IM_RECORD        =  IMAGE_RECORD ;
+	   idx            = StartFrame;  //index for image sequence
+	   sampleIdx  ;//    = 1;    //init sampling index
+	   laneImg[100];
+		 initTime         = (double)cv::getTickCount();
+	   intervalTime     = 0;
+		 execTime         = 0;  // Execute Time for Each Frame
+		 pastTime         = 0;
+		 lastStartTime    = (double)cv::getTickCount();
+		 key;
+		 delay = 1;
+		 /*/* Initialize Lane Kalman Filter */
+			cv::KalmanFilter laneKalmanFilter(8, 8, 0);//(rho, theta, delta_rho, delta_theta)x2
+			cv::Mat laneKalmanMeasureMat(8, 1, CV_32F, cv::Scalar::all(0));//(rho, theta, delta_rho, delta_theta)
+
+		 		 lastLateralOffset = 0;
+		 		 lateralOffset     = 0;    // Lateral Offset
+		     detectLaneFlag    = -1;   // init state -> normal state 0
+		     isChangeLane      = 0;    // Whether lane change happens
+		     changeDone        = 0;    // Finish lane change
+		     muWindowSize      = 5;    // Initial window size: 5 (sample)
+		     sigmaWindowSize   = 5;    // Initial window size: 5 (sample)
+
 
 
 		std::cout << "/*************************************/" << std::endl;
@@ -141,7 +155,7 @@ namespace LaneDetectorSim {
 
             		if (LANE_DETECTOR)
             		{
-                		ProcessLaneImage(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
+                		LaneDetectorSim::ProcessLaneImage(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
 			            	lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE);
             		}
 
@@ -174,7 +188,7 @@ namespace LaneDetectorSim {
 
         	return 0;
     	}
-}//FusedCarSurveillanceSim
+//FusedCarSurveillanceSim
 
 #endif //__cplusplus
 
@@ -184,7 +198,7 @@ int main()
 
 	int LANE_DETECTOR = 1;
 	int StartFrame = 1;
-	int EndFrame = 611;
+	int EndFrame = 61;
 	double YAW_ANGLE = 0.0;
   double PITCH_ANGLE = 0.1;
 
