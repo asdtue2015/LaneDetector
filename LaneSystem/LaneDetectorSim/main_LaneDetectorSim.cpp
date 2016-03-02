@@ -4,29 +4,32 @@
 #include <stdexcept>
 
 #ifdef __cplusplus
+class main_LDW{
+  /* Time */
+  extern const int    NUM_WINDOW_EWM      = 5;    //EWMA, EWVAR Init (times)
+  /* Size of Image */
+  extern const double COEF                = 1;
+  /* Multi-Image Show */
+  extern const int    WIN_COLS            = 3;
+  extern const int    WIN_ROWS            = 3;
 
-/* Time */
-extern const int    NUM_WINDOW_EWM      = 5;    //EWMA, EWVAR Init (times)
-/* Size of Image */
-extern const double COEF                = 1;
-/* Multi-Image Show */
-extern const int    WIN_COLS            = 3;
-extern const int    WIN_ROWS            = 3;
-
-/* Run applicaiton */
-extern const int    IMAGE_RECORD        = 1;
-/* Record docs */
-extern const char   LANE_RECORD_FILE[]  = "./inputdata/outputdata/LaneFeatures_22-03-2014_13h05m12s.txt";
-extern const char   FILE_LANE_FEATURE[] = "./inputdata/outputdata/Sim_LaneFeatures_22-03-2014_13h05m12s.txt";
-extern const char   LANE_RECORD_IMAGE[]    = "./inputdata/outputdata/lane_%d.png";
-/* Data Source */
-extern const char   LANE_RAW_NAME[]     = "./inputdata/cropped_images/cropped_%d.png";
-//extern const char   LANE_RAW_NAME[]     = "./inputdata/washington/lane_%d.png";
-// extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/KIT/2011_09_26/2011_09_26_drive_0015_sync/image_00/data/%010d.png";
-// extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/Data/LaneRaw_10-07-2013_18h30m21s/lane_%d.jpg";
+  /* Run applicaiton */
+  extern const int    IMAGE_RECORD        = 1;
+  /* Record docs */
+  extern const char   LANE_RECORD_FILE[]  = "./inputdata/outputdata/LaneFeatures_22-03-2014_13h05m12s.txt";
+  extern const char   FILE_LANE_FEATURE[] = "./inputdata/outputdata/Sim_LaneFeatures_22-03-2014_13h05m12s.txt";
+  extern const char   LANE_RECORD_IMAGE[]    = "./inputdata/outputdata/lane_%d.png";
+  /* Data Source */
+  extern const char   LANE_RAW_NAME[]     = "./inputdata/cropped_images/cropped_%d.png";
+  //extern const char   LANE_RAW_NAME[]     = "./inputdata/washington/lane_%d.png";
+  // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/KIT/2011_09_26/2011_09_26_drive_0015_sync/image_00/data/%010d.png";
+  // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/Data/LaneRaw_10-07-2013_18h30m21s/lane_%d.jpg";
+  extern const int    TH_KALMANFILTER     = 1; // originally 1
 
 
-extern const int    TH_KALMANFILTER     = 1; // originally 1
+
+}
+
 
 namespace LaneDetectorSim {
 
