@@ -400,7 +400,7 @@ namespace LaneDetector{
         	#endif
 
         	/* Curve Fitting Step */
-        	#if 1
+        	#if 1 
         		std::vector<cv::Point2d> leftPointSet, rightPointSet;
 
         		int termNum = 3;
