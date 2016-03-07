@@ -540,7 +540,7 @@ namespace LaneDetector{
 	void FilterLanes(cv::Mat &laneMat, const LaneDetectorConf &laneDetectorConf)
 	{
         	cv::Mat mat1, mat2, mat3, finalMat;
-        	int filterType = DOG_FILTER;
+        	int filterType = SOBEL_FILTER_2;
 
 		switch (filterType) //laneDetectorConf.filterType
         	{
