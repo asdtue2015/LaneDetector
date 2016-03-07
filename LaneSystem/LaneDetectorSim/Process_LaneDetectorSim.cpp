@@ -32,6 +32,14 @@ namespace LaneDetectorSim{
                           std::vector<cv::Vec2f> &postHfLanes, int &changeDone,
                           const double &YAW_ANGLE, const double &PITCH_ANGLE)
     	{
+				cv::Mat xMap;
+				cv::Mat yMap;
+				LaneDetector::InterpMap interpMap;
+				cv::Mat ipmMask;
+				cv::Mat ipmMat;
+
+
+
         	const int WIDTH = laneMat.cols;
         	const int HEIGHT = laneMat.rows;
         	char *text = new char[100];
@@ -62,9 +70,30 @@ namespace LaneDetectorSim{
          	* The same in the next frame draw the predicted region when laneKalmanIdx exceeds threshold */
         	LaneDetector::DrawPreROI(laneMat, offsetX, offsetY, postHfLanes, laneKalmanIdx, isChangeLane, laneDetectorConf);
 
-          /****/
+					/********/
+
+IPMpixelsToWorld(laneDetectorConf, xMap, yMap);
+IPMgetInterpMap(xMap, yMap, laneDetectorConf, interpMap, ipmMask);
+IPMgetWorldImage(laneMat, laneDetectorConf, interpMap, ipmMat);
+
+
+					/********/
+					//LaneDetector::IPMDetectLanes(const cv::Mat &ipmMat,	const LaneDetectorConf &laneDetectorConf,	std::vector<Lane> &leftIPMLanes, std::vector<Lane> &rightIPMLanes,
+													//	cv::Mat &leftCoefs, cv::Mat &rightCoefs,	std::vector<cv::Point2d> &leftSampledPoints, std::vector<cv::Point2d> &rightSampledPoints,
+													//	double &laneWidth)
+
+
+
 
         	LaneDetector::DetectLanes(grayMat, laneDetectorConf, offsetX, offsetY, hfLanes, postHfLanes, laneKalmanIdx, isChangeLane);
+
+
+
+			/********/
+					DrawMarkingFromIPM(cv::Mat &laneMat, const std::vector<cv::Point2d> &leftSampledPoints, const std::vector<cv::Point2d> &rightSampledPoints,
+																const LaneDetectorConf &laneDetectorConf)
+
+
 
         	//! Draw the detected lanes
         	if (!hfLanes.empty())
