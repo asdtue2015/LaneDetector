@@ -3,3 +3,8 @@ inputdata/
 LaneSystem64
 *.o
 refman.pdf
+CMakeCache.txt
+*.cmake
+CMakeFiles/
+makefile
+Makefile
