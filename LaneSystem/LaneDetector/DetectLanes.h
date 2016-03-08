@@ -14,11 +14,11 @@
 
 namespace LaneDetector{
     /* Line structure with start and end points */
-	typedef struct _Lane 
+	typedef struct _Lane
 	{ 	cv::Point2d startPoint; //start point
 		cv::Point2d endPoint; //end point
 	} Lane;
-    
+
 	/* Structure to hold lane detector settings */
 	typedef struct _LaneDetectorConf
 	{
@@ -45,7 +45,7 @@ namespace LaneDetector{
 
 		/* The method to use for IPM interpolation */
 		int ipmInterpolation;
-        
+
         	/* kernel size to use for filtering, matrix used for image processing */
         	unsigned char kernelWidth;
         	unsigned char kernelHeight;
@@ -72,18 +72,18 @@ namespace LaneDetector{
         	double distCornerMin;
         	double distCornerMax;
 		} LaneDetectorConf;
-    
-	void IPMPreprocess(const cv::Mat &ipmMat, 
-		const LaneDetectorConf &laneDetectorConf, 
+
+	void IPMPreprocess(const cv::Mat &ipmMat,
+		const LaneDetectorConf &laneDetectorConf,
 		cv::Mat &thMat);
-    
-	void IPMDetectLanes(const cv::Mat &ipmMat, 
-		const LaneDetectorConf &laneDetectorConf, 
+
+	void IPMDetectLanes(const cv::Mat &ipmMat,
+		 LaneDetectorConf &laneDetectorConf,
 		std::vector<Lane> &leftIPMLanes, std::vector<Lane> &rightIPMLanes,
 		cv::Mat &leftCoefs, cv::Mat &rightCoefs,
 		std::vector<cv::Point2d> &leftSampledPoints, std::vector<cv::Point2d> &rightSampledPoints, double &laneWidth);
-    
-	/* * This function tracks lanes in the input image. 
+
+	/* * This function tracks lanes in the input image.
 	* The returned lines are in a vector of Line objects, having start and end point in input image frame.
 	* \param image the input image
 	* \param the original image
@@ -91,14 +91,14 @@ namespace LaneDetector{
 	* \param lane detect configuration  */
 
 	void DetectLanes(const cv::Mat &laneMat,
-		const LaneDetectorConf &laneDetectorConf, 
+		LaneDetectorConf &laneDetectorConf,
 		const int &offsetX,
 		const int &offsetY,
 		std::vector<cv::Vec2f> &hfLanes,
 		std::vector<cv::Vec2f> &postHfLanes,
 		const int &laneKalmanIdx,
 		const double &isChangeLane);
-    
+
 	enum FilterType { SOBEL_FILTER_1  = 0,
         	SOBEL_FILTER_2  = 1,
         	SOBEL_FILTER_3  = 2,
@@ -109,9 +109,9 @@ namespace LaneDetector{
 
 	/* * This function extracts the edge from various filters */
 
-	void FilterLanes(cv::Mat &laneMat, const LaneDetectorConf &laneDetectorConf);	
-    
-    
+	void FilterLanes(cv::Mat &laneMat, const LaneDetectorConf &laneDetectorConf);
+
+
     	#define GROUPING_TYPE_HV_LINES      0
     	#define GROUPING_TYPE_HOUGH_LINES   1
 
@@ -120,50 +120,50 @@ namespace LaneDetector{
 	 * \param lines a vector of lines
 	 * \param lineConf the conf structure */
 
-	void GetHfLanes(cv::Mat &laneMat, 
-   		const LaneDetectorConf &laneDetectorConf, 
+	void GetHfLanes(cv::Mat &laneMat,
+   		const LaneDetectorConf &laneDetectorConf,
                	std::vector<cv::Vec2f> &hfLanes,
               	const cv::Mat &lLaneMask,
             	const cv::Mat &rLaneMask,
               	const int &isROI, const int &isChangeLane);
     	/* * This function define the rule of sort in hough params. */
     	bool sort_smaller(const cv::Vec2f &lane1, const cv::Vec2f &lane2);
-       
+
     	/* * This function gets the lateral offset of ego-vehicle. */
-    	void GetLateralOffset(const cv::Mat &laneMat, 
-		const double &leftPoint, 
+    	void GetLateralOffset(const cv::Mat &laneMat,
+		const double &leftPoint,
             	const double &rightPoint,
            	double &lateralOffset);
 
     	/* * This function does initialization of the struct of laneDetectorConf
     	* \param laneDetectorConf the structure to fill */
     	void InitlaneDetectorConf(const cv::Mat &laneMat, LaneDetectorConf &laneDetectorConf, const int database);
-    
+
     	/* * This function enhance the adaptive contrast of images. */
     	void EnhanceContrast_LCE(const cv::Mat &inMat, cv::Mat &outMat, const int &threshold = 1, const int &amount = 1);
-        
+
     	void HfLanetoLane(const cv::Mat &laneMat, const std::vector<cv::Vec2f> &hfLanes, std::vector<Lane> &lanes);
-    
-    	void GetMarkerPoints(const cv::Mat &laneMat, const std::vector<cv::Vec2f> &hfLanes, 
+
+    	void GetMarkerPoints(const cv::Mat &laneMat, const std::vector<cv::Vec2f> &hfLanes,
     				cv::Point2d &vp, cv::Point2d &corner_l, cv::Point2d &corner_r, const int offsetX, const int offsetY);
-    
-    	void DrawPreROI(cv::Mat &laneMat, 
+
+    	void DrawPreROI(cv::Mat &laneMat,
 		const int offsetX,
 		const int offsetY,
-		const std::vector<cv::Vec2f> &postHfLanes, 
+		const std::vector<cv::Vec2f> &postHfLanes,
 		const int &laneKalmanIdx,
 		const int &isChangeLane,
-		const LaneDetectorConf &laneDetectorConf);
-    
-    	void DrawMarker(cv::Mat &laneMat, 
+		 LaneDetectorConf &laneDetectorConf);
+
+    	void DrawMarker(cv::Mat &laneMat,
 		const int offsetX,
 		const int offsetY,
-		const std::vector<cv::Vec2f> &hfLanes, 
+		const std::vector<cv::Vec2f> &hfLanes,
 		const double &lateralOffset);
-    
-    	void MeasureLaneWidth(const std::vector<cv::Point2d> &leftSampledPoints, 
-		const std::vector<cv::Point2d> &rightSampledPoints, 
-		const LaneDetectorConf &laneDetectorConf, 
+
+    	void MeasureLaneWidth(const std::vector<cv::Point2d> &leftSampledPoints,
+		const std::vector<cv::Point2d> &rightSampledPoints,
+		const LaneDetectorConf &laneDetectorConf,
 		double &laneWidth);
 }
 

@@ -39,7 +39,7 @@ namespace LaneDetectorSim{
     };
 
     void ProcessLaneImage(cv::Mat &laneMat,
-                          const LaneDetector::LaneDetectorConf &laneDetectorConf,
+                          LaneDetector::LaneDetectorConf &laneDetectorConf,
                           const double &startTime,
                           cv::KalmanFilter &laneKalmanFilter,
                           cv::Mat &laneKalmanMeasureMat, int &laneKalmanIdx,

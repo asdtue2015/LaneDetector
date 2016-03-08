@@ -264,7 +264,7 @@ namespace LaneDetector{
 }//end IPMPreprocess
 
      	void IPMDetectLanes(const cv::Mat &ipmMat,
-                        const LaneDetectorConf &laneDetectorConf,
+                        LaneDetectorConf &laneDetectorConf,
                         std::vector<Lane> &leftIPMLanes, std::vector<Lane> &rightIPMLanes,
                         cv::Mat &leftCoefs, cv::Mat &rightCoefs,
                         std::vector<cv::Point2d> &leftSampledPoints, std::vector<cv::Point2d> &rightSampledPoints,
@@ -342,7 +342,7 @@ namespace LaneDetector{
             		theta = leftHfLanes.at(lanesNum/2)[1];
 
             		leftHfLanes.clear();
-            		leftHfLanes.push_back(Vec2f(rho, theta));
+            		leftHfLanes.push_back(cv::Vec2f(rho, theta));
             		HfLanetoLane(thMat, leftHfLanes, leftIPMLanes);
         	}
 
@@ -356,7 +356,7 @@ namespace LaneDetector{
             		theta = rightHfLanes.at(lanesNum/2)[1];
 
            		rightHfLanes.clear();
-            		rightHfLanes.push_back(Vec2f(rho, theta));
+            		rightHfLanes.push_back(cv::Vec2f(rho, theta));
             		HfLanetoLane(thMat, rightHfLanes, rightIPMLanes);
         	}
 
@@ -400,7 +400,7 @@ namespace LaneDetector{
         	#endif
 
         	/* Curve Fitting Step */
-        	#if 1 
+        	#if 1
         		std::vector<cv::Point2d> leftPointSet, rightPointSet;
 
         		int termNum = 3;
@@ -448,7 +448,7 @@ namespace LaneDetector{
 	* \param camera information
 	* \param lane detect configuration  */
 	void DetectLanes(const cv::Mat &laneMat,
-                     const LaneDetectorConf &laneDetectorConf,
+                      LaneDetectorConf &laneDetectorConf,
                      const int &offsetX,
                      const int &offsetY,
                      std::vector<cv::Vec2f> &hfLanes,
@@ -1144,7 +1144,7 @@ namespace LaneDetector{
                     const std::vector<cv::Vec2f> &pHfLanes,
                     const int &laneKalmanIdx,
                     const int &isChangeLane,
-                    const LaneDetectorConf &laneDetectorConf)
+                   LaneDetectorConf &laneDetectorConf)
     	{
         	cv::Point2d  vp, corner_l, corner_r;
         	std::vector<LaneDetector::Lane> pLanes;
