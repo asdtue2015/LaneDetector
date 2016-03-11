@@ -45,6 +45,7 @@ namespace LaneDetectorSim{
 				std::vector<cv::Point2d> rightSampledPoints;
 				std::vector<LaneDetector::Lane> leftIPMLanes;
 				std::vector<LaneDetector::Lane> rightIPMLanes;
+	    //  LaneDetector::LaneDetectorConf laneDetectorConf;
 		    double laneWidth;
 
         	const int WIDTH = laneMat.cols;
@@ -81,13 +82,12 @@ namespace LaneDetectorSim{
 
 IPMpixelsToWorld(laneDetectorConf, xMap, yMap);
 IPMgetInterpMap(xMap, yMap, laneDetectorConf, interpMap, ipmMask);
-IPMgetWorldImage(ipmMat, laneDetectorConf, interpMap, ipmMat);
+IPMgetWorldImage(laneMat, laneDetectorConf, interpMap, ipmMat);
 LaneDetector::IPMDetectLanes(ipmMat, laneDetectorConf, leftIPMLanes, rightIPMLanes, leftCoefs, rightCoefs,leftSampledPoints, rightSampledPoints, laneWidth);
         	//LaneDetector::DetectLanes(grayMat, laneDetectorConf, offsetX, offsetY, hfLanes, postHfLanes, laneKalmanIdx, isChangeLane);
-//DrawMarkingFromIPM(ipmMat, leftSampledPoints, rightSampledPoints, laneDetectorConf);
+DrawMarkingFromIPM(ipmMat, leftSampledPoints, rightSampledPoints, laneDetectorConf);
 
 			/********/
-		//	laneMat = ipmMat;
 
         	//! Draw the detected lanes
         	if (!hfLanes.empty())
@@ -147,167 +147,167 @@ LaneDetector::IPMDetectLanes(ipmMat, laneDetectorConf, leftIPMLanes, rightIPMLan
         	std::vector<cv::Vec2f> preHfLanes;
         	postHfLanes.clear();
 
-  // LaneDetector::TrackLanes_Particle(ipmMat, laneDetectorConf, samplingNum, leftCoefs, rightCoefs, leftSampledPoints, rightSampledPoints, laneWidth);
-
-        	if( (detectLaneFlag == 0 && initDone == 0)
-           	|| (detectLaneFlag == 1 && isChangeLane != -1 && isChangeLane != 1)
-           	|| (detectLaneFlag == 2 && changeDone == 1) )
-       	 	{
-             		LaneDetector::TrackLanes_KF(grayMat, laneKalmanFilter, laneKalmanMeasureMat, hfLanes, lastHfLanes, preHfLanes, postHfLanes, PITCH_ANGLE);
-		    	laneKalmanIdx++;
-        	}
-
-        	/* After use lastHfLanes: hfLanes(k-1), update it */
-        	lastHfLanes = hfLanes;
-
-        	/* * Change Lane Detect Flag
-         	* When init finished in current frame,
-         	* the process will not come into lane tracking
-         	* \param lateralOffset updates to current one
-         	* Lane change happened, lateralOffset is set to lastlateralOffset */
-        	if ( detectLaneFlag == 0 && std::abs(lateralOffset) == 1 )
-        	{
-            		detectLaneFlag = 1; // Changing lane may happen
-        	}
-        	else if( detectLaneFlag == 1 && std::abs(lateralOffset) == 1 )
-        	{
-            		detectLaneFlag = 0; // Return to the original lanes
-        	} //else keep the last state
-        	// std::cout << "detectLaneFlag: " << detectLaneFlag << std::endl;
- 	       /* * Operation in different Lane Detect Flag
-         	* If init finished and it can correctly track lanes */
-        	if (detectLaneFlag == 0 && initDone == 0)
-        	{
-            		isChangeLane = 0;
-        	} else if (detectLaneFlag == 1) {
-            		//! If Lane changes in last frame and lane can be tracked in current frame.
-            		//! In this condition, lateralOffset = 1 from the tracked lane
-            		isChangeLane = 0;
-        		//! If lateral deviation exceeds more than an entire vehcile,
-            		//! it would reset Kalman filter
-            		int departCond = 0; //not entire outside
-            		const double OutTh = 0.3;
-            		if(!postHfLanes.empty())
-            		{
-                		// std::cout << "postHfLanes >> theta_L: " << postHfLanes[0][1] << " theta_R: " << postHfLanes[1][1] << std::endl;
-                		if(lateralOffset < 0)//car to left
-                		{
-                    			if (postHfLanes[0][1] < OutTh)
-					{
-                        			//left side is out of left lane marking
-                        			departCond = 1;
-                    			}else {
-                        			// otherwise
-                        			departCond = 0;
-                    			}
-                		}
-                		else //car to right
-                		{
-                    			if(postHfLanes[1][1] > -OutTh)
-					{
-                        			departCond = 1;
-                    			} else {
-                        		departCond = 0;
-                    			}
-                		}
-            		}
-            		if(departCond == 1)
-            		{
-                		std::cout << "Changing Lanes >> Reset All Parameters" << std::endl;
-                		//! Reset Kalman filter and laneKalmanIdx = 0
-                		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
-                		postHfLanes.clear();
-
-                		//! Next detection will occur in the whole image, NOT ROI
-                		if(lateralOffset == -1)
-                    			isChangeLane = -1;//car departs towards left
-                		else
-                    			isChangeLane = 1;//car departs towards right
-					detectLaneFlag = 2;
-                			lastHfLanes.clear();
-            		}
-        	} else if(detectLaneFlag == 2 && changeDone == 1) {
-            		//! If Lane changes in last frame and lane can be tracked in current frame.
-            		//! In this condition, lateralOffset = 1 from the tracked lane
-            		if(std::abs(lateralOffset) < 1)
-			{
-                		detectLaneFlag = 0;
-                		changeDone = 0;
-            		}
-            		if(laneKalmanIdx > TH_KALMANFILTER)
-                		isChangeLane = 0;
-        	}
-
-        	/* Check whether the tracked lane can fit to the real situation */
-       		const double top = laneDetectorConf.vpTop;
-        	const double bottom = laneDetectorConf.vpBottom;
-        	const double minDIST   = laneDetectorConf.distCornerMin;
-        	const double maxDIST   = laneDetectorConf.distCornerMax;
-        	int isTrackFailed = 0;
-
-        	if(!postHfLanes.empty())
-        	{
-            		LaneDetector::GetMarkerPoints(laneMat, postHfLanes, vanishPt, leftCornerPt, rightCornerPt, offsetX, offsetY);
-
-            		/* Conditions of Checking Tracking */
-            		double distCornerPt =  std::abs(leftCornerPt.x - rightCornerPt.x);
-            		double heightVP = vanishPt.y;
-
-            		printf("\n Height VP: %f < %f < %f\n", top, heightVP, bottom);
-            		printf("Distance Corner : %f < %f < %f\n", minDIST, distCornerPt,  maxDIST);
-
-            		if( heightVP > bottom ||
-                	distCornerPt < minDIST || distCornerPt > maxDIST)
-            		{
-                		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
-                		postHfLanes.clear();
-                		isTrackFailed = 1;
-            		}
-        	}
-
-        	/* Consider an error LO */
-		if (std::isnan(lateralOffset))
-			lateralOffset = lastLateralOffset;
-
-        	if(!isTrackFailed)
-        	{
-            		if ( !postHfLanes.empty() && laneKalmanIdx >= TH_KALMANFILTER )
-            		{
-                		LaneDetector::GetMarkerPoints(laneMat, postHfLanes, vanishPt, leftCornerPt, rightCornerPt, offsetX, offsetY);
-                		cv::circle(laneMat, vanishPt, 4, CV_RGB(255, 0 , 255), 2);
-
-                		LaneDetector::HfLanetoLane(laneMat, postHfLanes, postLanes);
-                		for (std::vector<LaneDetector::Lane>::const_iterator iter = postLanes.begin(); iter != postLanes.end(); ++iter)
-                		{
-                    			line(laneMat, cv::Point2d(iter->startPoint.x+offsetX, iter->startPoint.y+offsetY), cv::Point2d(iter->endPoint.x+offsetX, iter->endPoint.y+offsetY), CV_RGB(0, 255, 0), 3);
-                		}
-
-                		if( hfLanes.size() != 2 || std::abs(lateralOffset - lastLateralOffset) > 0.1)
-                		{
-                    			LaneDetector::GetLateralOffset(laneMat, leftCornerPt.x, rightCornerPt.x, lateralOffset);
-                    			LaneDetector::DrawMarker(laneMat, offsetX, offsetY, postHfLanes, lateralOffset);
-                    			sprintf(text, "Tracking Data");
-                    			cv::putText(laneMat, text, cv::Point(laneMat.cols/2, 20), cv::FONT_HERSHEY_SIMPLEX, 0.7, CV_RGB(0, 255, 0));
-                		}
-                		else
-                		{
-                    			LaneDetector::DrawMarker(laneMat, offsetX, offsetY, hfLanes, lateralOffset);
-                    			sprintf(text, "Detection Data");
-                    			cv::putText(laneMat, text, cv::Point(laneMat.cols/2, 20),cv::FONT_HERSHEY_SIMPLEX, 0.7, CV_RGB(255, 255, 0));
-                		}
-            		}
-			lastLateralOffset = lateralOffset; //record last LO using current LO
-        	}
-       		else
-		{
-            		LaneDetector::DrawMarker(laneMat, offsetX, offsetY, hfLanes, lateralOffset);
-            		sprintf(text, "Detection Data");
-            		cv::putText(laneMat, text, cv::Point(laneMat.cols/2, 20),cv::FONT_HERSHEY_SIMPLEX, 0.7, CV_RGB(255, 255, 0));
-
-            		sprintf(text, "Fail in Tracking");
-            		cv::putText(laneMat, text, cv::Point(laneMat.cols/2, 40), cv::FONT_HERSHEY_SIMPLEX, 0.8, CV_RGB(255, 0, 0));
-        	}
-  		execTime = ((double)cv::getTickCount() - startTime)/cv::getTickFrequency();
+   LaneDetector::TrackLanes_Particle(ipmMat, laneDetectorConf, samplingNum, leftCoefs, rightCoefs, leftSampledPoints, rightSampledPoints, laneWidth);
+		//
+    //     	if( (detectLaneFlag == 0 && initDone == 0)
+    //        	|| (detectLaneFlag == 1 && isChangeLane != -1 && isChangeLane != 1)
+    //        	|| (detectLaneFlag == 2 && changeDone == 1) )
+    //    	 	{
+    //          		LaneDetector::TrackLanes_KF(grayMat, laneKalmanFilter, laneKalmanMeasureMat, hfLanes, lastHfLanes, preHfLanes, postHfLanes, PITCH_ANGLE);
+		//     	laneKalmanIdx++;
+    //     	}
+		//
+    //     	/* After use lastHfLanes: hfLanes(k-1), update it */
+    //     	lastHfLanes = hfLanes;
+		//
+    //     	/* * Change Lane Detect Flag
+    //      	* When init finished in current frame,
+    //      	* the process will not come into lane tracking
+    //      	* \param lateralOffset updates to current one
+    //      	* Lane change happened, lateralOffset is set to lastlateralOffset */
+    //     	if ( detectLaneFlag == 0 && std::abs(lateralOffset) == 1 )
+    //     	{
+    //         		detectLaneFlag = 1; // Changing lane may happen
+    //     	}
+    //     	else if( detectLaneFlag == 1 && std::abs(lateralOffset) == 1 )
+    //     	{
+    //         		detectLaneFlag = 0; // Return to the original lanes
+    //     	} //else keep the last state
+    //     	// std::cout << "detectLaneFlag: " << detectLaneFlag << std::endl;
+ 	 //       /* * Operation in different Lane Detect Flag
+    //      	* If init finished and it can correctly track lanes */
+    //     	if (detectLaneFlag == 0 && initDone == 0)
+    //     	{
+    //         		isChangeLane = 0;
+    //     	} else if (detectLaneFlag == 1) {
+    //         		//! If Lane changes in last frame and lane can be tracked in current frame.
+    //         		//! In this condition, lateralOffset = 1 from the tracked lane
+    //         		isChangeLane = 0;
+    //     		//! If lateral deviation exceeds more than an entire vehcile,
+    //         		//! it would reset Kalman filter
+    //         		int departCond = 0; //not entire outside
+    //         		const double OutTh = 0.3;
+    //         		if(!postHfLanes.empty())
+    //         		{
+    //             		// std::cout << "postHfLanes >> theta_L: " << postHfLanes[0][1] << " theta_R: " << postHfLanes[1][1] << std::endl;
+    //             		if(lateralOffset < 0)//car to left
+    //             		{
+    //                 			if (postHfLanes[0][1] < OutTh)
+		// 			{
+    //                     			//left side is out of left lane marking
+    //                     			departCond = 1;
+    //                 			}else {
+    //                     			// otherwise
+    //                     			departCond = 0;
+    //                 			}
+    //             		}
+    //             		else //car to right
+    //             		{
+    //                 			if(postHfLanes[1][1] > -OutTh)
+		// 			{
+    //                     			departCond = 1;
+    //                 			} else {
+    //                     		departCond = 0;
+    //                 			}
+    //             		}
+    //         		}
+    //         		if(departCond == 1)
+    //         		{
+    //             		std::cout << "Changing Lanes >> Reset All Parameters" << std::endl;
+    //             		//! Reset Kalman filter and laneKalmanIdx = 0
+    //             		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
+    //             		postHfLanes.clear();
+		//
+    //             		//! Next detection will occur in the whole image, NOT ROI
+    //             		if(lateralOffset == -1)
+    //                 			isChangeLane = -1;//car departs towards left
+    //             		else
+    //                 			isChangeLane = 1;//car departs towards right
+		// 			detectLaneFlag = 2;
+    //             			lastHfLanes.clear();
+    //         		}
+    //     	} else if(detectLaneFlag == 2 && changeDone == 1) {
+    //         		//! If Lane changes in last frame and lane can be tracked in current frame.
+    //         		//! In this condition, lateralOffset = 1 from the tracked lane
+    //         		if(std::abs(lateralOffset) < 1)
+		// 	{
+    //             		detectLaneFlag = 0;
+    //             		changeDone = 0;
+    //         		}
+    //         		if(laneKalmanIdx > TH_KALMANFILTER)
+    //             		isChangeLane = 0;
+    //     	}
+		//
+    //     	/* Check whether the tracked lane can fit to the real situation */
+    //    		const double top = laneDetectorConf.vpTop;
+    //     	const double bottom = laneDetectorConf.vpBottom;
+    //     	const double minDIST   = laneDetectorConf.distCornerMin;
+    //     	const double maxDIST   = laneDetectorConf.distCornerMax;
+    //     	int isTrackFailed = 0;
+		//
+    //     	if(!postHfLanes.empty())
+    //     	{
+    //         		LaneDetector::GetMarkerPoints(laneMat, postHfLanes, vanishPt, leftCornerPt, rightCornerPt, offsetX, offsetY);
+		//
+    //         		/* Conditions of Checking Tracking */
+    //         		double distCornerPt =  std::abs(leftCornerPt.x - rightCornerPt.x);
+    //         		double heightVP = vanishPt.y;
+		//
+    //         		printf("\n Height VP: %f < %f < %f\n", top, heightVP, bottom);
+    //         		printf("Distance Corner : %f < %f < %f\n", minDIST, distCornerPt,  maxDIST);
+		//
+    //         		if( heightVP > bottom ||
+    //             	distCornerPt < minDIST || distCornerPt > maxDIST)
+    //         		{
+    //             		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
+    //             		postHfLanes.clear();
+    //             		isTrackFailed = 1;
+    //         		}
+    //     	}
+		//
+    //     	/* Consider an error LO */
+		// if (std::isnan(lateralOffset))
+		// 	lateralOffset = lastLateralOffset;
+		//
+    //     	if(!isTrackFailed)
+    //     	{
+    //         		if ( !postHfLanes.empty() && laneKalmanIdx >= TH_KALMANFILTER )
+    //         		{
+    //             		LaneDetector::GetMarkerPoints(laneMat, postHfLanes, vanishPt, leftCornerPt, rightCornerPt, offsetX, offsetY);
+    //             		cv::circle(laneMat, vanishPt, 4, CV_RGB(255, 0 , 255), 2);
+		//
+    //             		LaneDetector::HfLanetoLane(laneMat, postHfLanes, postLanes);
+    //             		for (std::vector<LaneDetector::Lane>::const_iterator iter = postLanes.begin(); iter != postLanes.end(); ++iter)
+    //             		{
+    //                 			line(laneMat, cv::Point2d(iter->startPoint.x+offsetX, iter->startPoint.y+offsetY), cv::Point2d(iter->endPoint.x+offsetX, iter->endPoint.y+offsetY), CV_RGB(0, 255, 0), 3);
+    //             		}
+		//
+    //             		if( hfLanes.size() != 2 || std::abs(lateralOffset - lastLateralOffset) > 0.1)
+    //             		{
+    //                 			LaneDetector::GetLateralOffset(laneMat, leftCornerPt.x, rightCornerPt.x, lateralOffset);
+    //                 			LaneDetector::DrawMarker(laneMat, offsetX, offsetY, postHfLanes, lateralOffset);
+    //                 			sprintf(text, "Tracking Data");
+    //                 			cv::putText(laneMat, text, cv::Point(laneMat.cols/2, 20), cv::FONT_HERSHEY_SIMPLEX, 0.7, CV_RGB(0, 255, 0));
+    //             		}
+    //             		else
+    //             		{
+    //                 			LaneDetector::DrawMarker(laneMat, offsetX, offsetY, hfLanes, lateralOffset);
+    //                 			sprintf(text, "Detection Data");
+    //                 			cv::putText(laneMat, text, cv::Point(laneMat.cols/2, 20),cv::FONT_HERSHEY_SIMPLEX, 0.7, CV_RGB(255, 255, 0));
+    //             		}
+    //         		}
+		// 	lastLateralOffset = lateralOffset; //record last LO using current LO
+    //     	}
+    //    		else
+		// {
+    //         		LaneDetector::DrawMarker(laneMat, offsetX, offsetY, hfLanes, lateralOffset);
+    //         		sprintf(text, "Detection Data");
+    //         		cv::putText(laneMat, text, cv::Point(laneMat.cols/2, 20),cv::FONT_HERSHEY_SIMPLEX, 0.7, CV_RGB(255, 255, 0));
+		//
+    //         		sprintf(text, "Fail in Tracking");
+    //         		cv::putText(laneMat, text, cv::Point(laneMat.cols/2, 40), cv::FONT_HERSHEY_SIMPLEX, 0.8, CV_RGB(255, 0, 0));
+    //     	}
+  	// 	execTime = ((double)cv::getTickCount() - startTime)/cv::getTickFrequency();
 
         	/* Draw Lane information */
         	/* Show index of frames */
