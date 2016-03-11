@@ -14,5 +14,5 @@ command1="./LaneSystem64 1 1 611 0.0 0.1"
 echo $command1
 
 #run
-$command1 #& 
+$command1 #&
 # $command2 #& $command3

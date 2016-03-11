@@ -303,7 +303,7 @@ namespace LaneDetector{
         	imShowSub("6.Division", colorMat, WIN_COLS, WIN_ROWS, 7);
 
     		/* Hough Transform Step (Optional) */
-        	#if 1
+        	#if 0
         	//! Standard Hough Transform.
         	std::vector<cv::Vec2f> hfLanesCandi;
         	int maxLineGap = 50;

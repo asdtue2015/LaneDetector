@@ -331,7 +331,6 @@ namespace LaneDetector{
         	int nRows = interpMap.pixels[0].rows;
         	int nCols = interpMap.pixels[0].cols;
         	ipmMat = cv::Mat::zeros(nRows, nCols, CV_64F);
-
 		#if 0
 			//! Show the cropped image.
 			cv::Rect mask(0, laneDetectorConf.rHorizon, image.cols, image.rows - laneDetectorConf.rHorizon);
@@ -387,6 +386,7 @@ namespace LaneDetector{
             		}
         	}
 
+//cv::imshow("IPMgetWorldImage", ipmMat);
         	ipmMat.convertTo(ipmMat, CV_8U);
 
     	}// IPMgetWorldImage
