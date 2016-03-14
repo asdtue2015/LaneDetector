@@ -7,7 +7,14 @@
 #include "../LaneDetector/LaneDetectorTools.h"
 #include "../LaneDetector/GenerateLaneIndicators.h"
 #include "../LaneDetector/IPMTransformation.h"
-
+//*****************************************************
+#include "../JoostFiles/mcv.hh"
+#include "../JoostFiles/InversePerspectiveMapping.hh"
+#include "../JoostFiles/LaneDetectorOpt.h"
+#include "../JoostFiles/ranker.h"
+#include <cv.h>
+#include "../JoostFiles/LaneDetector.hh"
+//****************************************************
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>

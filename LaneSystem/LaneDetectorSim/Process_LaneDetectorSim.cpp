@@ -4,6 +4,14 @@
 
 #include "Process_LaneDetectorSim.h"
 
+#include "LaneDetector.hh"
+
+#include "mcv.hh"
+#include "InversePerspectiveMapping.hh"
+#include "LaneDetectorOpt.h"
+#include "ranker.h"
+
+
 extern const double COEF;
 
 extern const int    FRAME_START;
@@ -79,9 +87,12 @@ namespace LaneDetectorSim{
 
 					/********/
 
- IPMpixelsToWorld(laneDetectorConf, xMap, yMap);
- IPMgetInterpMap(xMap, yMap, laneDetectorConf, interpMap, ipmMask);
- IPMgetWorldImage(laneMat, laneDetectorConf, interpMap, ipmMat);
+ // IPMpixelsToWorld(laneDetectorConf, xMap, yMap);
+ // IPMgetInterpMap(xMap, yMap, laneDetectorConf, interpMap, ipmMask);
+ // IPMgetWorldImage(laneMat, laneDetectorConf, interpMap, ipmMat);
+ list<CvPoint> outPixels;
+ IPMInfo ipmInfo;
+ mcvGetIPM(laneMat, ipmMat, &ipmInfo, cameraInfo, &outPixels);
  LaneDetector::IPMDetectLanes(ipmMat, laneDetectorConf, leftIPMLanes, rightIPMLanes, leftCoefs, rightCoefs,leftSampledPoints, rightSampledPoints, laneWidth);
 //LaneDetector::DetectLanes(grayMat, laneDetectorConf, offsetX, offsetY, hfLanes, postHfLanes, laneKalmanIdx, isChangeLane);
  DrawMarkingFromIPM(ipmMat, leftSampledPoints, rightSampledPoints, laneDetectorConf);

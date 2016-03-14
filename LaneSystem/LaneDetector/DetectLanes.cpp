@@ -14,8 +14,8 @@ extern const int    TH_KALMANFILTER;
 namespace LaneDetector{
     	void IPMPreprocess(const cv::Mat &ipmMat, const LaneDetectorConf &laneDetectorConf, cv::Mat &thMat)
     	{
-	//	cv:: imshow("0.Raw", ipmMat);
-	//	imShowSub("0.Raw", ipmMat, WIN_COLS, WIN_ROWS, 1);
+		cv:: imshow("0.Raw", ipmMat);
+		imShowSub("0.Raw", ipmMat, WIN_COLS, WIN_ROWS, 1);
 	//	cv::Mat multiImage;
 	//	std::vector<cv::Mat> ipmMatT;
 	//	std::vector<cv::Mat> ipmMatG;
@@ -210,12 +210,12 @@ namespace LaneDetector{
 		contour.push_back(p3);
 		contour.push_back(p4);
 
-		#if 0
+		#if 1
 		cv::Mat ipmCopy = ipmMat.clone();
-		cv::line(ipmCopy, p1, p2, Scalar(255));
-		cv::line(ipmCopy, p2, p3, Scalar(255));
-		cv::line(ipmCopy, p3, p4, Scalar(255));
-		cv::line(ipmCopy, p4, p1, Scalar(255));
+		cv::line(ipmCopy, p1, p2, cv::Scalar(255));
+		cv::line(ipmCopy, p2, p3, cv::Scalar(255));
+		cv::line(ipmCopy, p3, p4, cv::Scalar(255));
+		cv::line(ipmCopy, p4, p1, cv::Scalar(255));
 		cv::imshow("ipm", ipmCopy);//cv::waitKey();
 		#endif
 
@@ -921,16 +921,16 @@ namespace LaneDetector{
 	void InitlaneDetectorConf(const cv::Mat &laneMat, LaneDetectorConf &laneDetectorConf, const int database)
 	{
         	/* run IPM */
-        	laneDetectorConf.isIPM = 1; //1 open, 0 close
+        	laneDetectorConf.isIPM = 0; //1 open, 0 close
         	/* Parameters of configuration of camera */
         	laneDetectorConf.m = laneMat.rows * COEF;    //Rows (height of Image)
         	laneDetectorConf.n = laneMat.cols * COEF;     //Columns (width of Image)
-        	laneDetectorConf.h = 1.15;              //Distance of camera above the ground (meters) //init 1.15
-        	laneDetectorConf.alphaTot = atan(3/12.5); //HALF viewing angle
+        	laneDetectorConf.h = 1.5;              //Distance of camera above the ground (meters) //init 1.15
+        	laneDetectorConf.alphaTot = atan(3.5/12.5); //HALF viewing angle
 
         	//! \param 6.7 for lane(data_130326)
         	//! \param 5.5 for lane(data_121013)
-        	// laneDetectorConf.theta0 = CV_PI*(5.5/180);   //Camera tilted angle below the horizontal(positive)
+        	//laneDetectorConf.theta0 = CV_PI*(6.7/180);   //Camera tilted angle below the horizontal(positive)
 
         	//! \params for lane (data_130710)
         	laneDetectorConf.theta0 = CV_PI * (8.5/180.0); //the pitch angle init 8.5
@@ -950,7 +950,7 @@ namespace LaneDetector{
         	laneDetectorConf.rhoMin  = 30;
 		laneDetectorConf.rhoStep = 1;
 
-		laneDetectorConf.thetaStep = CV_PI/180;
+		laneDetectorConf.thetaStep =2;// CV_PI/180;
 
         	switch(database)
 		{
@@ -969,9 +969,9 @@ namespace LaneDetector{
 
             		case ESIEE:
                 		laneDetectorConf.thetaMin = CV_PI / 4;//45 degree
-                		laneDetectorConf.thetaMax = CV_PI * 0.5; // / 9 * 4; //80 degree
-                		laneDetectorConf.top_range = 20;
-                		laneDetectorConf.bottom_range = 170;
+                		laneDetectorConf.thetaMax = 45;//CV_PI * 0.5; // / 9 * 4; //80 degree
+                		laneDetectorConf.top_range = 220;//20;
+                		laneDetectorConf.bottom_range = 350;//170;
 
                 		laneDetectorConf.vpTop = -laneMat.rows * 0.2 * COEF;
                 		laneDetectorConf.vpBottom = laneMat.rows * 0.3 * COEF;
