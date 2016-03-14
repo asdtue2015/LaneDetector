@@ -147,7 +147,7 @@ DrawMarkingFromIPM(ipmMat, leftSampledPoints, rightSampledPoints, laneDetectorCo
         	std::vector<cv::Vec2f> preHfLanes;
         	postHfLanes.clear();
 
-   LaneDetector::TrackLanes_Particle(ipmMat, laneDetectorConf, samplingNum, leftCoefs, rightCoefs, leftSampledPoints, rightSampledPoints, laneWidth);
+   //		LaneDetector::TrackLanes_Particle(ipmMat, laneDetectorConf, samplingNum, leftCoefs, rightCoefs, leftSampledPoints, rightSampledPoints, laneWidth);
 		//
     //     	if( (detectLaneFlag == 0 && initDone == 0)
     //        	|| (detectLaneFlag == 1 && isChangeLane != -1 && isChangeLane != 1)
