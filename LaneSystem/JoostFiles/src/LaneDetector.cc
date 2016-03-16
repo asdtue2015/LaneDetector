@@ -1269,6 +1269,7 @@ void mcvGetStopLines(const CvMat *inImage, vector<Line> *stopLines,
   list<CvPoint>::iterator outPixelsi;
   mcvGetIPM(image, ipm, &ipmInfo, cameraInfo, &outPixels);
 
+
   //smooth the IPM
   //cvSmooth(ipm, ipm, CV_GAUSSIAN, 5, 5, 1, 1);
 
@@ -1521,6 +1522,7 @@ void mcvGetLanes(const CvMat *inImage, const CvMat* clrImage,
   list<CvPoint> outPixels;
   list<CvPoint>::iterator outPixelsi;
   mcvGetIPM(image, ipm, &ipmInfo, cameraInfo, &outPixels);
+
 
   //smooth the IPM image with 5x5 gaussian filter
 #warning "Check: Smoothing IPM image"

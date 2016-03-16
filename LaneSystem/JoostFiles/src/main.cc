@@ -22,6 +22,9 @@ extern int counter=0;
 #include <cv.h>
 #include <highgui.h>
 
+#include <opencv2/opencv.hpp>
+
+
 
 
 // Useful message macro
@@ -168,6 +171,9 @@ void ProcessImage(const char* filename, CameraInfo& cameraInfo,
       // save the image file
       MSG("Writing output image: %s", outFilename.c_str());
       cvSaveImage(outFilename.c_str(), imDisplay);
+      // cout << "channels_222:" << CV_MAT_CN(imDisplay->type) << "\n";
+      // cout << "height222:" << CV_MAT_CN(imDisplay->height) << "\n";
+      // cout << "width222:" << CV_MAT_CN(imDisplay->width) << "\n";
     }
     // clear
     cvReleaseMat(&imDisplay);
@@ -187,14 +193,18 @@ int Process(int argc, char** argv)
 
   // read the camera configurations
   CameraInfo cameraInfo;
-  mcvInitCameraInfo(options.camera_conf_arg, &cameraInfo);
+  char fileName_test2[200];
+  strcpy(fileName_test2, "CameraInfo3.conf");
+  mcvInitCameraInfo(fileName_test2, &cameraInfo);
   MSG("Loaded camera file");
 
   // read the configurations
   LaneDetectorConf lanesConf, stoplinesConf;
   if (!options.no_lanes_flag)
   {
-    mcvInitLaneDetectorConf(options.lanes_conf_arg, &lanesConf);
+    char fileName_test[200];
+    strcpy(fileName_test, "Lanes3.conf");
+    mcvInitLaneDetectorConf(fileName_test, &lanesConf);
     MSG("Loaded lanes config file");
   }
   if (!options.no_stoplines_flag)

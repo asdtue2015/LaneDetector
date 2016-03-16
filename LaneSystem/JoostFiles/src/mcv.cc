@@ -15,6 +15,8 @@ using namespace std;
 #include <cv.h>
 #include <highgui.h>
 
+#include <opencv2/opencv.hpp>
+
 namespace LaneDetector
 {
 
@@ -53,6 +55,8 @@ void SHOW_IMAGE(const CvMat *pmat, const char str[], int wait)
   //cout << "in\n";
   cvNamedWindow(str, CV_WINDOW_AUTOSIZE); //0 1
   cvShowImage(str, mat);
+
+  //cvSaveImage( "../clips/output_ipm/ipmimage_.png", pmat);
   cvWaitKey(wait);
   //cvDestroyWindow(str);
   //clear
@@ -61,7 +65,9 @@ void SHOW_IMAGE(const CvMat *pmat, const char str[], int wait)
 }
 void SHOW_IMAGEtest(const CvMat *pmat, const char str[], int wait, int count)
 {
-  //cout << "channels:" << CV_MAT_CN(pmat->type) << "\n";
+  cout << "channels:" << CV_MAT_CN(pmat->type) << "\n";
+  cout << "height:" << CV_MAT_CN(pmat->height) << "\n";
+  cout << "width:" << CV_MAT_CN(pmat->width) << "\n";
   //scale it
   //CvMat *mat = cvCreateMat(pmat->height, pmat->width, pmat->type);
   //cvCopy(pmat, mat);
@@ -71,15 +77,36 @@ void SHOW_IMAGEtest(const CvMat *pmat, const char str[], int wait, int count)
   //cvConvert(pmat, mat);
   if(CV_MAT_CN(mat->type) == 1)//FLOAT_MAT_TYPE)
     mcvScaleMat(mat, mat);
+  //cv::Mat mat2;
+  //mat2=cv::Mat(&mat);
   //show it
- char fileName[100];
- sprintf(fileName,"../clips/output_ipm/test%d.ppm",count);
- cout << fileName << endl;
+ // char fileName[100];
+ // sprintf(fileName,"../clips/output_ipm/test%d.ppm",count);
+ // cout << fileName << endl;
+ //CvMat *out;
+ //CvMat *in[] = {mat, mat, mat};
+ //cvMerge(mat,mat,mat,mat,out);
+ //cvCvtColor(mat, print, 30);
+ char filename[200];
+ int counter=1;
+ stringstream sis;
+ sis << "../clips/output_ipm/" << "ipm_image" << "_" << setw(6) <<
+   setfill('0') << counter << ".bmp";
+ string outFilename_ipm = sis.str();
+ // save the image file
+ //MSG("Writing output image: %s", outFilename.c_str());
+ //cv::namedWindow("TEST", 'WINDOW_AUTOSIZE');
 
+ //cvThreshold(pmat, mat,0,0,'THRESH_TOZERO');
+ //TEST.convertTo(TEST, CV_8U);
+
+  cvSaveImage("lalala.bmp", mat);
   //cout << "in\n";
   cvNamedWindow(str, CV_WINDOW_AUTOSIZE); //0 1
   cvShowImage(str, mat);
-  cvSaveImage( fileName, mat );
+  //cv::imwrite("lalala12.bmp", mat2);
+  //cvSaveImage( fileName, mat );
+
   cvWaitKey(wait);
   //cvDestroyWindow(str);
   //clear

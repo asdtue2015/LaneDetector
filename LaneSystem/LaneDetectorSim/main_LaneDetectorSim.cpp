@@ -99,7 +99,31 @@ namespace LaneDetectorSim {
             		laneMat = cv::imread(laneImg);
             		LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2); // KIT 1, ESIEE 2
             		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
+
+
+/*************JOOST*****************/
+
+CameraInfo cameraInfo;
+char fileName_test2[200];
+strcpy(fileName_test2, "CameraInfo3.conf");
+mcvInitCameraInfo(fileName_test2, &cameraInfo);
+MSG("Loaded camera file");
+
+// read the configurations
+  LaneDetectorConfJ lanesConf;
+	char fileName_test[200];
+	strcpy(fileName_test, "Lanes3.conf");
+	mcvInitLaneDetectorConf(fileName_test, &lanesConf);
+	MSG("Loaded lanes config file");
+
+	ProcessImage(options.image_file_arg, cameraInfo, lanesConf, stoplinesConf,
+								options, NULL, elapsed, 0);
+
+
+
+
         	}
+
 
         	/* Inter-process communication */
         	key_t ipckey;

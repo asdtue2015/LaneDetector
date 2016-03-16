@@ -1,27 +1,4 @@
-/***
- * \file InversePerspectiveMapping.cc
- * \author Mohamed Aly <malaa@caltech.edu>
- * \date 11/29/2006
- */
-
-#include "InversePerspectiveMapping.hh"
-
-#include "CameraInfoOpt.h"
-#include <opencv2/opencv.hpp>
-
-#include <iostream>
-#include <math.h>
-#include <assert.h>
-#include <list>
-using namespace cv;
-using namespace std;
-#include <cv.h>
-#include <highgui.h>
-
-namespace LaneDetector
-{
-
-#define VP_PORTION 0.05
+ #define VP_PORTION 0.05
 
 /*
  We are assuming the world coordinate frame center is at the camera,
@@ -405,167 +382,56 @@ FLOAT_POINT2D mcvGetVanishingPoint(const CameraInfo *cameraInfo)
   return ret;
 }
 
+/******this might be shifted to somewhere else, take a look later */
 
-/**
- * Converts a point from IPM pixel coordinates into world coordinates
- *
- * \param point in/out point
- * \param ipmInfo the ipm info from mcvGetIPM
- *
- */
-void mcvPointImIPM2World(FLOAT_POINT2D *point, const IPMInfo *ipmInfo)
+void mcvGetLanes(const CvMat *inImage, CameraInfo *cameraInfo, LaneDetectorConf *stopLineConf)
 {
-  //x-direction
-  point->x /= ipmInfo->xScale;
-  point->x += ipmInfo->xLimits[0];
-  //y-direction
-  point->y /= ipmInfo->yScale;
-  point->y = ipmInfo->yLimits[1] - point->y;
-}
+  //input size
+  CvSize inSize = cvSize(inImage->width, inImage->height);
+
+  //TODO: smooth image
+  CvMat *image = cvCloneMat(inImage);
+  //cvSmooth(image, image, CV_GAUSSIAN, 5, 5, 1, 1);
+
+  //SHOW_IMAGE(image, "Input image", 10);
+
+  IPMInfo ipmInfo;
+
+  //state: create a new structure, and put pointer to it if it's null
+  // LineState newState;
+  // if(!state) state = &newState;
+
+//     //get the IPM size such that we have height of the stop line
+//     //is 3 pixels
+//     double ipmWidth, ipmHeight;
+//     mcvGetIPMExtent(cameraInfo, &ipmInfo);
+//     ipmHeight = 3*(ipmInfo.yLimits[1]-ipmInfo.yLimits[0]) / (stopLineConf->lineHeight/3.);
+//     ipmWidth = ipmHeight * 4/3;
+//     //put into the conf
+//     stopLineConf->ipmWidth = int(ipmWidth);
+//     stopLineConf->ipmHeight = int(ipmHeight);
+
+//     #ifdef DEBUG_GET_STOP_LINES
+//     cout << "IPM width:" << stopLineConf->ipmWidth << " IPM height:"
+// 	 << stopLineConf->ipmHeight << "\n";
+//     #endif
 
 
-/**
- * Converts from IPM pixel coordinates into world coordinates
- *
- * \param inMat input matrix 2xN
- * \param outMat output matrix 2xN
- * \param ipmInfo the ipm info from mcvGetIPM
- *
- */
-void mcvTransformImIPM2Ground(const CvMat *inMat, CvMat* outMat, const IPMInfo *ipmInfo)
-{
-  CvMat *mat;
-  mat = outMat;
-  if(inMat != mat)
-  {
-    cvCopy(inMat, mat);
-  }
+  //Get IPM
+  CvSize ipmSize = cvSize((int)stopLineConf->ipmWidth,
+      (int)stopLineConf->ipmHeight);
+  CvMat * ipm;
+  ipm = cvCreateMat(ipmSize.height, ipmSize.width, inImage->type);
+  //mcvGetIPM(inImage, ipm, &ipmInfo, cameraInfo);
+  ipmInfo.vpPortion = stopLineConf->ipmVpPortion;
+  ipmInfo.ipmLeft = stopLineConf->ipmLeft;
+  ipmInfo.ipmRight = stopLineConf->ipmRight;
+  ipmInfo.ipmTop = stopLineConf->ipmTop;
+  ipmInfo.ipmBottom = stopLineConf->ipmBottom;
+  ipmInfo.ipmInterpolation = stopLineConf->ipmInterpolation;
+  list<CvPoint> outPixels;
+  list<CvPoint>::iterator outPixelsi;
+  mcvGetIPM(image, ipm, &ipmInfo, cameraInfo, &outPixels);
 
-  //work on the x-direction i.e. first row
-  CvMat row;
-  cvGetRow(mat, &row, 0);
-  cvConvertScale(&row, &row, 1./ipmInfo->xScale, ipmInfo->xLimits[0]);
-
-  //work on y-direction
-  cvGetRow(mat, &row, 1);
-  cvConvertScale(&row, &row, -1./ipmInfo->yScale, ipmInfo->yLimits[1]);
-}
-
-/**
- * Converts from IPM pixel coordinates into Image coordinates
- *
- * \param inMat input matrix 2xN
- * \param outMat output matrix 2xN
- * \param ipmInfo the ipm info from mcvGetIPM
- * \param cameraInfo the camera info
- *
- */
-void mcvTransformImIPM2Im(const CvMat *inMat, CvMat* outMat, const IPMInfo *ipmInfo,
-			  const CameraInfo *cameraInfo)
-{
-  //convert to world coordinates
-  mcvTransformImIPM2Ground(inMat, outMat, ipmInfo);
-
-  //convert to image coordinates
-  mcvTransformGround2Image(outMat, outMat, cameraInfo);
 
 }
-
-
-/**
- * Initializes the cameraInfo structure with data read from the conf file
- *
- * \param fileName the input camera conf file name
- * \param cameraInfo the returned camera parametrs struct
- *
- */
-void mcvInitCameraInfo (char * const fileName, CameraInfo *cameraInfo)
-{
-  //parsed camera data
-  CameraInfoParserInfo camInfo;
-  //read the data
-  assert(cameraInfoParser_configfile(fileName, &camInfo, 0, 1, 1)==0);
-  //init the strucure
-  cameraInfo->focalLength.x = camInfo.focalLengthX_arg;
-  cameraInfo->focalLength.y = camInfo.focalLengthY_arg;
-  cameraInfo->opticalCenter.x = camInfo.opticalCenterX_arg;
-  cameraInfo->opticalCenter.y = camInfo.opticalCenterY_arg;
-  cameraInfo->cameraHeight = camInfo.cameraHeight_arg;
-  cameraInfo->pitch = camInfo.pitch_arg * CV_PI/180;
-  cameraInfo->yaw = camInfo.yaw_arg * CV_PI/180;
-  cameraInfo->imageWidth = camInfo.imageWidth_arg;
-  cameraInfo->imageHeight = camInfo.imageHeight_arg;
-}
-
-
-/**
- * Scales the cameraInfo according to the input image size
- *
- * \param cameraInfo the input/return structure
- * \param size the input image size
- *
- */
- void mcvScaleCameraInfo (CameraInfo *cameraInfo, CvSize size)
- {
-  //compute the scale factor
-  double scaleX = size.width/cameraInfo->imageWidth;
-  double scaleY = size.height/cameraInfo->imageHeight;
-  //scale
-  cameraInfo->imageWidth = size.width;
-  cameraInfo->imageHeight = size.height;
-  cameraInfo->focalLength.x *= scaleX;
-  cameraInfo->focalLength.y *= scaleY;
-  cameraInfo->opticalCenter.x *= scaleX;
-  cameraInfo->opticalCenter.y *= scaleY;
- }
-
-
-/**
- * Gets the extent of the image on the ground plane given the camera parameters
- *
- * \param cameraInfo the input camera info
- * \param ipmInfo the IPM info containing the extent on ground plane:
- *  xLimits & yLimits only are changed
- *
- */
-void mcvGetIPMExtent(const CameraInfo *cameraInfo, IPMInfo *ipmInfo )
-{
-  //get size of input image
-  FLOAT u, v;
-  v = cameraInfo->imageHeight;
-  u = cameraInfo->imageWidth;
-
-  //get the vanishing point
-  FLOAT_POINT2D vp;
-  vp = mcvGetVanishingPoint(cameraInfo);
-  vp.y = MAX(0, vp.y);
-
-  //get extent of the image in the xfyf plane
-  FLOAT_MAT_ELEM_TYPE eps = VP_PORTION*v;
-  FLOAT_MAT_ELEM_TYPE uvLimitsp[] = {vp.x, u, 0, vp.x,
-                      vp.y+eps, vp.y+eps, vp.y+eps, v};
-  CvMat uvLimits = cvMat(2, 4, FLOAT_MAT_TYPE, uvLimitsp);
-
-  //get these points on the ground plane
-  CvMat * xyLimitsp = cvCreateMat(2, 4, FLOAT_MAT_TYPE);
-  CvMat xyLimits = *xyLimitsp;
-  mcvTransformImage2Ground(&uvLimits, &xyLimits,cameraInfo);
-  //SHOW_MAT(xyLimitsp, "xyLImits");
-
-  //get extent on the ground plane
-  CvMat row1, row2;
-  cvGetRow(&xyLimits, &row1, 0);
-  cvGetRow(&xyLimits, &row2, 1);
-  double xfMax, xfMin, yfMax, yfMin;
-  cvMinMaxLoc(&row1, (double*)&xfMin, (double*)&xfMax, 0, 0, 0);
-  cvMinMaxLoc(&row2, (double*)&yfMin, (double*)&yfMax, 0, 0, 0);
-
-  //return
-  ipmInfo->xLimits[0] = xfMin;
-  ipmInfo->xLimits[1] = xfMax;
-  ipmInfo->yLimits[1] = yfMax;
-  ipmInfo->yLimits[0] = yfMin;
-
-}
-
-} // namespace LaneDetector
