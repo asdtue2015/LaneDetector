@@ -190,9 +190,15 @@ void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
   SHOW_IMAGEtest(outImage, "IPM image", 10, 0);
 
 
+
 //  cvSaveImage( "../clips/output_ipm/ipmimage.png", outImage);
    //counter++;
   //cvSaveImage( "../clips/output_ipm/ipmimage_%d.png", our_ipm);
+
+   SHOW_IMAGE(outImage, "IPM image", 10);
+
+  //cvSaveImage( "../clips/output_ipm/ipmimage_%d.png", outImage );
+
 
   //return the ipm info
   ipmInfo->xLimits[0] = CV_MAT_ELEM(*xyGrid, FLOAT_MAT_ELEM_TYPE, 0, 0);

@@ -63,6 +63,7 @@ void SHOW_IMAGE(const CvMat *pmat, const char str[], int wait)
   cvReleaseMat(&mat);
   //cout << "out\n";
 }
+
 void SHOW_IMAGEtest(const CvMat *pmat, const char str[], int wait, int count)
 {
   cout << "channels:" << CV_MAT_CN(pmat->type) << "\n";
@@ -113,6 +114,7 @@ void SHOW_IMAGEtest(const CvMat *pmat, const char str[], int wait, int count)
   cvReleaseMat(&mat);
   //cout << "out\n";
 }
+
 
 void SHOW_IMAGE(const IplImage *pmat, char str[])
 {
