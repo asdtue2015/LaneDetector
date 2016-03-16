@@ -59,33 +59,6 @@ void SHOW_IMAGE(const CvMat *pmat, const char str[], int wait)
   cvReleaseMat(&mat);
   //cout << "out\n";
 }
-void SHOW_IMAGEtest(const CvMat *pmat, const char str[], int wait, int count)
-{
-  //cout << "channels:" << CV_MAT_CN(pmat->type) << "\n";
-  //scale it
-  //CvMat *mat = cvCreateMat(pmat->height, pmat->width, pmat->type);
-  //cvCopy(pmat, mat);
-  CvMat *mat = cvCloneMat(pmat);//->rows, pmat->cols, INT_MAT_TYPE);//cvCloneMat(pmat);
-  assert(mat);
-  //convert to int type
-  //cvConvert(pmat, mat);
-  if(CV_MAT_CN(mat->type) == 1)//FLOAT_MAT_TYPE)
-    mcvScaleMat(mat, mat);
-  //show it
- char fileName[100];
- sprintf(fileName,"../clips/output_ipm/test%d.ppm",count);
- cout << fileName << endl;
-
-  //cout << "in\n";
-  cvNamedWindow(str, CV_WINDOW_AUTOSIZE); //0 1
-  cvShowImage(str, mat);
-  cvSaveImage( fileName, mat );
-  cvWaitKey(wait);
-  //cvDestroyWindow(str);
-  //clear
-  cvReleaseMat(&mat);
-  //cout << "out\n";
-}
 
 void SHOW_IMAGE(const IplImage *pmat, char str[])
 {

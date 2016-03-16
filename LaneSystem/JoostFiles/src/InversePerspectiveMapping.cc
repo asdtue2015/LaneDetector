@@ -187,8 +187,8 @@ void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
  //our_ipm = outImage;
  //Mat our_ipm=cvarrToMat(outImage);
 
-   SHOW_IMAGEtest(outImage, "IPM image", 10, counter);
-   counter++;
+   SHOW_IMAGE(outImage, "IPM image", 10);
+  
   //cvSaveImage( "../clips/output_ipm/ipmimage_%d.png", outImage );
 
   //return the ipm info

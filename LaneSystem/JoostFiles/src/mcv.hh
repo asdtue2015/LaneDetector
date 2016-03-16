@@ -44,7 +44,6 @@ void SHOT_MAT_TYPE(const CvMat *pmat);
 
 void SHOW_IMAGE(const CvMat *pmat, const char str[]="Window", int wait=0);
 void SHOW_IMAGE(const IplImage *pmat, char str[]="Window");
-void SHOW_IMAGEtest(const CvMat *pmat, const char str[], int wait, int count);
 
 void SHOW_POINT(const FLOAT_POINT2D pt, char str[]="Point:");
 
