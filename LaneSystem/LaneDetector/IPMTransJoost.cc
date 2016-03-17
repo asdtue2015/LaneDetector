@@ -164,7 +164,7 @@ void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
  //our_ipm = outImage;
  //Mat our_ipm=cvarrToMat(outImage);
   //cvSaveImage( "../clips/output_ipm/ipmimage.png", outImage);
-  SHOW_IMAGEtest(outImage, "IPM image", 10, 0);
+  SHOW_IMAGE(outImage, "IPM image", 10);
 
 
 //  cvSaveImage( "../clips/output_ipm/ipmimage.png", outImage);
@@ -434,4 +434,66 @@ void mcvGetLanes(const CvMat *inImage, CameraInfo *cameraInfo, LaneDetectorConf 
   mcvGetIPM(image, ipm, &ipmInfo, cameraInfo, &outPixels);
 
 
+}
+void processJ(CvMat *laneMat, CameraInfo& cameraInfo, LaneDetectorConf& lanesConf)
+{
+
+CvMat *raw_mat, *mat;
+mcvLoadImage(&laneMat, &raw_mat, &mat);
+
+// detect lanes
+vector<FLOAT> lineScores, splineScores;
+vector<Line> lanes;
+mcvGetLanes(mat, raw_mat, &lanes, &cameraInfo, &lanesConf, NULL);
+
+}
+
+
+
+
+void mcvLoadImage(const cvMat* ipminputimage , CvMat **clrImage, CvMat** channelImage)
+{
+  // load the image
+  cvMat im;
+  im = ipminputimage;
+  // convert to mat and get first channel
+  CvMat temp;
+  cvGetMat(im, &temp);
+  *clrImage = cvCloneMat(&temp);
+  // convert to single channel
+  CvMat *schannel_mat;
+  CvMat* tchannelImage = cvCreateMat(im->height, im->width, INT_MAT_TYPE);
+  cvSplit(*clrImage, tchannelImage, NULL, NULL, NULL);
+  // convert to float
+  *channelImage = cvCreateMat(im->height, im->width, FLOAT_MAT_TYPE);
+  cvConvertScale(tchannelImage, *channelImage, 1./255);
+  // destroy
+  cvReleaseMat(&tchannelImage);
+  cvReleaseImage(&im);
+}
+
+
+void SHOW_IMAGE(const CvMat *pmat, const char str[], int wait)
+{
+  //cout << "channels:" << CV_MAT_CN(pmat->type) << "\n";
+  //scale it
+  //CvMat *mat = cvCreateMat(pmat->height, pmat->width, pmat->type);
+  //cvCopy(pmat, mat);
+  CvMat *mat = cvCloneMat(pmat);//->rows, pmat->cols, INT_MAT_TYPE);//cvCloneMat(pmat);
+  assert(mat);
+  //convert to int type
+  //cvConvert(pmat, mat);
+  if(CV_MAT_CN(mat->type) == 1)//FLOAT_MAT_TYPE)
+    mcvScaleMat(mat, mat);
+  //show it
+  //cout << "in\n";
+  cvNamedWindow(str, CV_WINDOW_AUTOSIZE); //0 1
+  cvShowImage(str, mat);
+
+  //cvSaveImage( "../clips/output_ipm/ipmimage_.png", pmat);
+  cvWaitKey(wait);
+  //cvDestroyWindow(str);
+  //clear
+  cvReleaseMat(&mat);
+  //cout << "out\n";
 }

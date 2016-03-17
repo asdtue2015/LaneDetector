@@ -56,7 +56,8 @@ namespace LaneDetectorSim{
                           double &lateralOffset, int &isChangeLane,
                           int &detectLaneFlag,  const int &idx, double &execTime,
                           std::vector<cv::Vec2f> &preHfLanes, int &changeDone,
-                          const double &YAW_ANGLE, const double &PITCH_ANGLE);
+                          const double &YAW_ANGLE, const double &PITCH_ANGLE
+                         CameraInfo& cameraInfo, LaneDetectorConf& lanesConf);
 
     void GetSamplingTime(const char *fileName, std::vector<float> &samplingTime);
 
