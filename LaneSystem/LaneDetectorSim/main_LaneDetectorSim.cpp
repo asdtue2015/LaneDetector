@@ -110,7 +110,7 @@ mcvInitCameraInfo(fileName_test2, &cameraInfo);
 MSG("Loaded camera file");
 
 // read the configurations
-  LaneDetectorConfJ lanesConf;
+  LaneDetectorConf_J lanesConf;
 	char fileName_test[200];
 	strcpy(fileName_test, "Lanes3.conf");
 	mcvInitLaneDetectorConf(fileName_test, &lanesConf);
