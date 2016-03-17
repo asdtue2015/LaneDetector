@@ -435,3 +435,39 @@ void mcvGetLanes(const CvMat *inImage, CameraInfo *cameraInfo, LaneDetectorConf 
 
 
 }
+void processJ(CvMat *laneMat, CameraInfo& cameraInfo, LaneDetectorConf& lanesConf)
+{
+
+CvMat *raw_mat, *mat;
+mcvLoadImage(&laneMat, &raw_mat, &mat);
+
+// detect lanes
+vector<FLOAT> lineScores, splineScores;
+vector<Line> lanes;
+mcvGetLanes(mat, raw_mat, &lanes, &cameraInfo, &lanesConf, NULL);
+
+}
+
+
+
+
+void mcvLoadImage(const cvMat* ipminputimage , CvMat **clrImage, CvMat** channelImage)
+{
+  // load the image
+  cvMat im;
+  im = ipminputimage;
+  // convert to mat and get first channel
+  CvMat temp;
+  cvGetMat(im, &temp);
+  *clrImage = cvCloneMat(&temp);
+  // convert to single channel
+  CvMat *schannel_mat;
+  CvMat* tchannelImage = cvCreateMat(im->height, im->width, INT_MAT_TYPE);
+  cvSplit(*clrImage, tchannelImage, NULL, NULL, NULL);
+  // convert to float
+  *channelImage = cvCreateMat(im->height, im->width, FLOAT_MAT_TYPE);
+  cvConvertScale(tchannelImage, *channelImage, 1./255);
+  // destroy
+  cvReleaseMat(&tchannelImage);
+  cvReleaseImage(&im);
+}

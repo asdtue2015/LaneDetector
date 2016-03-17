@@ -30,7 +30,8 @@ namespace LaneDetectorSim{
                           double &lateralOffset, int &isChangeLane,
                           int &detectLaneFlag,  const int &idx, double &execTime,
                           std::vector<cv::Vec2f> &postHfLanes, int &changeDone,
-                          const double &YAW_ANGLE, const double &PITCH_ANGLE)
+                          const double &YAW_ANGLE, const double &PITCH_ANGLE
+											  	CameraInfo& cameraInfo, LaneDetectorConf& lanesConf)
     	{
 				cv::Mat xMap;
 				cv::Mat yMap;
@@ -79,6 +80,17 @@ namespace LaneDetectorSim{
         	LaneDetector::DrawPreROI(laneMat, offsetX, offsetY, postHfLanes, laneKalmanIdx, isChangeLane, laneDetectorConf);
 
 					/********/
+
+/**********Joost IPM*********/
+
+// load the image
+processJ(laneMat, cameraInfo, lanesConf);
+
+
+
+
+
+
 
 IPMpixelsToWorld(laneDetectorConf, xMap, yMap);
 IPMgetInterpMap(xMap, yMap, laneDetectorConf, interpMap, ipmMask);

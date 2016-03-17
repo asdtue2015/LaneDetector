@@ -116,11 +116,6 @@ MSG("Loaded camera file");
 	mcvInitLaneDetectorConf(fileName_test, &lanesConf);
 	MSG("Loaded lanes config file");
 
-	ProcessImage(options.image_file_arg, cameraInfo, lanesConf, stoplinesConf,
-								options, NULL, elapsed, 0);
-
-
-
 
         	}
 
@@ -152,7 +147,8 @@ MSG("Loaded camera file");
             		if (LANE_DETECTOR)
             		{
                 		ProcessLaneImage(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
-			            	lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE);
+			            	lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE
+								     cameraInfo,  lanesConf);
             		}
 
 

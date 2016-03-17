@@ -90,6 +90,8 @@ void ProcessImage(const char* filename, CameraInfo& cameraInfo,
   // load the image
   CvMat *raw_mat, *mat;
   mcvLoadImage(filename, &raw_mat, &mat);
+  SHOW_IMAGE(raw_mat, "raw_mat", 10);
+  SHOW_IMAGE(mat, "mat", 10);
 
   // detect lanes
   vector<FLOAT> lineScores, splineScores;
