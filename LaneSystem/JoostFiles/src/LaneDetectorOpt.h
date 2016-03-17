@@ -15,7 +15,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 #ifndef LANEDETECTORPARSER_PACKAGE
-#define LANEDETECTORPARSER_PACKAGE "LaneDetector"
+#define LANEDETECTORPARSER_PACKAGE "LaneDetector_J"
 #endif
 
 #ifndef LANEDETECTORPARSER_VERSION

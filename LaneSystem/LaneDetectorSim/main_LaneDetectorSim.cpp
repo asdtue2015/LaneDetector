@@ -1,6 +1,10 @@
-
 #include "main_LaneDetectorSim.h"
 #include "Process_LaneDetectorSim.h"
+
+#include "../LaneDetector/init.hh"
+#include "../LaneDetector/CameraInfoOpt.h"
+#include "../LaneDetector/LaneDetectorOpt.h"
+
 #include <stdexcept>
 
 #ifdef __cplusplus

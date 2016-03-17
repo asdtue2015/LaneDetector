@@ -8,10 +8,13 @@
 #ifndef INIT_HH_
 #define INIT_HH_
 
-#include "mcv.hh"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "IPMTransJoost.hh"
 
-namespace LaneDetector
+namespace LaneDetector_J
 {
 
 #define GROUPING_TYPE_HV_LINES 0
@@ -316,4 +319,7 @@ void mcvInitCameraInfo (char * const fileName, CameraInfo *cameraInfo);
 
 } // namespace LaneDetector
 
+#ifdef __cplusplus
+}
+#endif
 #endif /*INIT_HH_HH_*/

@@ -1,5 +1,7 @@
- #define VP_PORTION 0.05
+#define VP_PORTION 0.05
 
+
+#include "IPMTransJoost.hh"
 /*
  We are assuming the world coordinate frame center is at the camera,
  the ground plane is at height -h, the X-axis is going right,
@@ -384,7 +386,7 @@ FLOAT_POINT2D mcvGetVanishingPoint(const CameraInfo *cameraInfo)
 
 /******this might be shifted to somewhere else, take a look later */
 
-void mcvGetLanes(const CvMat *inImage, CameraInfo *cameraInfo, LaneDetectorConf *stopLineConf)
+void mcvGetLanes(const CvMat *inImage, CameraInfo *cameraInfo, LaneDetectorConf_J *stopLineConf)
 {
   //input size
   CvSize inSize = cvSize(inImage->width, inImage->height);
@@ -435,7 +437,7 @@ void mcvGetLanes(const CvMat *inImage, CameraInfo *cameraInfo, LaneDetectorConf 
 
 
 }
-void processJ(CvMat *laneMat, CameraInfo& cameraInfo, LaneDetectorConf& lanesConf)
+void processJ(CvMat *laneMat, CameraInfo& cameraInfo, LaneDetectorConf_J &lanesConf)
 {
 
 CvMat *raw_mat, *mat;

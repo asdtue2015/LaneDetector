@@ -3,6 +3,7 @@
 //                  (changing) 2  --  1 (possible)
 
 #include "Process_LaneDetectorSim.h"
+#include "../LaneDetector/IPMTransJoost.hh"
 
 extern const double COEF;
 
@@ -84,20 +85,18 @@ namespace LaneDetectorSim{
 /**********Joost IPM*********/
 
 // load the image
-processJ(laneMat, cameraInfo, lanesConf);
+LaneDetector_J::processJ(laneMat, cameraInfo, lanesConf);
 
 
 
 
 
-
-
-IPMpixelsToWorld(laneDetectorConf, xMap, yMap);
-IPMgetInterpMap(xMap, yMap, laneDetectorConf, interpMap, ipmMask);
-IPMgetWorldImage(laneMat, laneDetectorConf, interpMap, ipmMat);
-LaneDetector::IPMDetectLanes(ipmMat, laneDetectorConf, leftIPMLanes, rightIPMLanes, leftCoefs, rightCoefs,leftSampledPoints, rightSampledPoints, laneWidth);
+//IPMpixelsToWorld(laneDetectorConf, xMap, yMap);
+//IPMgetInterpMap(xMap, yMap, laneDetectorConf, interpMap, ipmMask);
+//IPMgetWorldImage(laneMat, laneDetectorConf, interpMap, ipmMat);
+//LaneDetector::IPMDetectLanes(ipmMat, laneDetectorConf, leftIPMLanes, rightIPMLanes, leftCoefs, rightCoefs,leftSampledPoints, rightSampledPoints, laneWidth);
         	//LaneDetector::DetectLanes(grayMat, laneDetectorConf, offsetX, offsetY, hfLanes, postHfLanes, laneKalmanIdx, isChangeLane);
-DrawMarkingFromIPM(ipmMat, leftSampledPoints, rightSampledPoints, laneDetectorConf);
+//DrawMarkingFromIPM(ipmMat, leftSampledPoints, rightSampledPoints, laneDetectorConf);
 
 			/********/
 

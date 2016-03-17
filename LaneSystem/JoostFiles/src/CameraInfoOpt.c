@@ -9,6 +9,10 @@
 */
 
 /* If we use autoconf.  */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -875,3 +879,7 @@ conf_failure:
 
   return result;
 }
+
+#ifdef __cplusplus
+}
+#endif

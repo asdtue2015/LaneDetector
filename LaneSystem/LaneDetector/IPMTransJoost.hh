@@ -4,18 +4,21 @@
  * \date 11/29/2006
  */
 
+
 #ifndef IPMTransJoost_HH_
 #define IPMTransJoost_HH_
 
 
 #include "cv.h"
-#include "mcv.hh"
 #include <list>
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 using namespace std;
 
-namespace LaneDetector
+namespace LaneDetector_J
 {
 //functions definitions
 /**
@@ -86,5 +89,8 @@ void SHOW_IMAGE(const CvMat *pmat, const char str[]="Window", int wait=0);
 // void mcvGetIPMExtent(const CameraInfo *cameraInfo, IPMInfo *ipmInfo);
 
 } // namespace LaneDetector
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*IPMTransJoost_HH_*/
