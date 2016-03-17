@@ -60,7 +60,7 @@ namespace LaneDetectorSim{
         	/* Reduce the size of raw image */
         	cv::resize(laneMat, laneMat, cv::Size(cvRound(WIDTH * COEF), cvRound(HEIGHT * COEF)), cv::INTER_AREA);
 
-        	/* Change color to grayscale */
+
         	cv::Mat grayMat = cv::Mat(cvRound(HEIGHT * COEF), cvRound(WIDTH * COEF), CV_8UC1);
         	cv::cvtColor(laneMat, grayMat, cv::COLOR_BGR2GRAY);
 
@@ -255,6 +255,11 @@ DrawMarkingFromIPM(ipmMat, leftSampledPoints, rightSampledPoints, laneDetectorCo
 
             		printf("\n Height VP: %f < %f < %f\n", top, heightVP, bottom);
             		printf("Distance Corner : %f < %f < %f\n", minDIST, distCornerPt,  maxDIST);
+
+
+            		//printf("\n Height VP: %f < %f < %f\n", top, heightVP, bottom);
+            		//printf("Distance Corner : %f < %f < %f\n", minDIST, distCornerPt,  maxDIST);
+
 
             		if( heightVP > bottom ||
                 	distCornerPt < minDIST || distCornerPt > maxDIST)

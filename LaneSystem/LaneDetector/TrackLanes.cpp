@@ -216,6 +216,7 @@ namespace LaneDetector {
 
     	//! For every tracking, the particles don't record for the next frame,
     	//! but they are constructed by the parameters \leftCoefs and \rightCoefs.
+
     	void TrackLanes_Particle(const cv::Mat &ipmMat,
                              const LaneDetectorConf &laneDetectorConf,
                              const int &samplingNum,
