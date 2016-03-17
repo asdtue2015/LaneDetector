@@ -164,7 +164,7 @@ void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
  //our_ipm = outImage;
  //Mat our_ipm=cvarrToMat(outImage);
   //cvSaveImage( "../clips/output_ipm/ipmimage.png", outImage);
-  SHOW_IMAGEtest(outImage, "IPM image", 10, 0);
+  SHOW_IMAGE(outImage, "IPM image", 10);
 
 
 //  cvSaveImage( "../clips/output_ipm/ipmimage.png", outImage);
@@ -470,4 +470,30 @@ void mcvLoadImage(const cvMat* ipminputimage , CvMat **clrImage, CvMat** channel
   // destroy
   cvReleaseMat(&tchannelImage);
   cvReleaseImage(&im);
+}
+
+
+void SHOW_IMAGE(const CvMat *pmat, const char str[], int wait)
+{
+  //cout << "channels:" << CV_MAT_CN(pmat->type) << "\n";
+  //scale it
+  //CvMat *mat = cvCreateMat(pmat->height, pmat->width, pmat->type);
+  //cvCopy(pmat, mat);
+  CvMat *mat = cvCloneMat(pmat);//->rows, pmat->cols, INT_MAT_TYPE);//cvCloneMat(pmat);
+  assert(mat);
+  //convert to int type
+  //cvConvert(pmat, mat);
+  if(CV_MAT_CN(mat->type) == 1)//FLOAT_MAT_TYPE)
+    mcvScaleMat(mat, mat);
+  //show it
+  //cout << "in\n";
+  cvNamedWindow(str, CV_WINDOW_AUTOSIZE); //0 1
+  cvShowImage(str, mat);
+
+  //cvSaveImage( "../clips/output_ipm/ipmimage_.png", pmat);
+  cvWaitKey(wait);
+  //cvDestroyWindow(str);
+  //clear
+  cvReleaseMat(&mat);
+  //cout << "out\n";
 }
