@@ -446,6 +446,7 @@ void processJ(IplImage* im, LaneDetector_J:: CameraInfo &cameraInfo, LaneDetecto
 {
 
 CvMat *raw_mat, *mat;
+
 LaneDetector_J::mcvLoadImage(im, &raw_mat, &mat);
 
 // detect lanes
@@ -474,9 +475,10 @@ void mcvLoadImage( IplImage* ipminputimage , CvMat **clrImage, CvMat** channelIm
   // convert to float
   *channelImage = cvCreateMat(im->height, im->width, FLOAT_MAT_TYPE);
   cvConvertScale(tchannelImage, *channelImage, 1./255);
-  // destroy
+    // destroy
   cvReleaseMat(&tchannelImage);
-  cvReleaseImage(&im);
+  //cvReleaseImage(&im);
+    //std::cout << "after processJ is called" << std::endl;
 }
 
 

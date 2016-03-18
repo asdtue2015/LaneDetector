@@ -12,6 +12,7 @@
 #include "../LaneDetector/IPMTransJoost.hh"
 //}
 
+#include "cmdline.h"
 //extern "C" {
 //#include "../LaneDetector/init.hh"
 //}
