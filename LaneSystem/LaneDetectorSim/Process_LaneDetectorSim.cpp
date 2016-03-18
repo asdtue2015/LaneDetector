@@ -93,10 +93,14 @@ namespace LaneDetectorSim{
 // CvMat* pimg = &img;
 
 
-CvMat img = laneMat;
-laneMat = cv::Mat(&img);
+IplImage* img = new IplImage(laneMat);
 
-LaneDetector_J::processJ(&img, cameraInfo, lanesConf);
+
+// CvMat  n = laneMat;
+// laneMat = cv::Mat(&n);
+
+
+LaneDetector_J::processJ(img, cameraInfo, lanesConf);
 
 
 

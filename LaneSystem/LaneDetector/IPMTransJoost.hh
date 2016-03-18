@@ -8,28 +8,28 @@
 #ifndef IPMTransJoost_HH_
 #define IPMTransJoost_HH_
 
-//*****Joost Definitions*****//
-  #define MSG(fmt, ...) \
-  (fprintf(stdout, "%s:%d msg   " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__) ? 0 : 0)
-  #define FLOAT_MAT_TYPE CV_32FC1
-  #define FLOAT_MAT_ELEM_TYPE float
-
-  #define INT_MAT_TYPE CV_8UC1
-  #define INT_MAT_ELEM_TYPE unsigned char
-
-  #define FLOAT_IMAGE_TYPE IPL_DEPTH_32F
-  #define FLOAT_IMAGE_ELEM_TYPE float
-
-  #define INT_IMAGE_TYPE IPL_DEPTH_8U
-  #define INT_IMAGE_ELEM_TYPE unsigned char
-
-  #define FLOAT_POINT2D CvPoint2D32f
-  #define FLOAT_POINT2D_F cvPoint2D632f
-
-  #define FLOAT float
-  #define INT int
-  #define SHORT_INT unsigned char
-//*****//
+// //*****Joost Definitions*****//
+//   #define MSG(fmt, ...) \
+//   (fprintf(stdout, "%s:%d msg   " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__) ? 0 : 0)
+//   #define FLOAT_MAT_TYPE CV_32FC1
+//   #define FLOAT_MAT_ELEM_TYPE float
+//
+//   #define INT_MAT_TYPE CV_8UC1
+//   #define INT_MAT_ELEM_TYPE unsigned char
+//
+//   #define FLOAT_IMAGE_TYPE IPL_DEPTH_32F
+//   #define FLOAT_IMAGE_ELEM_TYPE float
+//
+//   #define INT_IMAGE_TYPE IPL_DEPTH_8U
+//   #define INT_IMAGE_ELEM_TYPE unsigned char
+//
+//   #define FLOAT_POINT2D CvPoint2D32f
+//   #define FLOAT_POINT2D_F cvPoint2D632f
+//
+//   #define FLOAT float
+//   #define INT int
+//   #define SHORT_INT unsigned char
+// //*****//
 
 #include "cv.h"
 #include <list>
@@ -59,7 +59,7 @@ namespace LaneDetector_J
  * \param focalLength focal length (in x and y direction)
  * \param cameraInfo the camera parameters
  */
-void mcvGetIPM(const CvMat* inImage, CvMat* outImage, IPMInfo *ipmInfo, const CameraInfo *cameraInfo, list<CvPoint> *outPoints);
+void mcvGetIPM(const CvMat* inImage, CvMat* outImage, LaneDetector_J::IPMInfo *ipmInfo, const LaneDetector_J::CameraInfo *cameraInfo, list<CvPoint> *outPoints);
 
 /**
  * Transforms points from the image frame (uv-coordinates)
@@ -71,7 +71,7 @@ void mcvGetIPM(const CvMat* inImage, CvMat* outImage, IPMInfo *ipmInfo, const Ca
  * \param cemaraInfo the input camera parameters
  *
  */
-void mcvTransformImage2Ground(const CvMat *inPoints, CvMat *outPoints, const CameraInfo *cameraInfo);
+void mcvTransformImage2Ground(const CvMat *inPoints, CvMat *outPoints, const  LaneDetector_J::CameraInfo *cameraInfo);
 
 /**
  * Transforms points from the ground plane (z=-h) in the world frame
@@ -82,7 +82,7 @@ void mcvTransformImage2Ground(const CvMat *inPoints, CvMat *outPoints, const Cam
  * \param cameraInfo the camera parameters
  *
  */
-void mcvTransformGround2Image(const CvMat *inPoints, CvMat *outPoints, const CameraInfo *cameraInfo);
+void mcvTransformGround2Image(const CvMat *inPoints, CvMat *outPoints, const  LaneDetector_J::CameraInfo *cameraInfo);
 
 /**
  * Computes the vanishing point in the image plane uv. It is
@@ -95,15 +95,17 @@ void mcvTransformGround2Image(const CvMat *inPoints, CvMat *outPoints, const Cam
  * \return the computed vanishing point in image frame
  *
  */
-FLOAT_POINT2D mcvGetVanishingPoint(const CameraInfo *cameraInfo);
+FLOAT_POINT2D mcvGetVanishingPoint(const LaneDetector_J::CameraInfo *cameraInfo);
 
 void mcvGetLanes(const CvMat *inImage, LaneDetector_J::CameraInfo *cameraInfo, LaneDetector_J::LaneDetectorConf_J *stopLineConf);
 
-void processJ(CvMat *laneMat, LaneDetector_J::CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf);
+void processJ(IplImage *laneMat, LaneDetector_J::CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf);
 
-void mcvLoadImage(const CvMat* ipminputimage , CvMat **clrImage, CvMat** channelImage);
+void mcvLoadImage( IplImage* ipminputimage , CvMat **clrImage, CvMat** channelImage);
 
 void SHOW_IMAGE(const CvMat *pmat, const char str[]="Window", int wait=0);
+
+void mcvScaleMat(const CvMat *inMat, CvMat *outMat);
 
 /**
  * Gets the extent of the image on the ground plane given the camera parameters

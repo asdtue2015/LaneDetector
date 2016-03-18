@@ -9,10 +9,11 @@
 */
 
 /* If we use autoconf.  */
-#ifdef HAVE_CONFIG_H
-//extern "C" {
-#include "config.h"
-//#endif
+// #ifdef HAVE_CONFIG_H
+// //extern "C" {
+// #include "config.h"
+// //}
+// #endif
 
 //extern "C" {
 #include <stdio.h>

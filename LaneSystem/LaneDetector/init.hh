@@ -8,9 +8,12 @@
 #ifndef INIT_HH_
 #define INIT_HH_
 
+
+
 //extern "C" {
 
 //#include "IPMTransJoost.hh"
+#include <cv.h>
 #include "CameraInfoOpt.h"
 #include "getopt.h"
 #include "LaneDetectorOpt.h"
@@ -22,9 +25,56 @@ namespace LaneDetector_J
 #define GROUPING_TYPE_HV_LINES 0
 #define GROUPING_TYPE_HOUGH_LINES 1
 
+#define MSG(fmt, ...) \
+(fprintf(stdout, "%s:%d msg   " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__) ? 0 : 0)
+#define FLOAT_MAT_TYPE CV_32FC1
+#define FLOAT_MAT_ELEM_TYPE float
+
+#define INT_MAT_TYPE CV_8UC1
+#define INT_MAT_ELEM_TYPE unsigned char
+
+#define FLOAT_IMAGE_TYPE IPL_DEPTH_32F
+#define FLOAT_IMAGE_ELEM_TYPE float
+
+#define INT_IMAGE_TYPE IPL_DEPTH_8U
+#define INT_IMAGE_ELEM_TYPE unsigned char
+
+#define FLOAT_POINT2D CvPoint2D32f
+#define FLOAT_POINT2D_F CvPoint2D632f
+
+#define FLOAT float
+#define INT int
+#define SHORT_INT unsigned char
+
+///Line type
+typedef enum LineType_ {
+  LINE_HORIZONTAL = 0,
+  LINE_VERTICAL = 1
+} LineType;
+
+/// Line color
+typedef enum LineColor_ {
+  LINE_COLOR_NONE,
+  LINE_COLOR_YELLOW,
+  LINE_COLOR_WHITE
+} LineColor;
+
+typedef struct Line
+{
+  ///start point
+  FLOAT_POINT2D startPoint;
+  ///end point
+  FLOAT_POINT2D endPoint;
+  ///color of line
+  LineColor color;
+  ///score of line
+  float score;
+} Line;
+
 ///Structure to hold lane detector settings
 typedef struct LaneDetectorConf_J
 {
+
   ///width of IPM image to use
   FLOAT ipmWidth;
   ///height of IPM image
@@ -143,7 +193,7 @@ typedef struct LaneDetectorConf_J
   int extendIPMLinePixelsNormal;
   ///Trehsold used for stopping the extending process (higher ->
   /// less extending)
-  float emcvInitCameraInfoxtendIPMContThreshold;
+  float extendIPMContThreshold;
   ///Stop extending when number of deviating points exceeds this threshold
   int extendIPMDeviationThreshold;
   ///Top point for extension bounding box

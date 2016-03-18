@@ -166,6 +166,8 @@ void mcvLoadImage(const char *filename, CvMat **clrImage, CvMat** channelImage)
   // load the image
   IplImage* im;
   im = cvLoadImage(filename, CV_LOAD_IMAGE_COLOR);
+
+
   // convert to mat and get first channel
   CvMat temp;
   cvGetMat(im, &temp);

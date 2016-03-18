@@ -94,13 +94,13 @@ namespace LaneDetectorSim {
 
 		LaneDetector_J::CameraInfo cameraInfo;
 		char  fileName_test2[200];
-		strcpy(fileName_test2, "CameraInfo3.conf");
+		strcpy(fileName_test2, "../LaneDetector/CameraInfo3.conf");
 
 
 		// read the configurations
 		  LaneDetector_J::LaneDetectorConf_J lanesConf;
 			char fileName_test[200];
-			strcpy(fileName_test, "Lanes3.conf");
+			strcpy(fileName_test, "../LaneDetector/Lanes3.conf");
 
 		/**************************************/
 
@@ -136,7 +136,7 @@ namespace LaneDetectorSim {
 								MSG("Loaded camera file");
             		LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2); // KIT 1, ESIEE 2
             		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
-							
+
         	}
 
 

@@ -8,7 +8,7 @@ if(NOT WIN32)
 endif()
 find_package( OpenCV REQUIRED )
 
-FILE(GLOB_RECURSE SRCS ./LaneDetectorSim/*.cpp ./LaneDetector/*.cpp )
+FILE(GLOB_RECURSE SRCS ./LaneDetectorSim/*.cpp ./LaneDetector/*.cpp ./LaneDetector/*.cc ./LaneDetector/*.c )
 
 add_executable( LaneDetector64 ${SRCS} )
 target_link_libraries( LaneDetector64 ${OpenCV_LIBS} )

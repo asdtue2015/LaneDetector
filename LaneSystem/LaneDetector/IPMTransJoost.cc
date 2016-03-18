@@ -2,7 +2,7 @@
 
 
 #include "IPMTransJoost.hh"
-
+#include <highgui.h>
 
 /*
  We are assuming the world coordinate frame center is at the camera,
@@ -32,8 +32,11 @@
  * \param cameraInfo the camera parameters
  * \param outPoints indices of points outside the image
  */
+
+namespace LaneDetector_J{
+
 void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
-               IPMInfo *ipmInfo, const CameraInfo *cameraInfo,
+               LaneDetector_J::IPMInfo *ipmInfo, const LaneDetector_J::CameraInfo *cameraInfo,
                list<CvPoint> *outPoints)
 {
   //check input images types
@@ -56,7 +59,7 @@ void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
 
   //get the vanishing point
   FLOAT_POINT2D vp;
-  vp = mcvGetVanishingPoint(cameraInfo);
+  vp = LaneDetector_J::mcvGetVanishingPoint(cameraInfo);
   vp.y = MAX(0, vp.y);
   //vp.y = 30;
 
@@ -76,7 +79,7 @@ void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
   //get these points on the ground plane
   CvMat * xyLimitsp = cvCreateMat(2, 4, FLOAT_MAT_TYPE);
   CvMat xyLimits = *xyLimitsp;
-  mcvTransformImage2Ground(&uvLimits, &xyLimits,cameraInfo);
+  LaneDetector_J::mcvTransformImage2Ground(&uvLimits, &xyLimits,cameraInfo);
   //SHOW_MAT(xyLimitsp, "xyLImits");
 
   //get extent on the ground plane
@@ -106,7 +109,7 @@ void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
     }
   //get their pixel values in image frame
   CvMat *uvGrid = cvCreateMat(2, outRow*outCol, FLOAT_MAT_TYPE);
-  mcvTransformGround2Image(xyGrid, uvGrid, cameraInfo);
+  LaneDetector_J::mcvTransformGround2Image(xyGrid, uvGrid, cameraInfo);
   //now loop and find the nearest pixel value for each position
   //that's inside the image, otherwise put it zero
   FLOAT_MAT_ELEM_TYPE ui, vi;
@@ -168,7 +171,7 @@ void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
  //our_ipm = outImage;
  //Mat our_ipm=cvarrToMat(outImage);
   //cvSaveImage( "../clips/output_ipm/ipmimage.png", outImage);
-  SHOW_IMAGE(outImage, "IPM image", 10);
+  LaneDetector_J::SHOW_IMAGE(outImage, "IPM image", 10);
 
 
 //  cvSaveImage( "../clips/output_ipm/ipmimage.png", outImage);
@@ -205,7 +208,7 @@ void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
  *
  */
 void mcvTransformImage2Ground(const CvMat *inPoints,
-                              CvMat *outPoints, const CameraInfo *cameraInfo)
+                              CvMat *outPoints, const  LaneDetector_J::CameraInfo *cameraInfo)
 {
 
   //add two rows to the input points
@@ -278,7 +281,7 @@ void mcvTransformImage2Ground(const CvMat *inPoints,
  *
  */
 void mcvTransformGround2Image(const CvMat *inPoints,
-                              CvMat *outPoints, const CameraInfo *cameraInfo)
+                              CvMat *outPoints, const  LaneDetector_J::CameraInfo *cameraInfo)
 {
   //add two rows to the input points
   CvMat *inPoints3 = cvCreateMat(inPoints->rows+1, inPoints->cols,
@@ -338,7 +341,7 @@ void mcvTransformGround2Image(const CvMat *inPoints,
  * \return the computed vanishing point in image frame
  *
  */
-FLOAT_POINT2D mcvGetVanishingPoint(const CameraInfo *cameraInfo)
+FLOAT_POINT2D mcvGetVanishingPoint(const LaneDetector_J::CameraInfo *cameraInfo)
 {
   //get the vp in world coordinates
   FLOAT_MAT_ELEM_TYPE vpp[] = {sin(cameraInfo->yaw)/cos(cameraInfo->pitch),
@@ -388,7 +391,7 @@ FLOAT_POINT2D mcvGetVanishingPoint(const CameraInfo *cameraInfo)
 
 /******this might be shifted to somewhere else, take a look later */
 
-void mcvGetLanes(const CvMat *inImage, CameraInfo *cameraInfo, LaneDetectorConf_J *stopLineConf)
+void mcvGetLanes(const CvMat *inImage,  LaneDetector_J::CameraInfo *cameraInfo,  LaneDetector_J::LaneDetectorConf_J *stopLineConf)
 {
   //input size
   CvSize inSize = cvSize(inImage->width, inImage->height);
@@ -435,30 +438,30 @@ void mcvGetLanes(const CvMat *inImage, CameraInfo *cameraInfo, LaneDetectorConf_
   ipmInfo.ipmInterpolation = stopLineConf->ipmInterpolation;
   list<CvPoint> outPixels;
   list<CvPoint>::iterator outPixelsi;
-  mcvGetIPM(image, ipm, &ipmInfo, cameraInfo, &outPixels);
+  LaneDetector_J::mcvGetIPM(image, ipm, &ipmInfo, cameraInfo, &outPixels);
 
 
 }
-void processJ(CvMat *laneMat, LaneDetector_J:: CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf)
+void processJ(IplImage* im, LaneDetector_J:: CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf)
 {
 
 CvMat *raw_mat, *mat;
-mcvLoadImage(&laneMat, &raw_mat, &mat);
+LaneDetector_J::mcvLoadImage(im, &raw_mat, &mat);
 
 // detect lanes
 vector<FLOAT> lineScores, splineScores;
-vector<Line> lanes;
-mcvGetLanes(mat, raw_mat, &lanes, &cameraInfo, &lanesConf, NULL);
+vector<LaneDetector_J::Line> lanes;
+LaneDetector_J::mcvGetLanes(mat, &cameraInfo, &lanesConf);
 
 }
 
 
 
 
-void mcvLoadImage(const cvMat* ipminputimage , CvMat **clrImage, CvMat** channelImage)
+void mcvLoadImage( IplImage* ipminputimage , CvMat **clrImage, CvMat** channelImage)
 {
   // load the image
-  cvMat im;
+   IplImage* im;
   im = ipminputimage;
   // convert to mat and get first channel
   CvMat temp;
@@ -488,7 +491,7 @@ void SHOW_IMAGE(const CvMat *pmat, const char str[], int wait)
   //convert to int type
   //cvConvert(pmat, mat);
   if(CV_MAT_CN(mat->type) == 1)//FLOAT_MAT_TYPE)
-    mcvScaleMat(mat, mat);
+    LaneDetector_J::mcvScaleMat(mat, mat);
   //show it
   //cout << "in\n";
   cvNamedWindow(str, CV_WINDOW_AUTOSIZE); //0 1
@@ -501,3 +504,31 @@ void SHOW_IMAGE(const CvMat *pmat, const char str[], int wait)
   cvReleaseMat(&mat);
   //cout << "out\n";
 }
+
+
+/**
+ * This function scales the input image to have values 0->1
+ *
+ * \param inImage the input image
+ * \param outImage hte output iamge
+ */
+void mcvScaleMat(const CvMat *inMat, CvMat *outMat)
+{
+  //convert inMat type to outMat type
+  cvConvert(inMat, outMat);
+  //if (CV_MAT_DEPTH(inMat->type)
+  //get the min and subtract it
+  double min;
+  cvMinMaxLoc(inMat, &min, 0, 0, 0, 0);
+  cvSubS(inMat, cvRealScalar(min), outMat);
+
+  //get max and divide by it
+  double max;
+  cvMinMaxLoc(outMat, 0, &max, 0, 0, 0);
+  if(CV_MAT_TYPE(outMat->type) == FLOAT_MAT_TYPE)
+    cvConvertScale(outMat, outMat,  1/max);
+  else if(CV_MAT_TYPE(outMat->type) == INT_MAT_TYPE)
+    cvConvertScale(outMat, outMat,  255/max);
+}
+
+}//LaneDetector_J namespace
