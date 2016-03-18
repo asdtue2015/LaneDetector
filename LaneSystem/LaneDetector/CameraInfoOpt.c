@@ -9,21 +9,31 @@
 */
 
 /* If we use autoconf.  */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef HAVE_CONFIG_H
+extern "C" {
 #include "config.h"
+}
 #endif
 
+extern "C" {
 #include <stdio.h>
+}
+
+extern "C" {
 #include <stdlib.h>
+}
+
+extern "C" {
 #include <string.h>
+}
 
+extern "C" {
 #include "getopt.h"
+}
 
+extern "C" {
 #include "CameraInfoOpt.h"
+}
 
 const char *CameraInfoParserInfo_purpose = "";
 

@@ -8,18 +8,44 @@
 #ifndef IPMTransJoost_HH_
 #define IPMTransJoost_HH_
 
+//*****Joost Definitions*****//
+  #define MSG(fmt, ...) \
+  (fprintf(stdout, "%s:%d msg   " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__) ? 0 : 0)
+  #define FLOAT_MAT_TYPE CV_32FC1
+  #define FLOAT_MAT_ELEM_TYPE float
+
+  #define INT_MAT_TYPE CV_8UC1
+  #define INT_MAT_ELEM_TYPE unsigned char
+
+  #define FLOAT_IMAGE_TYPE IPL_DEPTH_32F
+  #define FLOAT_IMAGE_ELEM_TYPE float
+
+  #define INT_IMAGE_TYPE IPL_DEPTH_8U
+  #define INT_IMAGE_ELEM_TYPE unsigned char
+
+  #define FLOAT_POINT2D CvPoint2D32f
+  #define FLOAT_POINT2D_F cvPoint2D632f
+
+  #define FLOAT float
+  #define INT int
+  #define SHORT_INT unsigned char
+//*****//
 
 #include "cv.h"
 #include <list>
+#include "init.hh"
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+
+// #ifdef __cplusplus
+//  extern "C" {
+// #endif
 
 using namespace std;
 
 namespace LaneDetector_J
 {
+
+
 //functions definitions
 /**
  * This function returns the Inverse Perspective Mapping
@@ -70,11 +96,11 @@ void mcvTransformGround2Image(const CvMat *inPoints, CvMat *outPoints, const Cam
  */
 FLOAT_POINT2D mcvGetVanishingPoint(const CameraInfo *cameraInfo);
 
-void mcvGetLanes(const CvMat *inImage, CameraInfo *cameraInfo, LaneDetectorConf *stopLineConf);
+void mcvGetLanes(const CvMat *inImage, LaneDetector_J::CameraInfo *cameraInfo, LaneDetector_J::LaneDetectorConf_J *stopLineConf);
 
-void processJ(CvMat *laneMat, CameraInfo& cameraInfo, LaneDetectorConf& lanesConf);
+void processJ(CvMat *laneMat, LaneDetector_J::CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf);
 
-void mcvLoadImage(const cvMat* ipminputimage , CvMat **clrImage, CvMat** channelImage);
+void mcvLoadImage(const CvMat* ipminputimage , CvMat **clrImage, CvMat** channelImage);
 
 void SHOW_IMAGE(const CvMat *pmat, const char str[]="Window", int wait=0);
 
@@ -89,8 +115,8 @@ void SHOW_IMAGE(const CvMat *pmat, const char str[]="Window", int wait=0);
 // void mcvGetIPMExtent(const CameraInfo *cameraInfo, IPMInfo *ipmInfo);
 
 } // namespace LaneDetector
-#ifdef __cplusplus
-}
-#endif
+// #ifdef __cplusplus
+// }
+// #endif
 
 #endif /*IPMTransJoost_HH_*/

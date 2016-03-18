@@ -7,6 +7,14 @@
 #include "../LaneDetector/LaneDetectorTools.h"
 #include "../LaneDetector/GenerateLaneIndicators.h"
 #include "../LaneDetector/IPMTransformation.h"
+
+extern "C" {
+#include "../LaneDetector/IPMTransJoost.hh"
+}
+
+extern "C" {
+#include "../LaneDetector/init.hh"
+}
 //*****************************************************
 // #include "../JoostFiles/mcv.hh"
 // #include "../JoostFiles/InversePerspectiveMapping.hh"
@@ -56,8 +64,8 @@ namespace LaneDetectorSim{
                           double &lateralOffset, int &isChangeLane,
                           int &detectLaneFlag,  const int &idx, double &execTime,
                           std::vector<cv::Vec2f> &preHfLanes, int &changeDone,
-                          const double &YAW_ANGLE, const double &PITCH_ANGLE
-                         CameraInfo& cameraInfo, LaneDetectorConf& lanesConf);
+                          const double &YAW_ANGLE, const double &PITCH_ANGLE,
+                          LaneDetector_J::CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf);
 
     void GetSamplingTime(const char *fileName, std::vector<float> &samplingTime);
 

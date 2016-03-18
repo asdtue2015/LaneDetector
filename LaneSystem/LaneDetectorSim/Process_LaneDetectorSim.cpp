@@ -3,7 +3,9 @@
 //                  (changing) 2  --  1 (possible)
 
 #include "Process_LaneDetectorSim.h"
-#include "../LaneDetector/IPMTransJoost.hh"
+
+
+
 
 extern const double COEF;
 

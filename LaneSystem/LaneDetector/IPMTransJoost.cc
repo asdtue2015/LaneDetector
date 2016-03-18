@@ -2,6 +2,8 @@
 
 
 #include "IPMTransJoost.hh"
+#include "init.hh"
+
 /*
  We are assuming the world coordinate frame center is at the camera,
  the ground plane is at height -h, the X-axis is going right,
@@ -437,7 +439,7 @@ void mcvGetLanes(const CvMat *inImage, CameraInfo *cameraInfo, LaneDetectorConf_
 
 
 }
-void processJ(CvMat *laneMat, CameraInfo& cameraInfo, LaneDetectorConf_J &lanesConf)
+void processJ(CvMat *laneMat, LaneDetector_J:: CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf)
 {
 
 CvMat *raw_mat, *mat;

@@ -8,11 +8,11 @@
 #ifndef INIT_HH_
 #define INIT_HH_
 
-#ifdef __cplusplus
 extern "C" {
-#endif
 
 #include "IPMTransJoost.hh"
+
+}
 
 namespace LaneDetector_J
 {
@@ -319,7 +319,5 @@ void mcvInitCameraInfo (char * const fileName, CameraInfo *cameraInfo);
 
 } // namespace LaneDetector
 
-#ifdef __cplusplus
-}
-#endif
+
 #endif /*INIT_HH_HH_*/
