@@ -8,11 +8,13 @@
 #ifndef INIT_HH_
 #define INIT_HH_
 
-extern "C" {
+//extern "C" {
 
-#include "IPMTransJoost.hh"
-
-}
+//#include "IPMTransJoost.hh"
+#include "CameraInfoOpt.h"
+#include "getopt.h"
+#include "LaneDetectorOpt.h"
+//}
 
 namespace LaneDetector_J
 {
@@ -313,11 +315,11 @@ typedef struct IPMInfo
  *
  *
  */
-void mcvInitLaneDetectorConf(char * const fileName, LaneDetectorConf_J *stopLineConf);
-void mcvInitCameraInfo (char * const fileName, CameraInfo *cameraInfo);
+void mcvInitLaneDetectorConf(char * const fileName, LaneDetector_J::LaneDetectorConf_J *stopLineConf);
+void mcvInitCameraInfo (char * const fileName, LaneDetector_J::CameraInfo *cameraInfo);
 
 
-} // namespace LaneDetector
+} // namespace LaneDetector_J
 
 
 #endif /*INIT_HH_HH_*/

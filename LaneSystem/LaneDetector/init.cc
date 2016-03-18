@@ -1,5 +1,10 @@
+#include "init.hh"
+
+
+namespace LaneDetector_J
+{
 void mcvInitLaneDetectorConf(char * const fileName,
-   LaneDetectorConf *stopLineConf)
+   LaneDetector_J::LaneDetectorConf_J *stopLineConf)
 {
  //parsed camera data
  LaneDetectorParserInfo stopLineParserInfo;
@@ -145,7 +150,7 @@ void mcvInitLaneDetectorConf(char * const fileName,
 }
 
 
-void mcvInitCameraInfo (char * const fileName, CameraInfo *cameraInfo)
+void mcvInitCameraInfo (char * const fileName, LaneDetector_J::CameraInfo *cameraInfo)
 {
   //parsed camera data
   CameraInfoParserInfo camInfo;
@@ -162,3 +167,4 @@ void mcvInitCameraInfo (char * const fileName, CameraInfo *cameraInfo)
   cameraInfo->imageWidth = camInfo.imageWidth_arg;
   cameraInfo->imageHeight = camInfo.imageHeight_arg;
 }
+}//end namespace LaneDetector_J

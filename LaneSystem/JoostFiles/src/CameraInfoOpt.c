@@ -880,6 +880,6 @@ conf_failure:
   return result;
 }
 
-#ifdef __cplusplus
-}
-#endif
+// #ifdef __cplusplus
+// }
+// #endif

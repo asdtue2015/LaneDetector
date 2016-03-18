@@ -8,13 +8,13 @@
 #include "../LaneDetector/GenerateLaneIndicators.h"
 #include "../LaneDetector/IPMTransformation.h"
 
-extern "C" {
+//extern "C" {
 #include "../LaneDetector/IPMTransJoost.hh"
-}
+//}
 
-extern "C" {
-#include "../LaneDetector/init.hh"
-}
+//extern "C" {
+//#include "../LaneDetector/init.hh"
+//}
 //*****************************************************
 // #include "../JoostFiles/mcv.hh"
 // #include "../JoostFiles/InversePerspectiveMapping.hh"

@@ -10,30 +10,29 @@
 
 /* If we use autoconf.  */
 #ifdef HAVE_CONFIG_H
-extern "C" {
+//extern "C" {
 #include "config.h"
-}
-#endif
+//#endif
 
-extern "C" {
+//extern "C" {
 #include <stdio.h>
-}
+//}
 
-extern "C" {
+//extern "C" {
 #include <stdlib.h>
-}
+//}
 
-extern "C" {
+//extern "C" {
 #include <string.h>
-}
+//}
 
-extern "C" {
+//extern "C" {
 #include "getopt.h"
-}
+//}
 
-extern "C" {
+//extern "C" {
 #include "CameraInfoOpt.h"
-}
+//}
 
 const char *CameraInfoParserInfo_purpose = "";
 
@@ -890,6 +889,6 @@ conf_failure:
   return result;
 }
 
-#ifdef __cplusplus
-}
-#endif
+// #ifdef __cplusplus
+// }
+// #endif

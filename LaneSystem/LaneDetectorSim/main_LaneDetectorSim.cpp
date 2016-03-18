@@ -1,21 +1,21 @@
 #include "main_LaneDetectorSim.h"
 #include "Process_LaneDetectorSim.h"
 
-extern "C" {
-	#include "../LaneDetector/init.hh"
-}
+//extern "C" {
+	//#include "../LaneDetector/init.hh"
+//}
 
-extern "C" {
+//extern "C" {
 #include "../LaneDetector/CameraInfoOpt.h"
-}
+//}
 
-extern "C" {
+//extern "C" {
 #include "../LaneDetector/LaneDetectorOpt.h"
-}
+//}
 
-extern "C" {
+//extern "C" {
 #include <stdexcept>
-}
+//}
 
 
 #ifdef __cplusplus
@@ -93,17 +93,15 @@ namespace LaneDetectorSim {
 		/*************JOOST*****************/
 
 		LaneDetector_J::CameraInfo cameraInfo;
-		char fileName_test2[200];
+		char  fileName_test2[200];
 		strcpy(fileName_test2, "CameraInfo3.conf");
-		LaneDetector_J::mcvInitCameraInfo(fileName_test2, &cameraInfo);
-		MSG("Loaded camera file");
+
 
 		// read the configurations
 		  LaneDetector_J::LaneDetectorConf_J lanesConf;
 			char fileName_test[200];
 			strcpy(fileName_test, "Lanes3.conf");
-			LaneDetector_J::mcvInitLaneDetectorConf(fileName_test, &lanesConf);
-			MSG("Loaded lanes config file");
+
 		/**************************************/
 
 		std::vector<double> LATSDBaselineVec;
@@ -132,9 +130,13 @@ namespace LaneDetectorSim {
              		/* Lane detect and tracking */
             		sprintf(laneImg, LANE_RAW_NAME , idx);
             		laneMat = cv::imread(laneImg);
+								LaneDetector_J::mcvInitLaneDetectorConf(fileName_test, &lanesConf);
+								MSG("Loaded lanes config file");
+								LaneDetector_J::mcvInitCameraInfo(fileName_test2, &cameraInfo);
+								MSG("Loaded camera file");
             		LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2); // KIT 1, ESIEE 2
             		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
-
+							
         	}
 
 

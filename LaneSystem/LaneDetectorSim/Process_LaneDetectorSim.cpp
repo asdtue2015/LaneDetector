@@ -33,8 +33,8 @@ namespace LaneDetectorSim{
                           double &lateralOffset, int &isChangeLane,
                           int &detectLaneFlag,  const int &idx, double &execTime,
                           std::vector<cv::Vec2f> &postHfLanes, int &changeDone,
-                          const double &YAW_ANGLE, const double &PITCH_ANGLE
-											  	CameraInfo& cameraInfo, LaneDetectorConf& lanesConf)
+                          const double &YAW_ANGLE, const double &PITCH_ANGLE,
+											  	LaneDetector_J::CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf)
     	{
 				cv::Mat xMap;
 				cv::Mat yMap;
@@ -87,7 +87,16 @@ namespace LaneDetectorSim{
 /**********Joost IPM*********/
 
 // load the image
-LaneDetector_J::processJ(laneMat, cameraInfo, lanesConf);
+// cv::Mat img = laneMat.clone();
+//
+// CvMat deprecatedImg(img);
+// CvMat* pimg = &img;
+
+
+CvMat img = laneMat;
+laneMat = cv::Mat(&img);
+
+LaneDetector_J::processJ(&img, cameraInfo, lanesConf);
 
 
 

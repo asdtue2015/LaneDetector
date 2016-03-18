@@ -53,7 +53,7 @@ struct CameraInfoParserInfo
   double imageHeight_arg;	/* height of image in pixels.  */
   char * imageHeight_orig;	/* height of image in pixels original value given at command line.  */
   const char *imageHeight_help; /* height of image in pixels help description.  */
-  
+
   int help_given ;	/* Whether help was given.  */
   int version_given ;	/* Whether version was given.  */
   int focalLengthX_given ;	/* Whether focalLengthX was given.  */
@@ -94,7 +94,7 @@ int cameraInfoParser_required (struct CameraInfoParserInfo *args_info,
   const char *prog_name);
 
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+// #ifdef __cplusplus
+// }
+// #endif /* __cplusplus */
 #endif /* CAMERAINFOOPT_H */

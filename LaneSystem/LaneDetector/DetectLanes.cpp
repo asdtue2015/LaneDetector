@@ -969,15 +969,12 @@ namespace LaneDetector{
 
             		case ESIEE:
                 		laneDetectorConf.thetaMin = CV_PI / 4;//45 degree
-<<<<<<< .merge_file_xKBQu2
                 		laneDetectorConf.thetaMax = 45;//CV_PI * 0.5; // / 9 * 4; //80 degree
                 		laneDetectorConf.top_range = 220;//20;
                 		laneDetectorConf.bottom_range = 350;//170;
-=======
                 		laneDetectorConf.thetaMax = CV_PI * 0.5; //80 degree
                 		laneDetectorConf.top_range = 20;
                 		laneDetectorConf.bottom_range = 170;
->>>>>>> .merge_file_WLvG51
 
                 		laneDetectorConf.vpTop = -laneMat.rows * 0.2 * COEF;
                 		laneDetectorConf.vpBottom = laneMat.rows * 0.3 * COEF;

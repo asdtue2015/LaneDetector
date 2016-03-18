@@ -16,7 +16,7 @@ DIR 		= ./LaneDetector
 DIR_SIM		= ./LaneDetectorSim
 DIR_RCD		= ./LaneRecorder
 
-SRCS		+= $(wildcard ${DIR_SIM}/*.cpp ${DIR}/*.cpp) 
+SRCS		+= $(wildcard ${DIR_SIM}/*.cpp ${DIR}/*.cpp ${DIR}/*.cc ${DIR}/*.c) 
 
 OBJS  		= $(patsubst %.cpp, %.o, $(SRCS)) 
 

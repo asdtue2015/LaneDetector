@@ -2,7 +2,7 @@
 
 
 #include "IPMTransJoost.hh"
-#include "init.hh"
+
 
 /*
  We are assuming the world coordinate frame center is at the camera,

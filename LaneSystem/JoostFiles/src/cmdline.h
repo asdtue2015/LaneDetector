@@ -66,7 +66,7 @@ struct gengetopt_args_info
   const char *save_lanes_help; /* Export all detected lanes to a text file by appending --output-suffix + '.txt' to --list-file help description.  */
   int debug_flag;	/* Show debugging information and images (default=off).  */
   const char *debug_help; /* Show debugging information and images help description.  */
-  
+
   int help_given ;	/* Whether help was given.  */
   int version_given ;	/* Whether version was given.  */
   int lanes_conf_given ;	/* Whether lanes-conf was given.  */
@@ -116,7 +116,7 @@ int cmdline_parser_required (struct gengetopt_args_info *args_info,
   const char *prog_name);
 
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+// #ifdef __cplusplus
+// }
+// #endif /* __cplusplus */
 #endif /* CMDLINE_H */
