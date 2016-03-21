@@ -97,9 +97,9 @@ void mcvTransformGround2Image(const CvMat *inPoints, CvMat *outPoints, const  La
  */
 FLOAT_POINT2D mcvGetVanishingPoint(const LaneDetector_J::CameraInfo *cameraInfo);
 
-void mcvGetLanes(const CvMat *inImage, LaneDetector_J::CameraInfo *cameraInfo, LaneDetector_J::LaneDetectorConf_J *stopLineConf);
+void mcvGetLanes(const CvMat *inImage, CvMat &IPMJ, LaneDetector_J::CameraInfo *cameraInfo, LaneDetector_J::LaneDetectorConf_J *stopLineConf);
 
-void processJ(IplImage *laneMat, LaneDetector_J::CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf);
+void processJ(IplImage *laneMat, CvMat &IPMJ, LaneDetector_J::CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf);
 
 void mcvLoadImage( IplImage* ipminputimage , CvMat **clrImage, CvMat** channelImage);
 

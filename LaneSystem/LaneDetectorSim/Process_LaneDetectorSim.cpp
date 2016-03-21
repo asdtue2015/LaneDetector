@@ -42,6 +42,8 @@ namespace LaneDetectorSim{
 				cv::Mat ipmMask;
 				cv::Mat ipmMat;
 				int samplingNum = 50;
+				CvMat IPMJ;
+				cv::Mat IPMJ_Mat;
 
 				cv::Mat leftCoefs;
 				cv::Mat rightCoefs;
@@ -94,23 +96,27 @@ namespace LaneDetectorSim{
 
 
 IplImage* img = new IplImage(laneMat);
-
+//CvMat const *IPMJ;
 
 // CvMat  n = laneMat;
 // laneMat = cv::Mat(&n);
 
 
-LaneDetector_J::processJ(img, cameraInfo, lanesConf);
+LaneDetector_J::processJ(img, IPMJ, cameraInfo, lanesConf);
+//LaneDetector_J::SHOW_IMAGE(&IPMJ, "IPM image", 10);
+IPMJ_Mat = cv::Mat(&IPMJ, true);
 
-
-
+cv::Mat IPMJ_Rotated;
+cv::transpose(IPMJ_Mat, IPMJ_Rotated);
+flip(IPMJ_Rotated, IPMJ_Rotated, 1);
+cv::imshow("IPM ROT", IPMJ_Rotated);
 
 
 //IPMpixelsToWorld(laneDetectorConf, xMap, yMap);
 //IPMgetInterpMap(xMap, yMap, laneDetectorConf, interpMap, ipmMask);
 //IPMgetWorldImage(laneMat, laneDetectorConf, interpMap, ipmMat);
-//LaneDetector::IPMDetectLanes(ipmMat, laneDetectorConf, leftIPMLanes, rightIPMLanes, leftCoefs, rightCoefs,leftSampledPoints, rightSampledPoints, laneWidth);
-        	//LaneDetector::DetectLanes(grayMat, laneDetectorConf, offsetX, offsetY, hfLanes, postHfLanes, laneKalmanIdx, isChangeLane);
+LaneDetector::IPMDetectLanes(IPMJ_Rotated, laneDetectorConf, leftIPMLanes, rightIPMLanes, leftCoefs, rightCoefs,leftSampledPoints, rightSampledPoints, laneWidth);
+//LaneDetector::DetectLanes(IPMJ_Mat, laneDetectorConf, offsetX, offsetY, hfLanes, postHfLanes, laneKalmanIdx, isChangeLane);
 //DrawMarkingFromIPM(ipmMat, leftSampledPoints, rightSampledPoints, laneDetectorConf);
 
 			/********/

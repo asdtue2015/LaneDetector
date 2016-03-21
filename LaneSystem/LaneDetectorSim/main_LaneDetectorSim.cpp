@@ -38,7 +38,8 @@ extern const char   FILE_LANE_FEATURE[] = "./inputdata/outputdata/Sim_LaneFeatur
 extern const char   LANE_RECORD_IMAGE[]    = "./inputdata/outputdata/lane_%d.png";
 /* Data Source */
 
-extern const char   LANE_RAW_NAME[]     = "./inputdata/clips/cropped_%d.png";
+//extern const char   LANE_RAW_NAME[]     = "./inputdata/clips/cropped_%d.png";
+extern const char   LANE_RAW_NAME[]     = "./inputdata/clips_original/lane_%d.png";
 //extern const char   LANE_RAW_NAME[]     = "./inputdata/washington/lane_%d.png";
 // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/KIT/2011_09_26/2011_09_26_drive_0015_sync/image_00/data/%010d.png";
 // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/Data/LaneRaw_10-07-2013_18h30m21s/lane_%d.jpg";
@@ -134,9 +135,9 @@ namespace LaneDetectorSim {
             		sprintf(laneImg, LANE_RAW_NAME , idx);
             		laneMat = cv::imread(laneImg);
 								LaneDetector_J::mcvInitLaneDetectorConf(fileName_test, &lanesConf);
-								MSG("Loaded lanes config file");
+								MSG("Loaded lanes config file\n");
 								LaneDetector_J::mcvInitCameraInfo(fileName_test2, &cameraInfo);
-								MSG("Loaded camera file");
+								MSG("Loaded camera file\n");
             		LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2); // KIT 1, ESIEE 2
             		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
 

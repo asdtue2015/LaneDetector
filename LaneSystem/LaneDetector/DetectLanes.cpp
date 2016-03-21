@@ -12,10 +12,12 @@ extern const int    DEBUG_HOUGH = 1;
 extern const int    TH_KALMANFILTER;
 
 namespace LaneDetector{
+
     	void IPMPreprocess(const cv::Mat &ipmMat, const LaneDetectorConf &laneDetectorConf, cv::Mat &thMat)
     	{
-		cv:: imshow("0.Raw", ipmMat);
-		imShowSub("0.Raw", ipmMat, WIN_COLS, WIN_ROWS, 1);
+//		cv:: imshow("0.Raw", ipmMat);
+	//	imShowSub("0.Raw", ipmMat, WIN_COLS, WIN_ROWS, 1);
+
 	//	cv::Mat multiImage;
 	//	std::vector<cv::Mat> ipmMatT;
 	//	std::vector<cv::Mat> ipmMatG;
@@ -152,6 +154,10 @@ namespace LaneDetector{
 	//    	filterMat = cv::Mat::ones(ipmMat.size(), CV_8U)* 255 - filterMat;
 
 		/* * Get the contours in IPM image * It can be optimized using ipmMask */
+
+      std::cout<<"ipmMat.rows: "<<ipmMat.rows<<std::endl;
+      std::cout<<"ipmMat.cols: "<<ipmMat.cols<<std::endl;
+
 		cv::Point2f p1, p2, p3, p4;
 		//P1 (left top)
 		for(int m = 0; m < ipmMat.rows; m++)
@@ -161,7 +167,7 @@ namespace LaneDetector{
 		        break;       }
 		}
 		CV_Assert(p1.y != 0);
-
+std::cout<<"p1.y: "<<p1.y<<std::endl;
 		//P2 (left bottom)
 		for(int m = ipmMat.rows - 1; m > 0; m--)
 		{
@@ -173,25 +179,30 @@ namespace LaneDetector{
 		    }
 		}
 		CV_Assert(p2.y != 0);
+    std::cout<<"p2.y:"<<p2.y<<std::endl;
 
-		//P3 & P4 (right top & bottom)
-		if ((int)ipmMat.at<uchar>(0, ipmMat.cols-1) != 0)
-		{
-		    for(int n = ipmMat.cols-2; n > 0; n--)
-		    {
-		        if ((int)ipmMat.at<uchar>(0, n) == 0){
-		            p4.x = n + 1;
-		            p4.y = 0;
-		            p3.x = n + 1;
-		            p3.y = ipmMat.rows - 1;
-		            break;
-		        }
-		    }
-		}
-		else
-		{
+		// //P3 & P4 (right top & bottom)
+		// if ((int)ipmMat.at<uchar>(0, ipmMat.cols-1) != 0)
+		// {
+    //     std::cout<<"I AM IN FIRST IF"<<std::endl;
+		//     for(int n = ipmMat.cols-2; n > 0; n--)
+		//     {
+		//         if ((int)ipmMat.at<uchar>(0, n) == 0){
+    //           std::cout<<"I AM IN second IF"<<std::endl;
+		//             p4.x = n + 1;
+		//             p4.y = 0;
+		//             p3.x = n + 1;
+		//             p3.y = ipmMat.rows - 1;
+		//             break;
+		//         }
+		//     }
+		// }
+	//	else
+	//	{
+      std::cout<<"I AM IN ELSE"<<std::endl;
 		    for(int m = 1; m < ipmMat.rows; m++)
 		    {
+            std::cout<<"I AM IN FOR"<<std::endl;
 		        if((int)ipmMat.at<uchar>(m, ipmMat.cols-1) != 0)
 		        {
 		            p4.x = ipmMat.cols - 1;
@@ -201,7 +212,11 @@ namespace LaneDetector{
 		            break;
 		        }
 		    }
-		}
+		//}
+    std::cout<<"p3.x: "<<p3.x<<std::endl;
+    std::cout<<"p3.y: "<<p3.y<<std::endl;
+    std::cout<<"p4.x: "<<p4.x<<std::endl;
+    std::cout<<"p4.y: "<<p4.y<<std::endl;
 		CV_Assert(p3.x!=0 && p4.x!=0);
 
 		std::vector<cv::Point2f> contour;
@@ -210,7 +225,7 @@ namespace LaneDetector{
 		contour.push_back(p3);
 		contour.push_back(p4);
 
-		#if 1
+		#if 0
 		cv::Mat ipmCopy = ipmMat.clone();
 		cv::line(ipmCopy, p1, p2, cv::Scalar(255));
 		cv::line(ipmCopy, p2, p3, cv::Scalar(255));
@@ -263,6 +278,24 @@ namespace LaneDetector{
 		imShowSub("5.Threshold", thMat, WIN_COLS, WIN_ROWS, 6);
 }//end IPMPreprocess
 
+
+
+
+
+void ShowImage(cv::Mat *ipmMat)
+{
+
+ imshow ("IPMDetectLanes input", *ipmMat);
+
+}
+
+
+
+
+
+
+
+
      	void IPMDetectLanes(const cv::Mat &ipmMat,
                         LaneDetectorConf &laneDetectorConf,
                         std::vector<Lane> &leftIPMLanes, std::vector<Lane> &rightIPMLanes,
@@ -270,13 +303,14 @@ namespace LaneDetector{
                         std::vector<cv::Point2d> &leftSampledPoints, std::vector<cv::Point2d> &rightSampledPoints,
                         double &laneWidth)
     	{
-   		/* Preprossing Step */
-        	cv::Mat thMat;
+   	    	/* Preprossing Step */
+        	cv::Mat thMat, trial;
+         //  trial = *ipmMat;
+          imshow ("IPMDetectLanes input", ipmMat);
         	IPMPreprocess(ipmMat, laneDetectorConf, thMat);
-
-        	/* Set the ROI, considering the noise in the initialization step */
+          /* Set the ROI, considering the noise in the initialization step */
         	#if 1
-			double interval  = 3.0; //meter
+		 	double interval  = 3.0; //meter
             		int yROI = cvRound((double)ipmMat.rows/2 -  interval * laneDetectorConf.ipmStep);
 
             		for (int i = 0; i < yROI; i++)

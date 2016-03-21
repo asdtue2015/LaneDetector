@@ -35,6 +35,9 @@
 
 namespace LaneDetector_J{
 
+
+  CvMat frame;
+
 void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
                LaneDetector_J::IPMInfo *ipmInfo, const LaneDetector_J::CameraInfo *cameraInfo,
                list<CvPoint> *outPoints)
@@ -171,7 +174,7 @@ void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
  //our_ipm = outImage;
  //Mat our_ipm=cvarrToMat(outImage);
   //cvSaveImage( "../clips/output_ipm/ipmimage.png", outImage);
-  LaneDetector_J::SHOW_IMAGE(outImage, "IPM image", 10);
+//  LaneDetector_J::SHOW_IMAGE(outImage, "IPM image", 10);
 
 
 //  cvSaveImage( "../clips/output_ipm/ipmimage.png", outImage);
@@ -391,7 +394,7 @@ FLOAT_POINT2D mcvGetVanishingPoint(const LaneDetector_J::CameraInfo *cameraInfo)
 
 /******this might be shifted to somewhere else, take a look later */
 
-void mcvGetLanes(const CvMat *inImage,  LaneDetector_J::CameraInfo *cameraInfo,  LaneDetector_J::LaneDetectorConf_J *stopLineConf)
+void mcvGetLanes(const CvMat *inImage, CvMat &IPMJ,  LaneDetector_J::CameraInfo *cameraInfo,  LaneDetector_J::LaneDetectorConf_J *stopLineConf)
 {
   //input size
   CvSize inSize = cvSize(inImage->width, inImage->height);
@@ -427,7 +430,7 @@ void mcvGetLanes(const CvMat *inImage,  LaneDetector_J::CameraInfo *cameraInfo, 
   //Get IPM
   CvSize ipmSize = cvSize((int)stopLineConf->ipmWidth,
       (int)stopLineConf->ipmHeight);
-  CvMat * ipm;
+  CvMat *ipm, *ipmt;
   ipm = cvCreateMat(ipmSize.height, ipmSize.width, inImage->type);
   //mcvGetIPM(inImage, ipm, &ipmInfo, cameraInfo);
   ipmInfo.vpPortion = stopLineConf->ipmVpPortion;
@@ -439,20 +442,26 @@ void mcvGetLanes(const CvMat *inImage,  LaneDetector_J::CameraInfo *cameraInfo, 
   list<CvPoint> outPixels;
   list<CvPoint>::iterator outPixelsi;
   LaneDetector_J::mcvGetIPM(image, ipm, &ipmInfo, cameraInfo, &outPixels);
+  IPMJ = *ipm;
+  //frame=*ipm;
+//  LaneDetector_J::SHOW_IMAGE(&frame, "IPM image", 10);
 
 
 }
-void processJ(IplImage* im, LaneDetector_J:: CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf)
+void processJ(IplImage* im, CvMat &IPMJ, LaneDetector_J:: CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf)
 {
 
 CvMat *raw_mat, *mat;
+//CvMat const *IPM_ProcessJ;
 
 LaneDetector_J::mcvLoadImage(im, &raw_mat, &mat);
 
 // detect lanes
 vector<FLOAT> lineScores, splineScores;
 vector<LaneDetector_J::Line> lanes;
-LaneDetector_J::mcvGetLanes(mat, &cameraInfo, &lanesConf);
+LaneDetector_J::mcvGetLanes(mat, IPMJ,  &cameraInfo, &lanesConf);
+//IPMJ = IPM_ProcessJ;
+//LaneDetector_J::SHOW_IMAGE(&IPMJ, "IPM image", 10);
 
 }
 
