@@ -181,28 +181,42 @@ std::cout<<"p1.y: "<<p1.y<<std::endl;
 		CV_Assert(p2.y != 0);
     std::cout<<"p2.y:"<<p2.y<<std::endl;
 
-		// //P3 & P4 (right top & bottom)
-		// if ((int)ipmMat.at<uchar>(0, ipmMat.cols-1) != 0)
-		// {
-    //     std::cout<<"I AM IN FIRST IF"<<std::endl;
-		//     for(int n = ipmMat.cols-2; n > 0; n--)
-		//     {
-		//         if ((int)ipmMat.at<uchar>(0, n) == 0){
-    //           std::cout<<"I AM IN second IF"<<std::endl;
-		//             p4.x = n + 1;
-		//             p4.y = 0;
-		//             p3.x = n + 1;
-		//             p3.y = ipmMat.rows - 1;
-		//             break;
-		//         }
-		//     }
-		// }
-	//	else
-	//	{
-      std::cout<<"I AM IN ELSE"<<std::endl;
+		//P3 & P4 (right top & bottom)
+		if ((int)ipmMat.at<uchar>(0, ipmMat.cols-1) != 0)
+		{
+        std::cout<<"I AM IN FIRST IF"<<std::endl;
+		    for(int n = ipmMat.cols-2; n > 0; n--)
+		    {
+		        if ((int)ipmMat.at<uchar>(0, n) == 0){
+              //std::cout<<"I AM IN second IF"<<std::endl;
+		            p4.x = n + 1;
+		            p4.y = 0;
+		            p3.x = n + 1;
+		            p3.y = ipmMat.rows - 1;
+		            break;
+		        }
+		    }
+        for(int m = 1; m < ipmMat.rows; m++)
+        {
+            //std::cout<<"I AM IN FOR"<<std::endl;
+            if((int)ipmMat.at<uchar>(m, ipmMat.cols-1) != 0)
+            {
+                p4.x = ipmMat.cols - 1;
+                p4.y = m + 1;
+                p3.x = ipmMat.cols - 1;
+                p3.y = ipmMat.rows - 1 - (m + 1);
+                break;
+            }
+        }
+
+		}
+		//else
+    if ((int)ipmMat.at<uchar>(0, ipmMat.cols-1) == 0)
+		{
+      //std::cout<<"I AM IN ELSE"<<std::endl;
 		    for(int m = 1; m < ipmMat.rows; m++)
 		    {
-            std::cout<<"I AM IN FOR"<<std::endl;
+            //std::cout<<"I AM IN FOR"<<std::endl;
 		        if((int)ipmMat.at<uchar>(m, ipmMat.cols-1) != 0)
 		        {
 		            p4.x = ipmMat.cols - 1;
@@ -212,7 +226,7 @@ std::cout<<"p1.y: "<<p1.y<<std::endl;
 		            break;
 		        }
 		    }
-		//}
+		}
     std::cout<<"p3.x: "<<p3.x<<std::endl;
     std::cout<<"p3.y: "<<p3.y<<std::endl;
     std::cout<<"p4.x: "<<p4.x<<std::endl;
@@ -322,17 +336,19 @@ void ShowImage(cv::Mat *ipmMat)
                 		thMat.row(j) = cv::Scalar(0);
             		}
 		/////////////// Was Commented before, from here /////////////////////
-             		int xROI = 0;
-             		int wROI = ipmMat.cols;
-             		int hROI = cvRound(2 * interval * laneDetectorConf.ipmStep);
-             		cv::Rect roi = cv:: Rect(xROI,yROI,wROI,hROI);
-             		thMat = thMat(roi);
+             	// 	int xROI = 0;
+             	// 	int wROI = ipmMat.cols;
+             	// 	int hROI = cvRound(2 * interval * laneDetectorConf.ipmStep);
+             	// 	cv::Rect roi = cv:: Rect(xROI,yROI,wROI,hROI);
+             	// 	thMat = thMat(roi);
 		/////////////// To here /////////////////////
 
         	#endif
 
         	cv::Mat colorMat = ipmMat.clone();
         	cv::cvtColor(colorMat, colorMat, cv::COLOR_GRAY2RGB);
+          std::cout<<"rows: "<< colorMat.rows <<std::endl;
+          std::cout<<"cols: "<< colorMat.cols <<std::endl;
         	cv::line(colorMat, cv::Point(0, colorMat.rows/2), cv::Point(colorMat.cols, colorMat.rows/2), CV_RGB(0, 0, 255));
         	imShowSub("6.Division", colorMat, WIN_COLS, WIN_ROWS, 7);
 
@@ -447,9 +463,9 @@ void ShowImage(cv::Mat *ipmMat)
         		ExtractPointSet(leftThMat, leftPointSet);
         		if(!leftPointSet.empty())
         		{
-            			int leftCloseDataNum = 50;
-            			//FittingCurve_LS(leftPointSet, termNum, leftCoefs);PrintMat(leftCoefs);
-            			FittingCurve_RANSAC(leftPointSet, termNum, minDataNum, iterNum, thValue, leftCloseDataNum, leftCoefs, colorMat);
+            			int leftCloseDataNum = 80;
+            			FittingCurve_LS(leftPointSet, termNum, leftCoefs);PrintMat(leftCoefs);
+            		//	FittingCurve_RANSAC(leftPointSet, termNum, minDataNum, iterNum, thValue, leftCloseDataNum, leftCoefs, colorMat);
             			IPMDrawCurve(leftCoefs, colorMat, leftSampledPoints, CV_RGB(255, 0, 0));
         		}
 
@@ -463,7 +479,7 @@ void ShowImage(cv::Mat *ipmMat)
                 			rightPointSet.at(i).y += thMat.rows/2;
             			}
             			int rightCloseDataNum = 80;
-            			// FittingCurve_LS(rightPointSet, termNum, rightCoefs);
+            			//FittingCurve_LS(rightPointSet, termNum, rightCoefs);
             			FittingCurve_RANSAC(rightPointSet, termNum, minDataNum, iterNum, thValue, rightCloseDataNum, rightCoefs, colorMat);
             			IPMDrawCurve(rightCoefs, colorMat, rightSampledPoints, CV_RGB(0, 255, 0));
         		}

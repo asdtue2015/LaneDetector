@@ -21,6 +21,28 @@ namespace LaneDetectorSim{
      	* Record the effected data after Kalman tracking works
      	* When lane changes, we reset the Kalman filter and laneKalmanIdx
      	* Considering the situation that the lane changes but Kalman filter not works  */
+			string type2str(int type) {
+			  string r;
+
+			  uchar depth = type & CV_MAT_DEPTH_MASK;
+			  uchar chans = 1 + (type >> CV_CN_SHIFT);
+
+			  switch ( depth ) {
+			    case CV_8U:  r = "8U"; break;
+			    case CV_8S:  r = "8S"; break;
+			    case CV_16U: r = "16U"; break;
+			    case CV_16S: r = "16S"; break;
+			    case CV_32S: r = "32S"; break;
+			    case CV_32F: r = "32F"; break;
+			    case CV_64F: r = "64F"; break;
+			    default:     r = "User"; break;
+			  }
+
+			  r += "C";
+			  r += (chans+'0');
+
+			  return r;
+			}
 
 	void ProcessLaneImage(cv::Mat &laneMat,
                          LaneDetector::LaneDetectorConf &laneDetectorConf,
@@ -109,15 +131,28 @@ IPMJ_Mat = cv::Mat(&IPMJ, true);
 cv::Mat IPMJ_Rotated;
 cv::transpose(IPMJ_Mat, IPMJ_Rotated);
 flip(IPMJ_Rotated, IPMJ_Rotated, 1);
-cv::imshow("IPM ROT", IPMJ_Rotated);
+//cv::imshow("IPM ROT", IPMJ_Mat);
 
+double minVal, maxVal;
+// double min, max;
+minMaxLoc(IPMJ_Rotated, &minVal, &maxVal);
+IPMJ_Rotated.convertTo(IPMJ_Rotated, CV_8U, 255.0/(maxVal - minVal), -minVal * 255.0/(maxVal - minVal));
+cv::imshow("IPM ROT", IPMJ_Rotated);
+// minMaxLoc(IPMJ_Rotated, &min, &max);
+// printf("mival: %lf, maxval: %lf\n", min, max);
+//cout << "IPMJ_Rotated = "<< endl << " "  << IPMJ_Rotated << endl << endl;
+/************************************/
+
+
+//string ty =  LaneDetectorSim::type2str( IPMJ_Rotated.type() );
+//printf("Matrix: %s %dx%d \n", ty.c_str(), IPMJ_Rotated.cols, IPMJ_Rotated.rows );
 
 //IPMpixelsToWorld(laneDetectorConf, xMap, yMap);
 //IPMgetInterpMap(xMap, yMap, laneDetectorConf, interpMap, ipmMask);
 //IPMgetWorldImage(laneMat, laneDetectorConf, interpMap, ipmMat);
 LaneDetector::IPMDetectLanes(IPMJ_Rotated, laneDetectorConf, leftIPMLanes, rightIPMLanes, leftCoefs, rightCoefs,leftSampledPoints, rightSampledPoints, laneWidth);
-//LaneDetector::DetectLanes(IPMJ_Mat, laneDetectorConf, offsetX, offsetY, hfLanes, postHfLanes, laneKalmanIdx, isChangeLane);
-//DrawMarkingFromIPM(ipmMat, leftSampledPoints, rightSampledPoints, laneDetectorConf);
+//LaneDetector::DetectLanes(IPMJ_Rotated, laneDetectorConf, offsetX, offsetY, hfLanes, postHfLanes, laneKalmanIdx, isChangeLane);
+DrawMarkingFromIPM(IPMJ_Rotated, leftSampledPoints, rightSampledPoints, laneDetectorConf);
 
 			/********/
 
@@ -179,7 +214,7 @@ LaneDetector::IPMDetectLanes(IPMJ_Rotated, laneDetectorConf, leftIPMLanes, right
         	std::vector<cv::Vec2f> preHfLanes;
         	postHfLanes.clear();
 
-  // LaneDetector::TrackLanes_Particle(ipmMat, laneDetectorConf, samplingNum, leftCoefs, rightCoefs, leftSampledPoints, rightSampledPoints, laneWidth);
+  // LaneDetector::TrackLanes_Particle(IPMJ_Rotated, laneDetectorConf, samplingNum, leftCoefs, rightCoefs, leftSampledPoints, rightSampledPoints, laneWidth);
 
         	if( (detectLaneFlag == 0 && initDone == 0)
            	|| (detectLaneFlag == 1 && isChangeLane != -1 && isChangeLane != 1)
