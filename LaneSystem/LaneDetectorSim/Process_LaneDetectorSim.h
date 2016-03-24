@@ -65,7 +65,7 @@ namespace LaneDetectorSim{
                           int &detectLaneFlag,  const int &idx, double &execTime,
                           std::vector<cv::Vec2f> &preHfLanes, int &changeDone,
                           const double &YAW_ANGLE, const double &PITCH_ANGLE,
-                          LaneDetector_J::CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf);
+                          LaneDetector_J::CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf, cv::Mat &IPM_OUT);
     void ProcessLaneImage(cv::Mat &laneMat,
                           LaneDetector::LaneDetectorConf &laneDetectorConf,
                           const double &startTime,

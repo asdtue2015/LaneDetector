@@ -86,7 +86,7 @@ namespace LaneDetector{
 		 LaneDetectorConf &laneDetectorConf,
 		std::vector<Lane> &leftIPMLanes, std::vector<Lane> &rightIPMLanes,
 		cv::Mat &leftCoefs, cv::Mat &rightCoefs,
-		std::vector<cv::Point2d> &leftSampledPoints, std::vector<cv::Point2d> &rightSampledPoints, double &laneWidth);
+		std::vector<cv::Point2d> &leftSampledPoints, std::vector<cv::Point2d> &rightSampledPoints, double &laneWidth, cv::Mat &IPM_OUT);
 
 	/* * This function tracks lanes in the input image.
 	* The returned lines are in a vector of Line objects, having start and end point in input image frame.

@@ -34,7 +34,7 @@ namespace LaneDetectorSim{
 		                          int &detectLaneFlag,  const int &idx, double &execTime,
 		                          std::vector<cv::Vec2f> &postHfLanes, int &changeDone,
 		                          const double &YAW_ANGLE, const double &PITCH_ANGLE,
-													  	LaneDetector_J::CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf)
+													  	LaneDetector_J::CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf, cv::Mat &IPM_OUT)
 		    	{
 						cv::Mat xMap;
 						cv::Mat yMap;
@@ -116,7 +116,7 @@ namespace LaneDetectorSim{
 		 // double min, max;
 		 minMaxLoc(IPMJ_Rotated, &minVal, &maxVal);
 		 IPMJ_Rotated.convertTo(IPMJ_Rotated, CV_8U, 255.0/(maxVal - minVal), -minVal * 255.0/(maxVal - minVal));
-		 cv::imshow("IPM ROT", IPMJ_Rotated);
+		// cv::imshow("IPM ROT", IPMJ_Rotated);
 		// minMaxLoc(IPMJ_Rotated, &min, &max);
 
 		/************************************/
@@ -128,8 +128,10 @@ namespace LaneDetectorSim{
 		// IPMpixelsToWorld(laneDetectorConf, xMap, yMap);
 		// IPMgetInterpMap(xMap, yMap, laneDetectorConf, interpMap, ipmMask);
 		// IPMgetWorldImage(laneMat, laneDetectorConf, interpMap, ipmMat);
-		LaneDetector::IPMDetectLanes(IPMJ_Rotated, laneDetectorConf, leftIPMLanes, rightIPMLanes, leftCoefs, rightCoefs,leftSampledPoints, rightSampledPoints, laneWidth);
-		//LaneDetector::DetectLanes(IPMJ_Rotated, laneDetectorConf, offsetX, offsetY, hfLanes, postHfLanes, laneKalmanIdx, isChangeLane);
+		LaneDetector::IPMDetectLanes(IPMJ_Rotated, laneDetectorConf, leftIPMLanes, rightIPMLanes, leftCoefs, rightCoefs,leftSampledPoints, rightSampledPoints, laneWidth, IPM_OUT);
+
+	 //cv::imshow("IPM_OUT", IPM_OUT);
+	  //LaneDetector::DetectLanes(IPMJ_Rotated, laneDetectorConf, offsetX, offsetY, hfLanes, postHfLanes, laneKalmanIdx, isChangeLane);
 		DrawMarkingFromIPM(IPMJ_Rotated, leftSampledPoints, rightSampledPoints, laneDetectorConf);
 
 					/********/

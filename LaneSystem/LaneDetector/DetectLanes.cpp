@@ -236,7 +236,7 @@ namespace LaneDetector{
 		cv::line(ipmCopy, p2, p3, cv::Scalar(255));
 		cv::line(ipmCopy, p3, p4, cv::Scalar(255));
 		cv::line(ipmCopy, p4, p1, cv::Scalar(255));
-		cv::imshow("ipm", ipmCopy);//cv::waitKey();
+		//cv::imshow("ipm", ipmCopy);//cv::waitKey();
 		#endif
 
 		/* * The steps of edge detection  */
@@ -252,13 +252,13 @@ namespace LaneDetector{
 		        }
 		    }
 		}
-		imShowSub("1.Sobel", sobelMat, WIN_COLS, WIN_ROWS, 2);
+	//	imShowSub("1.Sobel", sobelMat, WIN_COLS, WIN_ROWS, 2);
 
 		//!DoG
 		cv::Mat gaussMat;
 		double sigmaX = 1.0, sigmaY = 1.0;
 		cv::GaussianBlur(sobelMat, gaussMat, cv::Size(3,3), sigmaX, sigmaY);
-		imShowSub("2.Gauss", gaussMat, WIN_COLS, WIN_ROWS, 3);
+	//	imShowSub("2.Gauss", gaussMat, WIN_COLS, WIN_ROWS, 3);
 
 		cv::Mat dogMat = sobelMat - gaussMat;
 		//! Work in Contour????
@@ -270,17 +270,17 @@ namespace LaneDetector{
 		        }
 		    }
 		}
-		imShowSub("3.DoG", dogMat, WIN_COLS, WIN_ROWS, 4);
+	//	imShowSub("3.DoG", dogMat, WIN_COLS, WIN_ROWS, 4);
 
 		//! Local Contrast Enhancement
 		cv::Mat lceMat;
 		EnhanceContrast_LCE(dogMat, lceMat);
-		imShowSub("4.LCE", lceMat, WIN_COLS, WIN_ROWS, 5);
+	//	imShowSub("4.LCE", lceMat, WIN_COLS, WIN_ROWS, 5);
 
 
 		cv::threshold(lceMat, thMat, 50, 255, cv::THRESH_BINARY);
 		//Canny(lceMat, thMat, 10, 100);
-		imShowSub("5.Threshold", thMat, WIN_COLS, WIN_ROWS, 6);
+	//	imShowSub("5.Threshold", thMat, WIN_COLS, WIN_ROWS, 6);
 }//end IPMPreprocess
 
 
@@ -306,12 +306,12 @@ void ShowImage(cv::Mat *ipmMat)
                         std::vector<Lane> &leftIPMLanes, std::vector<Lane> &rightIPMLanes,
                         cv::Mat &leftCoefs, cv::Mat &rightCoefs,
                         std::vector<cv::Point2d> &leftSampledPoints, std::vector<cv::Point2d> &rightSampledPoints,
-                        double &laneWidth)
+                        double &laneWidth, cv::Mat &IPM_OUT)
     	{
    	    	/* Preprossing Step */
         	cv::Mat thMat, trial;
          //  trial = *ipmMat;
-          imshow ("IPMDetectLanes input", ipmMat);
+        //  imshow ("IPMDetectLanes input", ipmMat);
         	IPMPreprocess(ipmMat, laneDetectorConf, thMat);
           /* Set the ROI, considering the noise in the initialization step */
         	#if 1
@@ -341,7 +341,7 @@ void ShowImage(cv::Mat *ipmMat)
           // std::cout<<"rows: "<< colorMat.rows <<std::endl;
           // std::cout<<"cols: "<< colorMat.cols <<std::endl;
         	cv::line(colorMat, cv::Point(0, colorMat.rows/2), cv::Point(colorMat.cols, colorMat.rows/2), CV_RGB(0, 0, 255));
-        	imShowSub("6.Division", colorMat, WIN_COLS, WIN_ROWS, 7);
+      //  	imShowSub("6.Division", colorMat, WIN_COLS, WIN_ROWS, 7);
 
     		/* Hough Transform Step (Optional) */
         	#if 0
@@ -484,7 +484,8 @@ void ShowImage(cv::Mat *ipmMat)
         		}
 
         		MeasureLaneWidth(leftSampledPoints, rightSampledPoints, laneDetectorConf, laneWidth);
-        		imShowSub("7.Init Tracking", colorMat, WIN_COLS, WIN_ROWS, 8);
+        	//	imShowSub("7.Init Tracking", colorMat, WIN_COLS, WIN_ROWS, 8);
+            IPM_OUT = colorMat;
         	#endif
 
     	}//end IPMDetectLane

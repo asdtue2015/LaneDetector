@@ -93,7 +93,7 @@ namespace LaneDetectorSim {
 		std::ofstream laneFeatureFile;
 
 		/* Parameters for Lane Detector */
-		cv::Mat laneMat;
+		cv::Mat laneMat, IPM_OUT;
 		LaneDetector::LaneDetectorConf laneDetectorConf;
 		std::vector<cv::Vec2f> hfLanes;
 		std::vector<cv::Vec2f> lastHfLanes;
@@ -141,9 +141,9 @@ namespace LaneDetectorSim {
             		sprintf(laneImg, LANE_RAW_NAME , idx);
             		laneMat = cv::imread(laneImg);
 								LaneDetector_J::mcvInitLaneDetectorConf(fileName_test, &lanesConf);
-								MSG("Loaded lanes config file\n");
+							//	MSG("Loaded lanes config file\n");
 								LaneDetector_J::mcvInitCameraInfo(fileName_test2, &cameraInfo);
-								MSG("Loaded camera file\n");
+							//	MSG("Loaded camera file\n");
             		LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2, coef_thetaMax); // KIT 1, ESIEE 2
             		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
 
@@ -189,13 +189,15 @@ namespace LaneDetectorSim {
             		{
                 		ProcessLaneImage_IPM(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
 			            	lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE,
-								     cameraInfo,  lanesConf);
+								     cameraInfo,  lanesConf, IPM_OUT);
+										 cv::imshow("IPM_OUT", IPM_OUT);
             		}
 
 								if (LANE_DETECTOR && HK)
 								{
 									ProcessLaneImage(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
 									lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE);
+									cv::imshow("Lane System", laneMat);
 								}
 
 
@@ -213,7 +215,8 @@ namespace LaneDetectorSim {
             		cv::putText(laneMat, text, cv::Point(0, 60), cv::FONT_HERSHEY_SIMPLEX, 0.8, CV_RGB(0, 255, 0));
             		delete text;
 
-            		cv::imshow("Lane System", laneMat);
+
+
             		//cv::moveWindow("Lane System", 790, 30);
             		key = cv::waitKey(delay);
             		if (key == 'q' || key == 'Q' || 27 == (int)key) //Esc q\Q\key to stop
