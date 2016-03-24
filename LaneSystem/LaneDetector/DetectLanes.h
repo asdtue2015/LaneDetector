@@ -48,7 +48,7 @@ namespace LaneDetector{
 
 		/* The method to use for IPM interpolation */
 		int ipmInterpolation;
-        
+
         	/* kernel size to use for filtering, matrix used for image processing */
         	unsigned char kernelWidth;
         	unsigned char kernelHeight;
@@ -75,7 +75,7 @@ namespace LaneDetector{
         	double distCornerMin;
         	double distCornerMax;
 		} LaneDetectorConf;
-    
+
 
 
 	void IPMPreprocess(const cv::Mat &ipmMat,
@@ -142,7 +142,7 @@ namespace LaneDetector{
 
     	/* * This function does initialization of the struct of laneDetectorConf
     	* \param laneDetectorConf the structure to fill */
-    	void InitlaneDetectorConf(const cv::Mat &laneMat, LaneDetectorConf &laneDetectorConf, const int database);
+    	void InitlaneDetectorConf(const cv::Mat &laneMat, LaneDetectorConf &laneDetectorConf, const int database, const double coef_thetaMax);
 
     	/* * This function enhance the adaptive contrast of images. */
     	void EnhanceContrast_LCE(const cv::Mat &inMat, cv::Mat &outMat, const int &threshold = 1, const int &amount = 1);

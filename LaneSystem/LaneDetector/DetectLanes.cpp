@@ -967,7 +967,7 @@ void ShowImage(cv::Mat *ipmMat)
     	enum database{ KIT = 1, ESIEE };
 
     	// Default setting due to lack of enough information
-	void InitlaneDetectorConf(const cv::Mat &laneMat, LaneDetectorConf &laneDetectorConf, const int database)
+	void InitlaneDetectorConf(const cv::Mat &laneMat, LaneDetectorConf &laneDetectorConf, const int database, const double coef_thetaMax)
 	{
     laneDetectorConf.isIPM = 1; //1 open, 0 close
     /* Parameters of configuration of camera */
@@ -1020,7 +1020,7 @@ laneDetectorConf.rHorizon = (laneDetectorConf.m-1)/2*(1 - tan(laneDetectorConf.t
 
           case ESIEE:
               laneDetectorConf.thetaMin = CV_PI / 4;//45 degree
-              laneDetectorConf.thetaMax = CV_PI * 0.5; //80 degree
+              laneDetectorConf.thetaMax = CV_PI * coef_thetaMax; //80 degree coef_thetaMax=0.5
               laneDetectorConf.top_range = 20;
               laneDetectorConf.bottom_range = 170;
 

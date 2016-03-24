@@ -54,7 +54,7 @@ namespace LaneDetectorSim {
 
 	int Process(int argc, const char* argv[])
 	{
-        	if(argc < 7)
+        	if(argc < 8)
             	std::cout << "Not enough parameters" << std::endl;
 
 		int	LANE_DETECTOR  	= atoi(argv[1]);
@@ -64,6 +64,7 @@ namespace LaneDetectorSim {
     double PITCH_ANGLE  = atof(argv[5]); // pitch - Y
 		int	IPM_HK     	= atoi(argv[6]); //enables the IPM tranformation
 		int	HK 	= atoi(argv[7]);
+	  double coef_thetaMax = atoi(argv[8]);
 
 		std::cout << "/*************************************/" << std::endl;
 		std::cout << "Input LANE_DETECTOR" << LANE_DETECTOR << std::endl;
@@ -73,6 +74,7 @@ namespace LaneDetectorSim {
 		std::cout << "Input PITCH_ANGLE" << PITCH_ANGLE << std::endl;
 		std::cout << "Input IPM_HK  " << IPM_HK  << std::endl;
 		std::cout << "Input HK" << HK << std::endl;
+		std::cout << "Input coef_thetaMax" << coef_thetaMax << std::endl;
 		std::cout << "/*************************************/" << std::endl;
 
 
@@ -142,7 +144,7 @@ namespace LaneDetectorSim {
 								MSG("Loaded lanes config file\n");
 								LaneDetector_J::mcvInitCameraInfo(fileName_test2, &cameraInfo);
 								MSG("Loaded camera file\n");
-            		LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2); // KIT 1, ESIEE 2
+            		LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2, coef_thetaMax); // KIT 1, ESIEE 2
             		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
 
         	}
@@ -152,7 +154,7 @@ namespace LaneDetectorSim {
              		/* Lane detect and tracking */
 	            sprintf(laneImg, LANE_RAW_NAME , idx);
 	            laneMat = cv::imread(laneImg);
-	            LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2); // KIT 1, ESIEE 2
+	            LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2, coef_thetaMax); // KIT 1, ESIEE 2
 	            LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
 
         	}
