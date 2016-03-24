@@ -196,22 +196,9 @@ std::cout<<"p1.y: "<<p1.y<<std::endl;
 		            break;
 		        }
 		    }
-        for(int m = 1; m < ipmMat.rows; m++)
-        {
-            //std::cout<<"I AM IN FOR"<<std::endl;
-            if((int)ipmMat.at<uchar>(m, ipmMat.cols-1) != 0)
-            {
-                p4.x = ipmMat.cols - 1;
-                p4.y = m + 1;
-                p3.x = ipmMat.cols - 1;
-                p3.y = ipmMat.rows - 1 - (m + 1);
-                break;
-            }
-        }
-
-		}
-		//else
-    if ((int)ipmMat.at<uchar>(0, ipmMat.cols-1) == 0)
+    }
+	else
+  //  if ((int)ipmMat.at<uchar>(0, ipmMat.cols-1) == 0)
 		{
       //std::cout<<"I AM IN ELSE"<<std::endl;
 		    for(int m = 1; m < ipmMat.rows; m++)
@@ -239,7 +226,7 @@ std::cout<<"p1.y: "<<p1.y<<std::endl;
 		contour.push_back(p3);
 		contour.push_back(p4);
 
-		#if 0
+		#if 1
 		cv::Mat ipmCopy = ipmMat.clone();
 		cv::line(ipmCopy, p1, p2, cv::Scalar(255));
 		cv::line(ipmCopy, p2, p3, cv::Scalar(255));
@@ -459,13 +446,18 @@ void ShowImage(cv::Mat *ipmMat)
         		double thValue  = 1;
 
         		cv::Rect leftROI = cv::Rect(0, 0, thMat.cols, thMat.rows/2);
+            //cv::Rect leftROI = cv::Rect(0, thMat.rows/4, thMat.cols, thMat.rows/4);
         		cv::Mat leftThMat = thMat(leftROI);
         		ExtractPointSet(leftThMat, leftPointSet);
         		if(!leftPointSet.empty())
         		{
             			int leftCloseDataNum = 80;
+                  // for(int i = 0; i < (int)leftPointSet.size(); i++)
+            			// {
+                	// 		leftPointSet.at(i).y += thMat.rows/4;
+            			// }
             			FittingCurve_LS(leftPointSet, termNum, leftCoefs);PrintMat(leftCoefs);
-            		//	FittingCurve_RANSAC(leftPointSet, termNum, minDataNum, iterNum, thValue, leftCloseDataNum, leftCoefs, colorMat);
+            			//FittingCurve_RANSAC(leftPointSet, termNum, minDataNum, iterNum, thValue, leftCloseDataNum, leftCoefs, colorMat);
             			IPMDrawCurve(leftCoefs, colorMat, leftSampledPoints, CV_RGB(255, 0, 0));
         		}
 
@@ -971,16 +963,16 @@ void ShowImage(cv::Mat *ipmMat)
 	void InitlaneDetectorConf(const cv::Mat &laneMat, LaneDetectorConf &laneDetectorConf, const int database)
 	{
         	/* run IPM */
-        	laneDetectorConf.isIPM = 0; //1 open, 0 close
+        	laneDetectorConf.isIPM = 1; //1 open, 0 close
         	/* Parameters of configuration of camera */
         	laneDetectorConf.m = laneMat.rows * COEF;    //Rows (height of Image)
         	laneDetectorConf.n = laneMat.cols * COEF;     //Columns (width of Image)
-        	laneDetectorConf.h = 1.5;              //Distance of camera above the ground (meters) //init 1.15
-        	laneDetectorConf.alphaTot = atan(3.5/12.5); //HALF viewing angle
+        	laneDetectorConf.h = 1.15;              //Distance of camera above the ground (meters) //init 1.15
+        	laneDetectorConf.alphaTot = atan(3/12.5); //HALF viewing angle
 
         	//! \param 6.7 for lane(data_130326)
         	//! \param 5.5 for lane(data_121013)
-        	//laneDetectorConf.theta0 = CV_PI*(6.7/180);   //Camera tilted angle below the horizontal(positive)
+        	// laneDetectorConf.theta0 = CV_PI*(5.5/180);   //Camera tilted angle below the horizontal(positive)
 
         	//! \params for lane (data_130710)
         	laneDetectorConf.theta0 = CV_PI * (8.5/180.0); //the pitch angle init 8.5
@@ -1000,11 +992,13 @@ void ShowImage(cv::Mat *ipmMat)
         	laneDetectorConf.rhoMin  = 30;
 		laneDetectorConf.rhoStep = 1;
 
-		laneDetectorConf.thetaStep =2;// CV_PI/180;
-
+		laneDetectorConf.thetaStep = CV_PI/180;
+		laneDetectorConf.den = sqrt(pow(laneDetectorConf.m-1, 2) + pow(laneDetectorConf.n-1, 2));
+		laneDetectorConf.alpha_v = atan( (laneDetectorConf.m-1)/laneDetectorConf.den * tan(laneDetectorConf.alphaTot));
+		laneDetectorConf.rHorizon = (laneDetectorConf.m-1)/2*(1 - tan(laneDetectorConf.theta0)/tan(laneDetectorConf.alpha_v)) + 1 +  laneDetectorConf.m * 0.05 ;
         	switch(database)
 		{
-            		case KIT:
+            			case KIT:
                 		laneDetectorConf.thetaMin = CV_PI * 0.25;//45 degree
                 		laneDetectorConf.thetaMax = CV_PI * 0.36; //72 degree 0.36 init
                 		laneDetectorConf.top_range = 20; //20 init
@@ -1019,9 +1013,6 @@ void ShowImage(cv::Mat *ipmMat)
 
             		case ESIEE:
                 		laneDetectorConf.thetaMin = CV_PI / 4;//45 degree
-                		laneDetectorConf.thetaMax = 45;//CV_PI * 0.5; // / 9 * 4; //80 degree
-                		laneDetectorConf.top_range = 220;//20;
-                		laneDetectorConf.bottom_range = 350;//170;
                 		laneDetectorConf.thetaMax = CV_PI * 0.5; //80 degree
                 		laneDetectorConf.top_range = 20;
                 		laneDetectorConf.bottom_range = 170;

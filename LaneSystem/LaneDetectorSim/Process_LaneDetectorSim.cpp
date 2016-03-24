@@ -130,7 +130,7 @@ namespace LaneDetectorSim{
 		// IPMgetWorldImage(laneMat, laneDetectorConf, interpMap, ipmMat);
 		LaneDetector::IPMDetectLanes(IPMJ_Rotated, laneDetectorConf, leftIPMLanes, rightIPMLanes, leftCoefs, rightCoefs,leftSampledPoints, rightSampledPoints, laneWidth);
 		//LaneDetector::DetectLanes(IPMJ_Rotated, laneDetectorConf, offsetX, offsetY, hfLanes, postHfLanes, laneKalmanIdx, isChangeLane);
-		//DrawMarkingFromIPM(IPMJ_Rotated, leftSampledPoints, rightSampledPoints, laneDetectorConf);
+		DrawMarkingFromIPM(IPMJ_Rotated, leftSampledPoints, rightSampledPoints, laneDetectorConf);
 
 					/********/
 
@@ -399,9 +399,9 @@ namespace LaneDetectorSim{
 				cv::resize(laneMat, laneMat, cv::Size(cvRound(WIDTH * COEF), cvRound(HEIGHT * COEF)), cv::INTER_AREA);
 
 	/* Cropping the ROI */
-	// cv::Mat croppedImg;
-	// croppedImg = laneMat(cv::Rect(0,250,480,200));
-	// laneMat=croppedImg;
+	 cv::Mat croppedImg;
+	 croppedImg = laneMat(cv::Rect(0,250,480,200));
+	 laneMat=croppedImg;
 
 				/* Change color to grayscale */
 				cv::Mat grayMat = cv::Mat(cvRound(HEIGHT * COEF), cvRound(WIDTH * COEF), CV_8UC1);

@@ -34,6 +34,9 @@ namespace LaneDetector{
         	double alpha_v;
         	double theta0;      //the camera tilted angle (pitch angle)
         	double rHorizon;
+		//For cutting the Horizon
+		double den;
+		//////////////////////
 
         	/* IPM parameters */
         	double ipmX_min;    //meter in IPM x coordinate
@@ -45,7 +48,7 @@ namespace LaneDetector{
 
 		/* The method to use for IPM interpolation */
 		int ipmInterpolation;
-
+        
         	/* kernel size to use for filtering, matrix used for image processing */
         	unsigned char kernelWidth;
         	unsigned char kernelHeight;
@@ -72,6 +75,8 @@ namespace LaneDetector{
         	double distCornerMin;
         	double distCornerMax;
 		} LaneDetectorConf;
+    
+
 
 	void IPMPreprocess(const cv::Mat &ipmMat,
 		const LaneDetectorConf &laneDetectorConf,

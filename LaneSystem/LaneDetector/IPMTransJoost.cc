@@ -132,7 +132,7 @@ void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
           if (ui<ipmInfo->ipmLeft || ui>ipmInfo->ipmRight || \
               vi<ipmInfo->ipmTop || vi>ipmInfo->ipmBottom) \
           { \
-              CV_MAT_ELEM(*outImage, type, i, j) = (type)mean; \
+              CV_MAT_ELEM(*outImage, type, i, j) = 0; \
           } \
           /*not out of bounds, then get nearest neighbor*/ \
           else \
