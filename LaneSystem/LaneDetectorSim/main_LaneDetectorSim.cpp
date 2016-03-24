@@ -62,8 +62,8 @@ namespace LaneDetectorSim {
 		int EndFrame	    	= atoi(argv[3]); // FRAME_END
     double YAW_ANGLE    = atof(argv[4]); // yaw - X
     double PITCH_ANGLE  = atof(argv[5]); // pitch - Y
-		int	IPM_TRANS     	= atoi(argv[6]); //enables the IPM tranformation
-		int	HoughandKalman 	= atoi(argv[7]);
+		int	IPM_HK     	= atoi(argv[6]); //enables the IPM tranformation
+		int	HK 	= atoi(argv[7]);
 
 		std::cout << "/*************************************/" << std::endl;
 		std::cout << "Input LANE_DETECTOR" << LANE_DETECTOR << std::endl;
@@ -71,8 +71,8 @@ namespace LaneDetectorSim {
 		std::cout << "Input EndFrame" << EndFrame << std::endl;
 		std::cout << "Input YAW_ANGLE" << YAW_ANGLE << std::endl;
 		std::cout << "Input PITCH_ANGLE" << PITCH_ANGLE << std::endl;
-		std::cout << "Input IPM_TRANS  " << IPM_TRANS   << std::endl;
-		std::cout << "Input HoughandKalman" << HoughandKalman << std::endl;
+		std::cout << "Input IPM_HK  " << IPM_HK  << std::endl;
+		std::cout << "Input HK" << HK << std::endl;
 		std::cout << "/*************************************/" << std::endl;
 
 
@@ -133,7 +133,7 @@ namespace LaneDetectorSim {
 
 		InitlaneFeatures(laneFeatures);
 
-        	if (LANE_DETECTOR && IPM_TRANS)
+        	if (LANE_DETECTOR && IPM_HK)
 	      	{
              		/* Lane detect and tracking */
             		sprintf(laneImg, LANE_RAW_NAME , idx);
@@ -147,7 +147,7 @@ namespace LaneDetectorSim {
 
         	}
 
-					if (LANE_DETECTOR && HoughandKalman)
+					if (LANE_DETECTOR && HK)
 	      	{
              		/* Lane detect and tracking */
 	            sprintf(laneImg, LANE_RAW_NAME , idx);
@@ -183,14 +183,14 @@ namespace LaneDetectorSim {
             		sprintf(laneImg, LANE_RAW_NAME , idx);
             		laneMat = cv::imread(laneImg);//imshow("laneMat", laneMat);
 
-            		if (LANE_DETECTOR && IPM_TRANS)
+            		if (LANE_DETECTOR && IPM_HK)
             		{
                 		ProcessLaneImage_IPM(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
 			            	lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE,
 								     cameraInfo,  lanesConf);
             		}
 
-								if (LANE_DETECTOR && HoughandKalman)
+								if (LANE_DETECTOR && HK)
 								{
 									ProcessLaneImage(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
 									lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE);
