@@ -337,7 +337,7 @@ namespace LaneDetector{
         	}//end for iteration
 
                	double costTime = ((double)cv::getTickCount() - startTime)/cv::getTickFrequency();
-        	printf("RANSAC Line Fitting Needs %.2f msec about %.2f Hz\n", costTime*1000, 1/costTime);
+        //	printf("RANSAC Line Fitting Needs %.2f msec about %.2f Hz\n", costTime*1000, 1/costTime);
 
     	}//end FittingCurve_RANSAC
 
@@ -360,7 +360,7 @@ namespace LaneDetector{
 		double delta0 = pow(b*c/(6*a*a) - b*b*b/(27*a*a*a) - d/(2*a), 2);
 		double delta1 = pow(c/(3*a) - b*b/(9*a*a), 3);
 		double delta = delta0 + delta1;
-		std::cout << "delta: " << delta << std::endl;
+		//std::cout << "delta: " << delta << std::endl;
 
 		//! TOO SLOW to calculate the roots
 		if (delta > 0)

@@ -258,7 +258,7 @@ namespace LaneDetectorSim{
 		            		}
 		            		if(departCond == 1)
 		            		{
-		                		std::cout << "Changing Lanes >> Reset All Parameters" << std::endl;
+		                	//	std::cout << "Changing Lanes >> Reset All Parameters" << std::endl;
 		                		//! Reset Kalman filter and laneKalmanIdx = 0
 		                		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
 		                		postHfLanes.clear();
@@ -390,8 +390,8 @@ namespace LaneDetectorSim{
 		//std::cout << "HEIGHT" << HEIGHT << std::endl;
         	char *text = new char[100];
 
-        	std::cout << std::endl;
-        	std::cout << "---" << idx << std::endl;
+        //	std::cout << std::endl;
+      //  	std::cout << "---" << idx << std::endl;
         	//LaneDetector::PrintMat(laneKalmanMeasureMat);
 
         	/* Reduce the size of raw image */
@@ -544,7 +544,7 @@ namespace LaneDetectorSim{
             		}
             		if(departCond == 1)
             		{
-                		std::cout << "Changing Lanes >> Reset All Parameters" << std::endl;
+                	//	std::cout << "Changing Lanes >> Reset All Parameters" << std::endl;
                 		//! Reset Kalman filter and laneKalmanIdx = 0
                 		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
                 		postHfLanes.clear();

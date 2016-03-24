@@ -155,8 +155,8 @@ namespace LaneDetector{
 
 		/* * Get the contours in IPM image * It can be optimized using ipmMask */
 
-      std::cout<<"ipmMat.rows: "<<ipmMat.rows<<std::endl;
-      std::cout<<"ipmMat.cols: "<<ipmMat.cols<<std::endl;
+    //  std::cout<<"ipmMat.rows: "<<ipmMat.rows<<std::endl;
+      //std::cout<<"ipmMat.cols: "<<ipmMat.cols<<std::endl;
 
 		cv::Point2f p1, p2, p3, p4;
 		//P1 (left top)
@@ -167,7 +167,7 @@ namespace LaneDetector{
 		        break;       }
 		}
 		CV_Assert(p1.y != 0);
-std::cout<<"p1.y: "<<p1.y<<std::endl;
+//std::cout<<"p1.y: "<<p1.y<<std::endl;
 		//P2 (left bottom)
 		for(int m = ipmMat.rows - 1; m > 0; m--)
 		{
@@ -179,12 +179,12 @@ std::cout<<"p1.y: "<<p1.y<<std::endl;
 		    }
 		}
 		CV_Assert(p2.y != 0);
-    std::cout<<"p2.y:"<<p2.y<<std::endl;
+  //  std::cout<<"p2.y:"<<p2.y<<std::endl;
 
 		//P3 & P4 (right top & bottom)
 		if ((int)ipmMat.at<uchar>(0, ipmMat.cols-1) != 0)
 		{
-        std::cout<<"I AM IN FIRST IF"<<std::endl;
+      //  std::cout<<"I AM IN FIRST IF"<<std::endl;
 		    for(int n = ipmMat.cols-2; n > 0; n--)
 		    {
 		        if ((int)ipmMat.at<uchar>(0, n) == 0){
@@ -218,10 +218,10 @@ std::cout<<"p1.y: "<<p1.y<<std::endl;
 		    }
 
 		}
-    std::cout<<"p3.x: "<<p3.x<<std::endl;
-    std::cout<<"p3.y: "<<p3.y<<std::endl;
-    std::cout<<"p4.x: "<<p4.x<<std::endl;
-    std::cout<<"p4.y: "<<p4.y<<std::endl;
+    // std::cout<<"p3.x: "<<p3.x<<std::endl;
+    // std::cout<<"p3.y: "<<p3.y<<std::endl;
+    // std::cout<<"p4.x: "<<p4.x<<std::endl;
+    // std::cout<<"p4.y: "<<p4.y<<std::endl;
 		CV_Assert(p3.x!=0 && p4.x!=0);
 
 		std::vector<cv::Point2f> contour;
@@ -338,8 +338,8 @@ void ShowImage(cv::Mat *ipmMat)
 
         	cv::Mat colorMat = ipmMat.clone();
         	cv::cvtColor(colorMat, colorMat, cv::COLOR_GRAY2RGB);
-          std::cout<<"rows: "<< colorMat.rows <<std::endl;
-          std::cout<<"cols: "<< colorMat.cols <<std::endl;
+          // std::cout<<"rows: "<< colorMat.rows <<std::endl;
+          // std::cout<<"cols: "<< colorMat.cols <<std::endl;
         	cv::line(colorMat, cv::Point(0, colorMat.rows/2), cv::Point(colorMat.cols, colorMat.rows/2), CV_RGB(0, 0, 255));
         	imShowSub("6.Division", colorMat, WIN_COLS, WIN_ROWS, 7);
 
@@ -967,7 +967,7 @@ void ShowImage(cv::Mat *ipmMat)
     	enum database{ KIT = 1, ESIEE };
 
     	// Default setting due to lack of enough information
-	void InitlaneDetectorConf(const cv::Mat &laneMat, LaneDetectorConf &laneDetectorConf, const int database, const double coef_thetaMax)
+	void InitlaneDetectorConf(const cv::Mat &laneMat, LaneDetectorConf &laneDetectorConf, const int database,  double coef_thetaMax)
 	{
     laneDetectorConf.isIPM = 1; //1 open, 0 close
     /* Parameters of configuration of camera */
@@ -1348,7 +1348,7 @@ laneDetectorConf.rHorizon = (laneDetectorConf.m-1)/2*(1 - tan(laneDetectorConf.t
         	}
         	double distance  = disSum / sampledPointsNum; //pixels
         	laneWidth = distance / laneDetectorConf.ipmStep;
-        	printf("@Two lane markings distance : %.2f, about %.2f meter.\n", distance , laneWidth);
+        //	printf("@Two lane markings distance : %.2f, about %.2f meter.\n", distance , laneWidth);
     	}
 
 }//namespace LaneDetector
