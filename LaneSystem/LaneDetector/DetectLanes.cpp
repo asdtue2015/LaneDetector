@@ -196,8 +196,11 @@ std::cout<<"p1.y: "<<p1.y<<std::endl;
 		            break;
 		        }
 		    }
+
     }
 	else
+
+
   //  if ((int)ipmMat.at<uchar>(0, ipmMat.cols-1) == 0)
 		{
       //std::cout<<"I AM IN ELSE"<<std::endl;
@@ -213,6 +216,7 @@ std::cout<<"p1.y: "<<p1.y<<std::endl;
 		            break;
 		        }
 		    }
+
 		}
     std::cout<<"p3.x: "<<p3.x<<std::endl;
     std::cout<<"p3.y: "<<p3.y<<std::endl;
@@ -423,6 +427,7 @@ void ShowImage(cv::Mat *ipmMat)
 
         	#if 0
         		//! Probabilistic Hough Transform.
+            std::vector<cv::Vec2f> hfLanesCandi;
         		std::vector<cv::Vec4i> phfLanesCandi;
        			double MinLength = 5;
         		double MaxGap = 300;
@@ -451,12 +456,14 @@ void ShowImage(cv::Mat *ipmMat)
         		ExtractPointSet(leftThMat, leftPointSet);
         		if(!leftPointSet.empty())
         		{
+              // for(int i = 0; i < (int)leftPointSet.size(); i++)
+              // {
+              //     leftPointSet.at(i).y += thMat.rows/2;
+              // }
             			int leftCloseDataNum = 80;
-                  // for(int i = 0; i < (int)leftPointSet.size(); i++)
-            			// {
-                	// 		leftPointSet.at(i).y += thMat.rows/4;
-            			// }
-            			FittingCurve_LS(leftPointSet, termNum, leftCoefs);PrintMat(leftCoefs);
+
+            			FittingCurve_LS(leftPointSet, termNum, leftCoefs);//PrintMat(leftCoefs);
+
             			//FittingCurve_RANSAC(leftPointSet, termNum, minDataNum, iterNum, thValue, leftCloseDataNum, leftCoefs, colorMat);
             			IPMDrawCurve(leftCoefs, colorMat, leftSampledPoints, CV_RGB(255, 0, 0));
         		}
@@ -962,71 +969,71 @@ void ShowImage(cv::Mat *ipmMat)
     	// Default setting due to lack of enough information
 	void InitlaneDetectorConf(const cv::Mat &laneMat, LaneDetectorConf &laneDetectorConf, const int database)
 	{
-        	/* run IPM */
-        	laneDetectorConf.isIPM = 1; //1 open, 0 close
-        	/* Parameters of configuration of camera */
-        	laneDetectorConf.m = laneMat.rows * COEF;    //Rows (height of Image)
-        	laneDetectorConf.n = laneMat.cols * COEF;     //Columns (width of Image)
-        	laneDetectorConf.h = 1.15;              //Distance of camera above the ground (meters) //init 1.15
-        	laneDetectorConf.alphaTot = atan(3/12.5); //HALF viewing angle
+    laneDetectorConf.isIPM = 1; //1 open, 0 close
+    /* Parameters of configuration of camera */
+    laneDetectorConf.m = laneMat.rows * COEF;    //Rows (height of Image)
+    laneDetectorConf.n = laneMat.cols * COEF;     //Columns (width of Image)
+    laneDetectorConf.h = 1.15;              //Distance of camera above the ground (meters) //init 1.15
+    laneDetectorConf.alphaTot = atan(3/12.5); //HALF viewing angle
 
-        	//! \param 6.7 for lane(data_130326)
-        	//! \param 5.5 for lane(data_121013)
-        	// laneDetectorConf.theta0 = CV_PI*(5.5/180);   //Camera tilted angle below the horizontal(positive)
+    //! \param 6.7 for lane(data_130326)
+    //! \param 5.5 for lane(data_121013)
+    // laneDetectorConf.theta0 = CV_PI*(5.5/180);   //Camera tilted angle below the horizontal(positive)
 
-        	//! \params for lane (data_130710)
-        	laneDetectorConf.theta0 = CV_PI * (8.5/180.0); //the pitch angle init 8.5
+    //! \params for lane (data_130710)
+    laneDetectorConf.theta0 = CV_PI * (8.5/180.0); //the pitch angle init 8.5
 
-        	laneDetectorConf.ipmX_max = 60.0;  //meters
-        	laneDetectorConf.ipmY_max = 12.0;  //meters
-        	laneDetectorConf.ipmY_min = -12.0; //meters
-        	laneDetectorConf.ipmStep = 8;      //pixels per meter
-        	laneDetectorConf.mIPM = (laneDetectorConf.ipmY_max - laneDetectorConf.ipmY_min) * laneDetectorConf.ipmStep;
+    laneDetectorConf.ipmX_max = 60.0;  //meters
+    laneDetectorConf.ipmY_max = 12.0;  //meters
+    laneDetectorConf.ipmY_min = -12.0; //meters
+    laneDetectorConf.ipmStep = 8;      //pixels per meter
+    laneDetectorConf.mIPM = (laneDetectorConf.ipmY_max - laneDetectorConf.ipmY_min) * laneDetectorConf.ipmStep;
 
-		laneDetectorConf.kernelWidth = 2;
-		laneDetectorConf.kernelHeight = 2;
+laneDetectorConf.kernelWidth = 2;
+laneDetectorConf.kernelHeight = 2;
 
-		laneDetectorConf.groupingType = GROUPING_TYPE_HOUGH_LINES;
-		laneDetectorConf.filterType = DOG_FILTER;
+laneDetectorConf.groupingType = GROUPING_TYPE_HOUGH_LINES;
+laneDetectorConf.filterType = DOG_FILTER;
 
-        	laneDetectorConf.rhoMin  = 30;
-		laneDetectorConf.rhoStep = 1;
+    laneDetectorConf.rhoMin  = 30;
+laneDetectorConf.rhoStep = 1;
 
-		laneDetectorConf.thetaStep = CV_PI/180;
-		laneDetectorConf.den = sqrt(pow(laneDetectorConf.m-1, 2) + pow(laneDetectorConf.n-1, 2));
-		laneDetectorConf.alpha_v = atan( (laneDetectorConf.m-1)/laneDetectorConf.den * tan(laneDetectorConf.alphaTot));
-		laneDetectorConf.rHorizon = (laneDetectorConf.m-1)/2*(1 - tan(laneDetectorConf.theta0)/tan(laneDetectorConf.alpha_v)) + 1 +  laneDetectorConf.m * 0.05 ;
-        	switch(database)
-		{
-            			case KIT:
-                		laneDetectorConf.thetaMin = CV_PI * 0.25;//45 degree
-                		laneDetectorConf.thetaMax = CV_PI * 0.36; //72 degree 0.36 init
-                		laneDetectorConf.top_range = 20; //20 init
-                		laneDetectorConf.bottom_range = 70; //70 init
+laneDetectorConf.thetaStep = CV_PI/180;
+laneDetectorConf.den = sqrt(pow(laneDetectorConf.m-1, 2) + pow(laneDetectorConf.n-1, 2));
+laneDetectorConf.alpha_v = atan( (laneDetectorConf.m-1)/laneDetectorConf.den * tan(laneDetectorConf.alphaTot));
+laneDetectorConf.rHorizon = (laneDetectorConf.m-1)/2*(1 - tan(laneDetectorConf.theta0)/tan(laneDetectorConf.alpha_v)) + 1 +  laneDetectorConf.m * 0.05 ;
 
-                		laneDetectorConf.vpTop = laneMat.rows * 0.2 * COEF;
-                		laneDetectorConf.vpBottom = laneMat.rows * 0.6 * COEF;
-                		laneDetectorConf.distCornerMin = laneMat.cols * 0.2 * COEF;
-                		laneDetectorConf.distCornerMax = laneMat.cols * 0.5 * COEF;
+    switch(database)
+{
+          case KIT:
+              laneDetectorConf.thetaMin = CV_PI * 0.25;//45 degree
+              laneDetectorConf.thetaMax = CV_PI * 0.36; //72 degree 0.36 init
+              laneDetectorConf.top_range = 20; //20 init
+              laneDetectorConf.bottom_range = 70; //70 init
 
-				break;
+              laneDetectorConf.vpTop = laneMat.rows * 0.2 * COEF;
+              laneDetectorConf.vpBottom = laneMat.rows * 0.6 * COEF;
+              laneDetectorConf.distCornerMin = laneMat.cols * 0.2 * COEF;
+              laneDetectorConf.distCornerMax = laneMat.cols * 0.5 * COEF;
 
-            		case ESIEE:
-                		laneDetectorConf.thetaMin = CV_PI / 4;//45 degree
-                		laneDetectorConf.thetaMax = CV_PI * 0.5; //80 degree
-                		laneDetectorConf.top_range = 20;
-                		laneDetectorConf.bottom_range = 170;
+  break;
 
-                		laneDetectorConf.vpTop = -laneMat.rows * 0.2 * COEF;
-                		laneDetectorConf.vpBottom = laneMat.rows * 0.3 * COEF;
-                		laneDetectorConf.distCornerMin = laneMat.cols * 0.5 * COEF;
-                		laneDetectorConf.distCornerMax = laneMat.cols * COEF * 2.5; //2.5
+          case ESIEE:
+              laneDetectorConf.thetaMin = CV_PI / 4;//45 degree
+              laneDetectorConf.thetaMax = CV_PI * 0.5; //80 degree
+              laneDetectorConf.top_range = 20;
+              laneDetectorConf.bottom_range = 170;
 
-				break;
+              laneDetectorConf.vpTop = -laneMat.rows * 0.2 * COEF;
+              laneDetectorConf.vpBottom = laneMat.rows * 0.3 * COEF;
+              laneDetectorConf.distCornerMin = laneMat.cols * 0.5 * COEF;
+              laneDetectorConf.distCornerMax = laneMat.cols * COEF * 2.5; //2.5
 
-            			default:
+  break;
 
-                		break;
+            default:
+
+              break;
         	}
 
 

@@ -195,6 +195,7 @@ namespace LaneDetector{
         	ipmMask.convertTo(ipmMask, CV_8U);
     //      cv::imshow("ipmMask", ipmMask);
 
+
     	}// IPMgetInterpMap
 
     	void IPMgetRowBounds(const int &xRow, const int &mCropped, int &r12, int &r34)
