@@ -125,6 +125,7 @@ IplImage* img = new IplImage(laneMat);
 
 
 LaneDetector_J::processJ(img, IPMJ, cameraInfo, lanesConf);
+cvSmooth(&IPMJ, &IPMJ, CV_GAUSSIAN, 3);
 //LaneDetector_J::SHOW_IMAGE(&IPMJ, "IPM image", 10);
 IPMJ_Mat = cv::Mat(&IPMJ, true);
 
@@ -150,6 +151,7 @@ cv::imshow("IPM ROT", IPMJ_Rotated);
 //IPMpixelsToWorld(laneDetectorConf, xMap, yMap);
 //IPMgetInterpMap(xMap, yMap, laneDetectorConf, interpMap, ipmMask);
 //IPMgetWorldImage(laneMat, laneDetectorConf, interpMap, ipmMat);
+
 LaneDetector::IPMDetectLanes(IPMJ_Rotated, laneDetectorConf, leftIPMLanes, rightIPMLanes, leftCoefs, rightCoefs,leftSampledPoints, rightSampledPoints, laneWidth);
 //LaneDetector::DetectLanes(IPMJ_Rotated, laneDetectorConf, offsetX, offsetY, hfLanes, postHfLanes, laneKalmanIdx, isChangeLane);
 DrawMarkingFromIPM(IPMJ_Rotated, leftSampledPoints, rightSampledPoints, laneDetectorConf);

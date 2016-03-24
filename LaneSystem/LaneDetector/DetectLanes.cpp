@@ -196,22 +196,10 @@ std::cout<<"p1.y: "<<p1.y<<std::endl;
 		            break;
 		        }
 		    }
-        for(int m = 1; m < ipmMat.rows; m++)
-        {
-            //std::cout<<"I AM IN FOR"<<std::endl;
-            if((int)ipmMat.at<uchar>(m, ipmMat.cols-1) != 0)
-            {
-                p4.x = ipmMat.cols - 1;
-                p4.y = m + 1;
-                p3.x = ipmMat.cols - 1;
-                p3.y = ipmMat.rows - 1 - (m + 1);
-                break;
-            }
-        }
 
 		}
-		//else
-    if ((int)ipmMat.at<uchar>(0, ipmMat.cols-1) == 0)
+		else
+  //  if ((int)ipmMat.at<uchar>(0, ipmMat.cols-1) == 0)
 		{
       //std::cout<<"I AM IN ELSE"<<std::endl;
 		    for(int m = 1; m < ipmMat.rows; m++)
@@ -226,6 +214,7 @@ std::cout<<"p1.y: "<<p1.y<<std::endl;
 		            break;
 		        }
 		    }
+
 		}
     std::cout<<"p3.x: "<<p3.x<<std::endl;
     std::cout<<"p3.y: "<<p3.y<<std::endl;
@@ -436,6 +425,7 @@ void ShowImage(cv::Mat *ipmMat)
 
         	#if 0
         		//! Probabilistic Hough Transform.
+            std::vector<cv::Vec2f> hfLanesCandi;
         		std::vector<cv::Vec4i> phfLanesCandi;
        			double MinLength = 5;
         		double MaxGap = 300;
@@ -463,9 +453,13 @@ void ShowImage(cv::Mat *ipmMat)
         		ExtractPointSet(leftThMat, leftPointSet);
         		if(!leftPointSet.empty())
         		{
+              for(int i = 0; i < (int)leftPointSet.size(); i++)
+              {
+                  leftPointSet.at(i).y += thMat.rows/2;
+              }
             			int leftCloseDataNum = 80;
-            			FittingCurve_LS(leftPointSet, termNum, leftCoefs);PrintMat(leftCoefs);
-            		//	FittingCurve_RANSAC(leftPointSet, termNum, minDataNum, iterNum, thValue, leftCloseDataNum, leftCoefs, colorMat);
+            			FittingCurve_LS(leftPointSet, termNum, leftCoefs);//PrintMat(leftCoefs);
+            			//FittingCurve_RANSAC(leftPointSet, termNum, minDataNum, iterNum, thValue, leftCloseDataNum, leftCoefs, colorMat);
             			IPMDrawCurve(leftCoefs, colorMat, leftSampledPoints, CV_RGB(255, 0, 0));
         		}
 
@@ -988,7 +982,7 @@ void ShowImage(cv::Mat *ipmMat)
         	laneDetectorConf.ipmX_max = 60.0;  //meters
         	laneDetectorConf.ipmY_max = 12.0;  //meters
         	laneDetectorConf.ipmY_min = -12.0; //meters
-        	laneDetectorConf.ipmStep = 8;      //pixels per meter
+        	laneDetectorConf.ipmStep = 3;      //pixels per meter
         	laneDetectorConf.mIPM = (laneDetectorConf.ipmY_max - laneDetectorConf.ipmY_min) * laneDetectorConf.ipmStep;
 
 		laneDetectorConf.kernelWidth = 2;
