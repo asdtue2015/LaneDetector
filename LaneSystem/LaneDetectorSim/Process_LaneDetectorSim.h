@@ -12,7 +12,7 @@
 #include "../LaneDetector/IPMTransJoost.hh"
 //}
 
-#include "cmdline.h"
+//#include "cmdline.h"
 //extern "C" {
 //#include "../LaneDetector/init.hh"
 //}
@@ -53,8 +53,7 @@ namespace LaneDetectorSim{
         // "TOT",
         "execTime", "pastTime"
     };
-
-    void ProcessLaneImage(cv::Mat &laneMat,
+    void ProcessLaneImage_IPM(cv::Mat &laneMat,
                           LaneDetector::LaneDetectorConf &laneDetectorConf,
                           const double &startTime,
                           cv::KalmanFilter &laneKalmanFilter,
@@ -67,6 +66,18 @@ namespace LaneDetectorSim{
                           std::vector<cv::Vec2f> &preHfLanes, int &changeDone,
                           const double &YAW_ANGLE, const double &PITCH_ANGLE,
                           LaneDetector_J::CameraInfo &cameraInfo, LaneDetector_J::LaneDetectorConf_J &lanesConf);
+    void ProcessLaneImage(cv::Mat &laneMat,
+                          LaneDetector::LaneDetectorConf &laneDetectorConf,
+                          const double &startTime,
+                          cv::KalmanFilter &laneKalmanFilter,
+                          cv::Mat &laneKalmanMeasureMat, int &laneKalmanIdx,
+                          std::vector<cv::Vec2f> &hfLanes,
+                          std::vector<cv::Vec2f> &lastHfLanes,
+                          double & lastLateralOffset,
+                          double &lateralOffset, int &isChangeLane,
+                          int &detectLaneFlag,  const int &idx, double &execTime,
+                          std::vector<cv::Vec2f> &preHfLanes, int &changeDone,
+                          const double &YAW_ANGLE, const double &PITCH_ANGLE);
 
     void GetSamplingTime(const char *fileName, std::vector<float> &samplingTime);
 

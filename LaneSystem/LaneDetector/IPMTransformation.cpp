@@ -191,7 +191,9 @@ namespace LaneDetector{
                 		p[n] = p[n] == 0 ? 0 : 255;
             		}
         	}
+
         	ipmMask.convertTo(ipmMask, CV_8U);
+    //      cv::imshow("ipmMask", ipmMask);
 
     	}// IPMgetInterpMap
 
@@ -376,7 +378,7 @@ namespace LaneDetector{
             		cv::multiply(newPixels, interpMap.weights[j], temp);
             		ipmMat += temp;
         	}
-
+cv::imshow("IPMgetWorldImage before ", ipmMat);
         	double *b = NULL;
         	for (int m = 0; m < nRows; m++)
         	{
@@ -388,7 +390,7 @@ namespace LaneDetector{
             		}
         	}
 
-//cv::imshow("IPMgetWorldImage", ipmMat);
+cv::imshow("IPMgetWorldImage after ", ipmMat);
         	ipmMat.convertTo(ipmMat, CV_8U);
 
     	}// IPMgetWorldImage

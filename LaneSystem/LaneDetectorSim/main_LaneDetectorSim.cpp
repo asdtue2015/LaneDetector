@@ -17,7 +17,7 @@
 #include <stdexcept>
 //}
 
-#include "cmdline.h"
+//#include "cmdline.h"
 
 
 #ifdef __cplusplus
@@ -38,8 +38,8 @@ extern const char   FILE_LANE_FEATURE[] = "./inputdata/outputdata/Sim_LaneFeatur
 extern const char   LANE_RECORD_IMAGE[]    = "./inputdata/outputdata/lane_%d.png";
 /* Data Source */
 
-//extern const char   LANE_RAW_NAME[]     = "./inputdata/clips/cropped_%d.png";
-extern const char   LANE_RAW_NAME[]     = "./inputdata/clips_original/lane_%d.png";
+extern const char   LANE_RAW_NAME[]     = "./inputdata/cropped_images/cropped_%d.png";
+//extern const char   LANE_RAW_NAME[]     = "./inputdata/clips/lane_%d.png";
 //extern const char   LANE_RAW_NAME[]     = "./inputdata/washington/lane_%d.png";
 // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/KIT/2011_09_26/2011_09_26_drive_0015_sync/image_00/data/%010d.png";
 // extern const char   LANE_RAW_NAME[]     = "/home/lixp/Developer/Data/LaneRaw_10-07-2013_18h30m21s/lane_%d.jpg";
@@ -54,7 +54,7 @@ namespace LaneDetectorSim {
 
 	int Process(int argc, const char* argv[])
 	{
-        	if(argc < 5)
+        	if(argc < 7)
             	std::cout << "Not enough parameters" << std::endl;
 
 		int	LANE_DETECTOR  	= atoi(argv[1]);
@@ -62,6 +62,8 @@ namespace LaneDetectorSim {
 		int EndFrame	    	= atoi(argv[3]); // FRAME_END
     double YAW_ANGLE    = atof(argv[4]); // yaw - X
     double PITCH_ANGLE  = atof(argv[5]); // pitch - Y
+		int	IPM_TRANS     	= atoi(argv[6]); //enables the IPM tranformation
+		int	HoughandKalman 	= atoi(argv[7]);
 
 		std::cout << "/*************************************/" << std::endl;
 		std::cout << "Input LANE_DETECTOR" << LANE_DETECTOR << std::endl;
@@ -69,6 +71,8 @@ namespace LaneDetectorSim {
 		std::cout << "Input EndFrame" << EndFrame << std::endl;
 		std::cout << "Input YAW_ANGLE" << YAW_ANGLE << std::endl;
 		std::cout << "Input PITCH_ANGLE" << PITCH_ANGLE << std::endl;
+		std::cout << "Input IPM_TRANS  " << IPM_TRANS   << std::endl;
+		std::cout << "Input HoughandKalman" << HoughandKalman << std::endl;
 		std::cout << "/*************************************/" << std::endl;
 
 
@@ -129,7 +133,7 @@ namespace LaneDetectorSim {
 
 		InitlaneFeatures(laneFeatures);
 
-        	if (LANE_DETECTOR)
+        	if (LANE_DETECTOR && IPM_TRANS)
 	      	{
              		/* Lane detect and tracking */
             		sprintf(laneImg, LANE_RAW_NAME , idx);
@@ -142,6 +146,17 @@ namespace LaneDetectorSim {
             		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
 
         	}
+
+					if (LANE_DETECTOR && HoughandKalman)
+	      	{
+             		/* Lane detect and tracking */
+	            sprintf(laneImg, LANE_RAW_NAME , idx);
+	            laneMat = cv::imread(laneImg);
+	            LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2); // KIT 1, ESIEE 2
+	            LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
+
+        	}
+
 
 
         	/* Inter-process communication */
@@ -168,12 +183,18 @@ namespace LaneDetectorSim {
             		sprintf(laneImg, LANE_RAW_NAME , idx);
             		laneMat = cv::imread(laneImg);//imshow("laneMat", laneMat);
 
-            		if (LANE_DETECTOR)
+            		if (LANE_DETECTOR && IPM_TRANS)
             		{
-                		ProcessLaneImage(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
+                		ProcessLaneImage_IPM(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
 			            	lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE,
 								     cameraInfo,  lanesConf);
             		}
+
+								if (LANE_DETECTOR && HoughandKalman)
+								{
+									ProcessLaneImage(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
+									lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE);
+								}
 
 
             		if(IMAGE_RECORD)
