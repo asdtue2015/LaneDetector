@@ -259,10 +259,10 @@ namespace LaneDetectorSim {
 
  						 			case 2:
 
- 						 			sprintf(laneImg, LANE_RAW_NAME , idx);
- 						 			laneMat = cv::imread(laneImg);
- 						 			LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2, coef_thetaMax); // KIT 1, ESIEE 2
- 						 			LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
+
+										ProcessLaneImage(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
+										lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE);
+										cv::imshow("Lane System", laneMat);
 
  						 			break;
 								 }
