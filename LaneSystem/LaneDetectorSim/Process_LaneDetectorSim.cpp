@@ -103,7 +103,7 @@ namespace LaneDetectorSim{
 
 
 		 LaneDetector_J::processJ(img, IPMJ, cameraInfo, lanesConf);
-//		 vSmooth(&IPMJ, &IPMJ, CV_GAUSSIAN, 3);
+		 cvSmooth(&IPMJ, &IPMJ, CV_GAUSSIAN, 3);
 		 //LaneDetector_J::SHOW_IMAGE(&IPMJ, "IPM image", 10);
 		 IPMJ_Mat = cv::Mat(&IPMJ, true);
 

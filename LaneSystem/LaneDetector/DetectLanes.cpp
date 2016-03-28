@@ -307,188 +307,184 @@ void ShowImage(cv::Mat *ipmMat)
                         cv::Mat &leftCoefs, cv::Mat &rightCoefs,
                         std::vector<cv::Point2d> &leftSampledPoints, std::vector<cv::Point2d> &rightSampledPoints,
                         double &laneWidth, cv::Mat &IPM_OUT)
-    	{
-   	    	/* Preprossing Step */
-        	cv::Mat thMat, trial;
-         //  trial = *ipmMat;
-        //  imshow ("IPMDetectLanes input", ipmMat);
-        	IPMPreprocess(ipmMat, laneDetectorConf, thMat);
-          /* Set the ROI, considering the noise in the initialization step */
-        	#if 1
-		 	double interval  = 3.0; //meter
-            		int yROI = cvRound((double)ipmMat.rows/2 -  interval * laneDetectorConf.ipmStep);
+                        {
+                       	    	/* Preprossing Step */
+                            	cv::Mat thMat, trial;
+                             //  trial = *ipmMat;
+                              imshow ("IPMDetectLanes input", ipmMat);
+                            	IPMPreprocess(ipmMat, laneDetectorConf, thMat);
+                              /* Set the ROI, considering the noise in the initialization step */
+                            	#if 1
+                    		 	double interval  = 3.75; //meter
+                                		int yROI = cvRound((double)ipmMat.rows/2 -  interval * laneDetectorConf.ipmStep);
 
-            		for (int i = 0; i < yROI; i++)
-            		{
-                		thMat.row(i) = cv::Scalar(0);
-            		}
-            		for(int j = thMat.rows - 1; j > thMat.rows - yROI; j--)
-            		{
-                		thMat.row(j) = cv::Scalar(0);
-            		}
-		/////////////// Was Commented before, from here /////////////////////
-             	// 	int xROI = 0;
-             	// 	int wROI = ipmMat.cols;
-             	// 	int hROI = cvRound(2 * interval * laneDetectorConf.ipmStep);
-             	// 	cv::Rect roi = cv:: Rect(xROI,yROI,wROI,hROI);
-             	// 	thMat = thMat(roi);
-		/////////////// To here /////////////////////
+                                		for (int i = 0; i < yROI; i++)
+                                		{
+                                    		thMat.row(i) = cv::Scalar(0);
+                                		}
+                                		for(int j = thMat.rows - 1; j > thMat.rows - yROI; j--)
+                                		{
+                                    		thMat.row(j) = cv::Scalar(0);
+                                		}
+                    		/////////////// Was Commented before, from here /////////////////////
+                                 	// 	int xROI = 0;
+                                 	// 	int wROI = ipmMat.cols;
+                                 	// 	int hROI = cvRound(2 * interval * laneDetectorConf.ipmStep);
+                                 	// 	cv::Rect roi = cv:: Rect(xROI,yROI,wROI,hROI);
+                                 	// 	thMat = thMat(roi);
+                    		/////////////// To here /////////////////////
 
-        	#endif
+                            	#endif
 
-        	cv::Mat colorMat = ipmMat.clone();
-        	cv::cvtColor(colorMat, colorMat, cv::COLOR_GRAY2RGB);
-          // std::cout<<"rows: "<< colorMat.rows <<std::endl;
-          // std::cout<<"cols: "<< colorMat.cols <<std::endl;
-        	cv::line(colorMat, cv::Point(0, colorMat.rows/2), cv::Point(colorMat.cols, colorMat.rows/2), CV_RGB(0, 0, 255));
-      //  	imShowSub("6.Division", colorMat, WIN_COLS, WIN_ROWS, 7);
+                            	cv::Mat colorMat = ipmMat.clone();
+                            	cv::cvtColor(colorMat, colorMat, cv::COLOR_GRAY2RGB);
+                              std::cout<<"rows: "<< colorMat.rows <<std::endl;
+                              std::cout<<"cols: "<< colorMat.cols <<std::endl;
+                            	cv::line(colorMat, cv::Point(0, colorMat.rows/2), cv::Point(colorMat.cols, colorMat.rows/2), CV_RGB(0, 0, 255));
+                            	imShowSub("6.Division", colorMat, WIN_COLS, WIN_ROWS, 7);
 
-    		/* Hough Transform Step (Optional) */
-        	#if 0
-        	//! Standard Hough Transform.
-        	std::vector<cv::Vec2f> hfLanesCandi;
-        	int maxLineGap = 50;
-        	cv::HoughLines(thMat, hfLanesCandi, laneDetectorConf.rhoStep, laneDetectorConf.thetaStep, maxLineGap);
+                        		/* Hough Transform Step (Optional) */
+                            	#if 0
+                            	//! Standard Hough Transform.
+                            	std::vector<cv::Vec2f> hfLanesCandi;
+                            	int maxLineGap = 50;
+                            	cv::HoughLines(thMat, hfLanesCandi, laneDetectorConf.rhoStep, laneDetectorConf.thetaStep, maxLineGap);
 
-        	std::vector<cv::Vec2f> leftHfLanes;
-        	std::vector<cv::Vec2f> rightHfLanes;
-        	//printf("Num of hfLinesCandi: %d\n", (int)hfLinesCandi.size());
-        	for (size_t i = 0; i < hfLanesCandi.size(); i++)
-        	{
-    			double thetaCandi = (double)hfLanesCandi[i][1];
-            		double rhoCandi = (double)hfLanesCandi[i][0];
-            		// std::cout << "Theta: " << thetaCandi << ", Rho: " << rhoCandi << std::endl;
+                            	std::vector<cv::Vec2f> leftHfLanes;
+                            	std::vector<cv::Vec2f> rightHfLanes;
+                            	//printf("Num of hfLinesCandi: %d\n", (int)hfLinesCandi.size());
+                            	for (size_t i = 0; i < hfLanesCandi.size(); i++)
+                            	{
+                        			double thetaCandi = (double)hfLanesCandi[i][1];
+                                		double rhoCandi = (double)hfLanesCandi[i][0];
+                                		// std::cout << "Theta: " << thetaCandi << ", Rho: " << rhoCandi << std::endl;
 
-            		if(cos(thetaCandi) < cos(CV_PI/2 - CV_PI/30)  && cos(thetaCandi) > cos(CV_PI/2 + CV_PI/30))
-				// && rhoCandi > laneDetectorConf.mIPM * 0.3 && rhoCandi < laneDetectorConf.mIPM * 0.7
-            		{
-                		if (rhoCandi < thMat.rows/2 - 10)
-                    			leftHfLanes.push_back(hfLanesCandi.at(i));
-                		else
-                    			rightHfLanes.push_back(hfLanesCandi.at(i));
-                			//hfLanes.push_back(Vec2f(hfLanesCandi.at(i)[0], hfLanesCandi.at(i)[1]));
-            		}
-        	}
+                                		if(cos(thetaCandi) < cos(CV_PI/2 - CV_PI/30)  && cos(thetaCandi) > cos(CV_PI/2 + CV_PI/30))
+                    				// && rhoCandi > laneDetectorConf.mIPM * 0.3 && rhoCandi < laneDetectorConf.mIPM * 0.7
+                                		{
+                                    		if (rhoCandi < thMat.rows/2 - 10)
+                                        			leftHfLanes.push_back(hfLanesCandi.at(i));
+                                    		else
+                                        			rightHfLanes.push_back(hfLanesCandi.at(i));
+                                    			//hfLanes.push_back(Vec2f(hfLanesCandi.at(i)[0], hfLanesCandi.at(i)[1]));
+                                		}
+                            	}
 
-        	double rho, theta;
-        	int lanesNum;
-        	if (!leftHfLanes.empty())
-		{
-            		// sort in sequence
-            		sort(leftHfLanes.begin(), leftHfLanes.end(), sort_smaller);
-            		// Find correct line from list of HoughLine;
-            		lanesNum = (int)leftHfLanes.size();
-            		// Matched lines may be the middle of all candidate lines.
-            		rho = leftHfLanes.at(lanesNum/2)[0];
-            		theta = leftHfLanes.at(lanesNum/2)[1];
+                            	double rho, theta;
+                            	int lanesNum;
+                            	if (!leftHfLanes.empty())
+                    		{
+                                		// sort in sequence
+                                		sort(leftHfLanes.begin(), leftHfLanes.end(), sort_smaller);
+                                		// Find correct line from list of HoughLine;
+                                		lanesNum = (int)leftHfLanes.size();
+                                		// Matched lines may be the middle of all candidate lines.
+                                		rho = leftHfLanes.at(lanesNum/2)[0];
+                                		theta = leftHfLanes.at(lanesNum/2)[1];
 
-            		leftHfLanes.clear();
-            		leftHfLanes.push_back(cv::Vec2f(rho, theta));
-            		HfLanetoLane(thMat, leftHfLanes, leftIPMLanes);
-        	}
+                                		leftHfLanes.clear();
+                                		leftHfLanes.push_back(cv::Vec2f(rho, theta));
+                                		HfLanetoLane(thMat, leftHfLanes, leftIPMLanes);
+                            	}
 
-       	 	if (!rightHfLanes.empty())
-		{
-            		// sort in sequence
-            		sort(rightHfLanes.begin(), rightHfLanes.end(), sort_smaller);
-            		// Find correct line from list of HoughLine;
-            		lanesNum = (int)rightHfLanes.size();
-            		rho = rightHfLanes.at(lanesNum/2)[0];
-            		theta = rightHfLanes.at(lanesNum/2)[1];
+                           	 	if (!rightHfLanes.empty())
+                    		{
+                                		// sort in sequence
+                                		sort(rightHfLanes.begin(), rightHfLanes.end(), sort_smaller);
+                                		// Find correct line from list of HoughLine;
+                                		lanesNum = (int)rightHfLanes.size();
+                                		rho = rightHfLanes.at(lanesNum/2)[0];
+                                		theta = rightHfLanes.at(lanesNum/2)[1];
 
-           		rightHfLanes.clear();
-            		rightHfLanes.push_back(cv::Vec2f(rho, theta));
-            		HfLanetoLane(thMat, rightHfLanes, rightIPMLanes);
-        	}
+                               		rightHfLanes.clear();
+                                		rightHfLanes.push_back(cv::Vec2f(rho, theta));
+                                		HfLanetoLane(thMat, rightHfLanes, rightIPMLanes);
+                            	}
 
-        	//! Draw the candidated lanes
-        	std::vector<Lane> drawLanes;
-        	if (!leftHfLanes.empty())
-		{
-            		HfLanetoLane(thMat, leftHfLanes, drawLanes);
-            		for(size_t i = 0; i < leftHfLanes.size(); i++)
-			{
-                		cv::line(colorMat, drawLanes[i].startPoint, drawLanes[i].endPoint, CV_RGB(255, 0, 0), 1);
-            		}
-            		drawLanes.clear();
-       		}
+                            	//! Draw the candidated lanes
+                            	std::vector<Lane> drawLanes;
+                            	if (!leftHfLanes.empty())
+                    		{
+                                		HfLanetoLane(thMat, leftHfLanes, drawLanes);
+                                		for(size_t i = 0; i < leftHfLanes.size(); i++)
+                    			{
+                                    		cv::line(colorMat, drawLanes[i].startPoint, drawLanes[i].endPoint, CV_RGB(255, 0, 0), 1);
+                                		}
+                                		drawLanes.clear();
+                           		}
 
-        	if(!rightHfLanes.empty())
-		{
-            		HfLanetoLane(thMat, rightHfLanes, drawLanes);
-            		for(size_t i = 0; i < drawLanes.size(); i++)
-			{
-                	cv::line(colorMat, drawLanes[i].startPoint, drawLanes[i].endPoint, CV_RGB(0, 255, 0), 1);
-            		}
-           	 	drawLanes.clear();
-        	}
-        	#endif
+                            	if(!rightHfLanes.empty())
+                    		{
+                                		HfLanetoLane(thMat, rightHfLanes, drawLanes);
+                                		for(size_t i = 0; i < drawLanes.size(); i++)
+                    			{
+                                    	cv::line(colorMat, drawLanes[i].startPoint, drawLanes[i].endPoint, CV_RGB(0, 255, 0), 1);
+                                		}
+                               	 	drawLanes.clear();
+                            	}
+                            	#endif
 
+                    // Dont use it, it doesnt work well.
+                            	#if 0
+                            		//! Probabilistic Hough Transform.
+                                //std::vector<cv::Vec2f> hfLanesCandi;
+                            		std::vector<cv::Vec4i> phfLanesCandi;
+                           			double MinLength = 5;
+                            		double MaxGap = 300;
+                            		cv::HoughLinesP( thMat, phfLanesCandi, laneDetectorConf.rhoStep, laneDetectorConf.thetaStep, 10, MinLength, MaxGap );
 
-        	#if 0
-        		//! Probabilistic Hough Transform.
-            std::vector<cv::Vec2f> hfLanesCandi;
-        		std::vector<cv::Vec4i> phfLanesCandi;
-       			double MinLength = 5;
-        		double MaxGap = 300;
-        		cv::HoughLinesP( thMat, phfLanesCandi, laneDetectorConf.rhoStep, laneDetectorConf.thetaStep, 10, MinLength, MaxGap );
+                            		for( size_t i = 0; i < hfLanesCandi.size(); i++ )
+                            		{
+                                			cv::line( colorMat, cv::Point(phfLanesCandi[i][0], phfLanesCandi[i][1]),
+                                     		cv::Point(phfLanesCandi[i][2], phfLanesCandi[i][3]), CV_RGB(0,0,255), 1);
+                            		}
 
-        		for( size_t i = 0; i < hfLanesCandi.size(); i++ )
-        		{
-            			cv::line( colorMat, cv::Point(phfLanesCandi[i][0], phfLanesCandi[i][1]),
-                 		cv::Point(phfLanesCandi[i][2], phfLanesCandi[i][3]), CV_RGB(0,0,255), 1);
-        		}
+                            	#endif
 
-        	#endif
+                            	/* Curve Fitting Step */
+                            	#if 1
+                            		std::vector<cv::Point2d> leftPointSet, rightPointSet;
 
-        	/* Curve Fitting Step */
-        	#if 1
-        		std::vector<cv::Point2d> leftPointSet, rightPointSet;
+                            		int termNum = 3;
+                            		int minDataNum = 20;
+                            		int iterNum = 100;
+                            		double thValue  = 1;
 
-        		int termNum = 3;
-        		int minDataNum = 20;
-        		int iterNum = 100;
-        		double thValue  = 1;
+                            		cv::Rect leftROI = cv::Rect(0, thMat.rows/4, thMat.cols, thMat.rows/4);
+                            		cv::Mat leftThMat = thMat(leftROI);
+                            		ExtractPointSet(leftThMat, leftPointSet);
+                            		if(!leftPointSet.empty())
+                            		{
+                                  for(int i = 0; i < (int)leftPointSet.size(); i++)
+                                  {
+                                      leftPointSet.at(i).y += thMat.rows/4;
+                                  }
+                                			int leftCloseDataNum = 50;
+                                			FittingCurve_LS(leftPointSet, termNum, leftCoefs);//PrintMat(leftCoefs);
+                                			//FittingCurve_RANSAC(leftPointSet, termNum, minDataNum, iterNum, thValue, leftCloseDataNum, leftCoefs, colorMat);
+                                			IPMDrawCurve(leftCoefs, colorMat, leftSampledPoints, CV_RGB(255, 0, 0));
+                            		}
 
-        		cv::Rect leftROI = cv::Rect(0, 0, thMat.cols, thMat.rows/2);
-            //cv::Rect leftROI = cv::Rect(0, thMat.rows/4, thMat.cols, thMat.rows/4);
-        		cv::Mat leftThMat = thMat(leftROI);
-        		ExtractPointSet(leftThMat, leftPointSet);
-        		if(!leftPointSet.empty())
-        		{
-              // for(int i = 0; i < (int)leftPointSet.size(); i++)
-              // {
-              //     leftPointSet.at(i).y += thMat.rows/2;
-              // }
-            			int leftCloseDataNum = 80;
+                            		cv::Rect rightROI = cv::Rect(0, thMat.rows/2, thMat.cols, thMat.rows/4);
+                            		cv::Mat rightThMat = thMat(rightROI);
+                            		ExtractPointSet(rightThMat, rightPointSet);
+                            		if(!rightPointSet.empty())
+                            		{
+                                			for(int i = 0; i < (int)rightPointSet.size(); i++)
+                                			{
+                                    			rightPointSet.at(i).y += thMat.rows/2;
+                                			}
+                                			int rightCloseDataNum = 80;
+                                			//FittingCurve_LS(rightPointSet, termNum, rightCoefs);
+                                			FittingCurve_RANSAC(rightPointSet, termNum, minDataNum, iterNum, thValue, rightCloseDataNum, rightCoefs, colorMat);
+                                			IPMDrawCurve(rightCoefs, colorMat, rightSampledPoints, CV_RGB(0, 255, 0));
+                            		}
 
-            			FittingCurve_LS(leftPointSet, termNum, leftCoefs);//PrintMat(leftCoefs);
-
-            			//FittingCurve_RANSAC(leftPointSet, termNum, minDataNum, iterNum, thValue, leftCloseDataNum, leftCoefs, colorMat);
-            			IPMDrawCurve(leftCoefs, colorMat, leftSampledPoints, CV_RGB(255, 0, 0));
-        		}
-
-        		cv::Rect rightROI = cv::Rect(0, thMat.rows/2, thMat.cols, thMat.rows/2);
-        		cv::Mat rightThMat = thMat(rightROI);
-        		ExtractPointSet(rightThMat, rightPointSet);
-        		if(!rightPointSet.empty())
-        		{
-            			for(int i = 0; i < (int)rightPointSet.size(); i++)
-            			{
-                			rightPointSet.at(i).y += thMat.rows/2;
-            			}
-            			int rightCloseDataNum = 80;
-            			//FittingCurve_LS(rightPointSet, termNum, rightCoefs);
-            			FittingCurve_RANSAC(rightPointSet, termNum, minDataNum, iterNum, thValue, rightCloseDataNum, rightCoefs, colorMat);
-            			IPMDrawCurve(rightCoefs, colorMat, rightSampledPoints, CV_RGB(0, 255, 0));
-        		}
-
-        		MeasureLaneWidth(leftSampledPoints, rightSampledPoints, laneDetectorConf, laneWidth);
-        	//	imShowSub("7.Init Tracking", colorMat, WIN_COLS, WIN_ROWS, 8);
-            IPM_OUT = colorMat;
-        	#endif
-
-    	}//end IPMDetectLane
+                            		MeasureLaneWidth(leftSampledPoints, rightSampledPoints, laneDetectorConf, laneWidth);
+                            		imShowSub("7.Init Tracking", colorMat, WIN_COLS, WIN_ROWS, 8);
+                            	#endif
+  IPM_OUT = colorMat;
+                        	}//end IPMDetectLane
 
 
     	/* * This function detects lanes in the input image using IPM transformation and the input camera parameters. The returned lines
