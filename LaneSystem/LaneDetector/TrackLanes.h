@@ -17,17 +17,17 @@
 #include "DetectLanes.h"
 #include "FittingCurve.h"
 
-namespace LaneDetector{	
+namespace LaneDetector{
     /********************************************************************/
     /* Kalman Filter */
     /********************************************************************/
-    void InitLaneKalmanFilter(cv::KalmanFilter &laneKalmanFilter, 
-			cv::Mat &laneKalmanMeasureMat, 
+    void InitLaneKalmanFilter(cv::KalmanFilter &laneKalmanFilter,
+			cv::Mat &laneKalmanMeasureMat,
 			int &laneKalmanIdx);
-    
-    	/* * This function tracks lanes in the input image. 
+
+    	/* * This function tracks lanes in the input image.
      	* Input is the parameters from hough transform: rho and theta.
-     	* Output is the predicted lane. 
+     	* Output is the predicted lane.
 	* \param image the input image
 	* \param kalman filter
 	* \param process noise
@@ -36,15 +36,15 @@ namespace LaneDetector{
      	* \param lane detected from last frame
      	* \param lane tracked */
 
-	void TrackLanes_KF(const cv::Mat &laneMat, 
-                      	cv::KalmanFilter &laneKalmanFilter, 
-			cv::Mat &laneKalmanMeasureMat, 
-                       	const std::vector<cv::Vec2f> &hfLanes, 
-			const std::vector<cv::Vec2f> &lastHfLanes, 
-                       	std::vector<cv::Vec2f> &preHfLanes, 
+	void TrackLanes_KF(const cv::Mat &laneMat,
+                      	cv::KalmanFilter &laneKalmanFilter,
+			cv::Mat &laneKalmanMeasureMat,
+                       	const std::vector<cv::Vec2f> &hfLanes,
+			const std::vector<cv::Vec2f> &lastHfLanes,
+                       	std::vector<cv::Vec2f> &preHfLanes,
 			std::vector<cv::Vec2f> &postHfLanes,
                        	const double &PITCH_ANGLE);
-    
+
     /********************************************************************/
     /* Particle Filter */
     /********************************************************************/
@@ -55,16 +55,16 @@ namespace LaneDetector{
         		double a1;
         		double a2;
     }PARTICLE_LANE;
-    
+
     bool particle_cmp(const PARTICLE_LANE &p1, const PARTICLE_LANE &p2);
-    
-    void TrackLanes_Particle(const cv::Mat &ipmMat, 
+
+    void TrackLanes_Particle(const cv::Mat &ipmMat,
 			const LaneDetectorConf &laneDetectorConf,
-                      	const int &samplingNum, 
+                      	const int &samplingNum,
               		cv::Mat &leftCoefs, cv::Mat &rightCoefs,
-                     	std::vector<cv::Point2d> &leftSampledPoints, 
-                      	std::vector<cv::Point2d> &rightSampledPoints, 
-                       	double &laneWidth);
+                     	std::vector<cv::Point2d> &leftSampledPoints,
+                      	std::vector<cv::Point2d> &rightSampledPoints,
+                       	double &laneWidth, cv::Mat &IPM_cont, cv::Mat &particle_detect, cv::Mat &particle_track);
 }
 
 #endif

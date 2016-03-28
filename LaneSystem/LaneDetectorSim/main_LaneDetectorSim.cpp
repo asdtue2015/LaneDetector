@@ -54,7 +54,7 @@ namespace LaneDetectorSim {
 
 	int Process(int argc, const char* argv[])
 	{
-        	if(argc < 8)
+        	if(argc < 7)
             	std::cout << "Not enough parameters" << std::endl;
 
 		int	LANE_DETECTOR  	= atoi(argv[1]);
@@ -63,8 +63,8 @@ namespace LaneDetectorSim {
     double YAW_ANGLE    = atof(argv[4]); // yaw - X
     double PITCH_ANGLE  = atof(argv[5]); // pitch - Y
 		int	IPM_HK     	= atoi(argv[6]); //enables the IPM tranformation
-		int	HK 	= atoi(argv[7]);
-	  double coef_thetaMax = atof(argv[8]);
+	//	int	HK 	= atoi(argv[7]);
+	  double coef_thetaMax = atof(argv[7]);
 
 		std::cout << "/*************************************/" << std::endl;
 		std::cout << "Input LANE_DETECTOR" << LANE_DETECTOR << std::endl;
@@ -72,8 +72,8 @@ namespace LaneDetectorSim {
 		std::cout << "Input EndFrame" << EndFrame << std::endl;
 		std::cout << "Input YAW_ANGLE" << YAW_ANGLE << std::endl;
 		std::cout << "Input PITCH_ANGLE" << PITCH_ANGLE << std::endl;
-		std::cout << "Input IPM_HK  " << IPM_HK  << std::endl;
-		std::cout << "Input HK" << HK << std::endl;
+		std::cout << "Input IPM_HK  " << IPM_HK  << std::endl; //0=IPM+HK, 1=IPM+P, 2=HK
+	//	std::cout << "Input HK" << HK << std::endl;
 		std::cout << "Input coef_thetaMax " << coef_thetaMax << std::endl;
 		std::cout << "/*************************************/" << std::endl;
 
@@ -94,6 +94,7 @@ namespace LaneDetectorSim {
 
 		/* Parameters for Lane Detector */
 		cv::Mat laneMat, IPM_OUT;
+		cv::Mat IPM_cont, particle_detect, particle_track;
 		LaneDetector::LaneDetectorConf laneDetectorConf;
 		std::vector<cv::Vec2f> hfLanes;
 		std::vector<cv::Vec2f> lastHfLanes;
@@ -134,30 +135,72 @@ namespace LaneDetectorSim {
 		int    laneKalmanIdx     = 0;    //Marker of start kalmam
 
 		InitlaneFeatures(laneFeatures);
+ if (LANE_DETECTOR){
+		switch (IPM_HK) {
 
-        	if (LANE_DETECTOR && IPM_HK)
-	      	{
-             		/* Lane detect and tracking */
-            		sprintf(laneImg, LANE_RAW_NAME , idx);
-            		laneMat = cv::imread(laneImg);
-								LaneDetector_J::mcvInitLaneDetectorConf(fileName_test, &lanesConf);
-							//	MSG("Loaded lanes config file\n");
-								LaneDetector_J::mcvInitCameraInfo(fileName_test2, &cameraInfo);
-							//	MSG("Loaded camera file\n");
-            		LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2, coef_thetaMax); // KIT 1, ESIEE 2
-            		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
+			case 0: //IPM+HK
 
-        	}
+			sprintf(laneImg, LANE_RAW_NAME , idx);
+			laneMat = cv::imread(laneImg);
+			LaneDetector_J::mcvInitLaneDetectorConf(fileName_test, &lanesConf);
+		//	MSG("Loaded lanes config file\n");
+			LaneDetector_J::mcvInitCameraInfo(fileName_test2, &cameraInfo);
+		//	MSG("Loaded camera file\n");
+			LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2, coef_thetaMax); // KIT 1, ESIEE 2
+			LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
 
-					if (LANE_DETECTOR && HK)
-	      	{
-             		/* Lane detect and tracking */
-	            sprintf(laneImg, LANE_RAW_NAME , idx);
-	            laneMat = cv::imread(laneImg);
-	            LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2, coef_thetaMax); // KIT 1, ESIEE 2
-	            LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
+			break;
 
-        	}
+
+			case 1:		//IPM+P
+
+			sprintf(laneImg, LANE_RAW_NAME , idx);
+			laneMat = cv::imread(laneImg);
+			LaneDetector_J::mcvInitLaneDetectorConf(fileName_test, &lanesConf);
+		//	MSG("Loaded lanes config file\n");
+			LaneDetector_J::mcvInitCameraInfo(fileName_test2, &cameraInfo);
+		//	MSG("Loaded camera file\n");
+			LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2, coef_thetaMax); // KIT 1, ESIEE 2
+			LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
+			break;
+
+
+
+			case 2:
+
+			sprintf(laneImg, LANE_RAW_NAME , idx);
+			laneMat = cv::imread(laneImg);
+			LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2, coef_thetaMax); // KIT 1, ESIEE 2
+			LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
+
+			break;
+		}
+
+	}
+					//
+        	// if (LANE_DETECTOR && IPM_HK)
+	      	// {
+          //    		/* Lane detect and tracking */
+          //   		sprintf(laneImg, LANE_RAW_NAME , idx);
+          //   		laneMat = cv::imread(laneImg);
+					// 			LaneDetector_J::mcvInitLaneDetectorConf(fileName_test, &lanesConf);
+					// 		//	MSG("Loaded lanes config file\n");
+					// 			LaneDetector_J::mcvInitCameraInfo(fileName_test2, &cameraInfo);
+					// 		//	MSG("Loaded camera file\n");
+          //   		LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2, coef_thetaMax); // KIT 1, ESIEE 2
+          //   		LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
+					//
+        	// }
+					//
+					// if (LANE_DETECTOR && HK)
+	      	// {
+          //    		/* Lane detect and tracking */
+	        //     sprintf(laneImg, LANE_RAW_NAME , idx);
+	        //     laneMat = cv::imread(laneImg);
+	        //     LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2, coef_thetaMax); // KIT 1, ESIEE 2
+	        //     LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
+					//
+        	// }
 
 
 
@@ -185,21 +228,63 @@ namespace LaneDetectorSim {
             		sprintf(laneImg, LANE_RAW_NAME , idx);
             		laneMat = cv::imread(laneImg);//imshow("laneMat", laneMat);
 
-            		if (LANE_DETECTOR && IPM_HK)
-            		{
-                		ProcessLaneImage_IPM(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
-			            	lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE,
-								     cameraInfo,  lanesConf, IPM_OUT);
-										 cv::imshow("IPM_OUT", IPM_OUT);
-            		}
+							 if (LANE_DETECTOR){
 
-								if (LANE_DETECTOR && HK)
-								{
-									ProcessLaneImage(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
-									lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE);
-									cv::imshow("Lane System", laneMat);
-								}
+								 switch (IPM_HK) {
 
+									 case 0: //IPM+HK
+
+									 ProcessLaneImage_IPM(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
+	 			             	lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE,
+	 							      cameraInfo,  lanesConf, IPM_OUT, IPM_cont, particle_detect, particle_track, IPM_HK);
+	 										 cv::imshow("IPM_OUT", IPM_OUT);
+	 										 cv::imshow("IPM_CONTOUR", IPM_cont);
+											 //  cv::imshow("PARTICLE_DETECT", particle_detect);
+											 //  cv::imshow("PARTICLE_TRACK", particle_track);
+ 						 			break;
+
+
+ 						 			case 1:		//IPM+P
+
+									ProcessLaneImage_IPM(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
+				             	lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE,
+								      cameraInfo,  lanesConf, IPM_OUT, IPM_cont, particle_detect, particle_track, IPM_HK);
+											//  cv::imshow("IPM_OUT", IPM_OUT);
+											//  cv::imshow("IPM_CONTOUR", IPM_cont);
+											 cv::imshow("PARTICLE_DETECT", particle_detect);
+											 cv::imshow("PARTICLE_TRACK", particle_track);
+ 						 			break;
+
+
+
+ 						 			case 2:
+
+ 						 			sprintf(laneImg, LANE_RAW_NAME , idx);
+ 						 			laneMat = cv::imread(laneImg);
+ 						 			LaneDetector::InitlaneDetectorConf(laneMat, laneDetectorConf, 2, coef_thetaMax); // KIT 1, ESIEE 2
+ 						 			LaneDetector::InitLaneKalmanFilter(laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx);
+
+ 						 			break;
+								 }
+
+            		// if (LANE_DETECTOR && IPM_HK)
+            		// {
+                // 		ProcessLaneImage_IPM(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
+			          //   	lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE,
+								//      cameraInfo,  lanesConf, IPM_OUT, IPM_cont, particle_detect, particle_track);
+								// 		 cv::imshow("IPM_OUT", IPM_OUT);
+								// 		 cv::imshow("IPM_CONTOUR", IPM_cont);
+								// 		 cv::imshow("PARTICLE_DETECT", particle_detect);
+								// 		 cv::imshow("PARTICLE_TRACK", particle_track);
+            		// }
+								//
+								// if (LANE_DETECTOR && HK)
+								// {
+								// 	ProcessLaneImage(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
+								// 	lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE);
+								// 	cv::imshow("Lane System", laneMat);
+								// }
+               }
 
             		if(IMAGE_RECORD)
 	         	  	{
