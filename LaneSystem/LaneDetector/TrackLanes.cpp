@@ -217,6 +217,7 @@ namespace LaneDetector {
     	//! For every tracking, the particles don't record for the next frame,
     	//! but they are constructed by the parameters \leftCoefs and \rightCoefs.
 
+
     	void TrackLanes_Particle(const cv::Mat &ipmMat,
                              const LaneDetectorConf &laneDetectorConf,
                              const int &samplingNum,
@@ -225,6 +226,7 @@ namespace LaneDetector {
                              std::vector<cv::Point2d> &rightSampledPoints,
                              double &laneWidth, cv::Mat &IPM_cont, cv::Mat &particle_detect, cv::Mat &particle_track)
     	{
+
         	cv::Mat thMat = ipmMat.clone();
         	LaneDetector::IPMPreprocess(thMat, laneDetectorConf, thMat,IPM_cont);
 

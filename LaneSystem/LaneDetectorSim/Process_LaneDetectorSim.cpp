@@ -408,7 +408,7 @@ namespace LaneDetectorSim{
 		croppedImg = laneMat(cv::Rect(0,250,480,200));
 		laneMat=croppedImg;
 
-        	/* Change color to grayscale */
+
         	cv::Mat grayMat = cv::Mat(cvRound(HEIGHT * COEF), cvRound(WIDTH * COEF), CV_8UC1);
         	cv::cvtColor(laneMat, grayMat, cv::COLOR_BGR2GRAY);
 
@@ -588,6 +588,7 @@ namespace LaneDetectorSim{
 
             		/* Conditions of Checking Tracking */
             		double distCornerPt =  std::abs(leftCornerPt.x - rightCornerPt.x);
+
             		double heightVP = vanishPt.y;
 
             		//printf("\n Height VP: %f < %f < %f\n", top, heightVP, bottom);

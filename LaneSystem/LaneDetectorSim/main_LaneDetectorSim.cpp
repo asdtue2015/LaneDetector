@@ -38,6 +38,7 @@ extern const char   FILE_LANE_FEATURE[] = "./inputdata/outputdata/Sim_LaneFeatur
 extern const char   LANE_RECORD_IMAGE[]    = "./inputdata/outputdata/lane_%d.png";
 /* Data Source */
 
+
 //extern const char   LANE_RAW_NAME[]     = "./inputdata/cropped_images/cropped_%d.png";
 extern const char   LANE_RAW_NAME[]     = "./inputdata/clips/lane_%d.png";
 //extern const char   LANE_RAW_NAME[]     = "./inputdata/washington/lane_%d.png";
