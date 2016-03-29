@@ -83,7 +83,7 @@ namespace LaneDetectorSim {
 		int  sampleIdx      = 1;    //init sampling index
 		char laneImg[100];
 
-		double initTime         = (double)cv::getTickCount();
+		//double initTime         = (double)cv::getTickCount();
 		double intervalTime     = 0;
 		double execTime         = 0;  // Execute Time for Each Frame
 		double pastTime         = 0;

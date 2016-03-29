@@ -118,7 +118,7 @@ void mcvGetIPM(const CvMat* inImage, CvMat* outImage,
   FLOAT_MAT_ELEM_TYPE ui, vi;
   //get mean of the input image
   CvScalar means = cvAvg(inImage);
-  double mean = means.val[0];
+  //double mean = means.val[0];
   //generic loop to work for both float and int matrix types
   #define MCV_GET_IPM(type) \
   for (i=0; i<outRow; i++) \
@@ -397,7 +397,7 @@ FLOAT_POINT2D mcvGetVanishingPoint(const LaneDetector_J::CameraInfo *cameraInfo)
 void mcvGetLanes(const CvMat *inImage, CvMat &IPMJ,  LaneDetector_J::CameraInfo *cameraInfo,  LaneDetector_J::LaneDetectorConf_J *stopLineConf)
 {
   //input size
-  CvSize inSize = cvSize(inImage->width, inImage->height);
+  //CvSize inSize = cvSize(inImage->width, inImage->height);
 
   //TODO: smooth image
   CvMat *image = cvCloneMat(inImage);
@@ -430,7 +430,8 @@ void mcvGetLanes(const CvMat *inImage, CvMat &IPMJ,  LaneDetector_J::CameraInfo 
   //Get IPM
   CvSize ipmSize = cvSize((int)stopLineConf->ipmWidth,
       (int)stopLineConf->ipmHeight);
-  CvMat *ipm, *ipmt;
+  CvMat *ipm;
+  //CvMat *ipm, *ipmt;
   ipm = cvCreateMat(ipmSize.height, ipmSize.width, inImage->type);
   //mcvGetIPM(inImage, ipm, &ipmInfo, cameraInfo);
   ipmInfo.vpPortion = stopLineConf->ipmVpPortion;
@@ -478,7 +479,7 @@ void mcvLoadImage( IplImage* ipminputimage , CvMat **clrImage, CvMat** channelIm
   cvGetMat(im, &temp);
   *clrImage = cvCloneMat(&temp);
   // convert to single channel
-  CvMat *schannel_mat;
+//  CvMat *schannel_mat;
   CvMat* tchannelImage = cvCreateMat(im->height, im->width, INT_MAT_TYPE);
   cvSplit(*clrImage, tchannelImage, NULL, NULL, NULL);
   // convert to float

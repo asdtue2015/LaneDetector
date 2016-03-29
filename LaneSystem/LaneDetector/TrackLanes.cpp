@@ -228,7 +228,7 @@ namespace LaneDetector {
     	{
 
         	cv::Mat thMat = ipmMat.clone();
-        	LaneDetector::IPMPreprocess(thMat, laneDetectorConf, thMat,IPM_cont);
+        	LaneDetector::IPMPreprocess(thMat, laneDetectorConf, thMat, IPM_cont);
 
         	//! Just for drawing
         	cv::Mat colorMat = thMat.clone();

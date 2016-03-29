@@ -9,7 +9,7 @@
 #define IPMTransJoost_HH_
 
 // //*****Joost Definitions*****//
-//   #define MSG(fmt, ...) \
+//   #define MSG(fmt, ...) 
 //   (fprintf(stdout, "%s:%d msg   " fmt "\n", __FILE__, __LINE__, ##__VA_ARGS__) ? 0 : 0)
 //   #define FLOAT_MAT_TYPE CV_32FC1
 //   #define FLOAT_MAT_ELEM_TYPE float

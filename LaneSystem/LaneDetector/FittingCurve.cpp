@@ -1,4 +1,4 @@
-// \************************************\
+// \************************************\/
 //  Polynomial Curves by the Least Squares Method for Curve Fitting
 // /************************************/
 
@@ -336,7 +336,7 @@ namespace LaneDetector{
 
         	}//end for iteration
 
-               	double costTime = ((double)cv::getTickCount() - startTime)/cv::getTickFrequency();
+  //             	double costTime = ((double)cv::getTickCount() - startTime)/cv::getTickFrequency();
         //	printf("RANSAC Line Fitting Needs %.2f msec about %.2f Hz\n", costTime*1000, 1/costTime);
 
     	}//end FittingCurve_RANSAC

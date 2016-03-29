@@ -6,8 +6,8 @@ extern const double COEF;
 extern const int    WIN_COLS;
 extern const int    WIN_ROWS;
 
-extern const int    DEBUG_LANE = 1;
-extern const int    DEBUG_HOUGH = 1;
+extern const int    DEBUG_LANE = 0;
+extern const int    DEBUG_HOUGH = 0;
 
 extern const int    TH_KALMANFILTER;
 

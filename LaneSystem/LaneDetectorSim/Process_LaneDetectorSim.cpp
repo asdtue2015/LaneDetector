@@ -45,8 +45,10 @@ namespace LaneDetectorSim{
 						CvMat IPMJ;
 						cv::Mat IPMJ_Mat;
 
-						cv::Mat leftCoefs;
-						cv::Mat rightCoefs;
+						//cv::Mat leftCoefs;
+	          cv::Mat leftCoefs = cv::Mat::zeros(3, 1, CV_64F);
+	          //cv::Mat rightCoefs;
+	          cv::Mat rightCoefs = cv::Mat::zeros(3, 1, CV_64F);
 						std::vector<cv::Point2d> leftSampledPoints;
 						std::vector<cv::Point2d> rightSampledPoints;
 						std::vector<LaneDetector::Lane> leftIPMLanes;
@@ -56,7 +58,7 @@ namespace LaneDetectorSim{
 
 		        	const int WIDTH = laneMat.cols;
 		        	const int HEIGHT = laneMat.rows;
-		        	char *text = new char[100];
+		//        	char *text = new char[100];
 
 		        	// std::cout << std::endl;
 		        	// std::cout << "---" << idx << std::endl;
@@ -390,7 +392,8 @@ namespace LaneDetectorSim{
                           int &detectLaneFlag,  const int &idx, double &execTime,
                           std::vector<cv::Vec2f> &postHfLanes, int &changeDone,
                           const double &YAW_ANGLE, const double &PITCH_ANGLE)
-    	{const int WIDTH = laneMat.cols;
+    	{
+				  const int WIDTH = laneMat.cols;
 		//std::cout << "WIDTH" << WIDTH << std::endl;
         	const int HEIGHT = laneMat.rows;
 		//std::cout << "HEIGHT" << HEIGHT << std::endl;
@@ -405,8 +408,9 @@ namespace LaneDetectorSim{
 
 		/* Cropping the ROI */
 		cv::Mat croppedImg;
-		croppedImg = laneMat(cv::Rect(0,250,480,200));
-		laneMat=croppedImg;
+		croppedImg = laneMat(cv::Rect(0,230,640,250));
+		cv::resize(croppedImg, croppedImg, laneMat.size());
+		laneMat = croppedImg.clone();
 
 
         	cv::Mat grayMat = cv::Mat(cvRound(HEIGHT * COEF), cvRound(WIDTH * COEF), CV_8UC1);
