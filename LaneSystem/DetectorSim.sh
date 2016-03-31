@@ -9,8 +9,8 @@
 # 22-03-2014_13h05m12s: 1 ~ 18468(lane), 11 ~ 18533(face)
 
 # command
-#LANE_DETECTOR, LANE_ANALYZER, SEND_DATA, DATA_RECORD, StartFrame, EndFrame, YAW_ANGLE, PITCH_ANGLE, IPM-HK or HK, theta_coef
-command1="./LaneDetector64 1 1 611 0.0 0.1 1 0.5 " 
+#LANE_DETECTOR, LANE_ANALYZER, SEND_DATA, DATA_RECORD, StartFrame, EndFrame, YAW_ANGLE for HK, PITCH_ANGLE for HK, IPM-P (1) or HK(2), theta_coef
+command1="./LaneDetector64 1 1 611 0.0 0.1 2 0.5 " 
 echo $command1
 
 #run
