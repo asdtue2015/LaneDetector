@@ -252,8 +252,8 @@ namespace LaneDetectorSim {
 								      cameraInfo,  lanesConf, IPM_OUT, IPM_cont, particle_detect, particle_track, IPM_HK);
 											//  cv::imshow("IPM_OUT", IPM_OUT);
 											//  cv::imshow("IPM_CONTOUR", IPM_cont);
-											 cv::imshow("PARTICLE_DETECT", particle_detect);
-											 cv::imshow("PARTICLE_TRACK", particle_track);
+											 //cv::imshow("PARTICLE_DETECT", particle_detect);
+											 //cv::imshow("PARTICLE_TRACK", particle_track);
  						 			break;
 
 

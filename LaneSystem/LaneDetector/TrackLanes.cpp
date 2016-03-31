@@ -236,6 +236,7 @@ namespace LaneDetector {
 
 		//! From last frame
 		double a0_l = leftCoefs.at<double>(0,0);
+    //std::cout<<"I AM IN particle"<<std::endl;
 		double a1_l = leftCoefs.at<double>(1,0);
 		double a2_l = leftCoefs.at<double>(2,0);
 		double a0_r = rightCoefs.at<double>(0,0);
@@ -243,11 +244,14 @@ namespace LaneDetector {
 		double a2_r = rightCoefs.at<double>(2,0);
 
 		cv::RNG rng;
+
 		std::vector<double> samplingA0_l, samplingA1_l, samplingA2_l;
 		std::vector<double> samplingA0_r, samplingA1_r, samplingA2_r;
+
         	for(int i = 0; i < samplingNum; i++)
 		{
             		//!Left Lane Sampling Cooefficients
+
             		samplingA0_l.push_back(a0_l + rng.gaussian(SIGMA0));
             		samplingA1_l.push_back(a1_l + rng.gaussian(SIGMA1));
             		samplingA2_l.push_back(a2_l + rng.gaussian(SIGMA2));
@@ -280,7 +284,7 @@ namespace LaneDetector {
                 		}
             		}
         	}
-        //	imShowSub("6. Candidate Sampling", colorMat2, WIN_COLS, WIN_ROWS, 7);
+        	imShowSub("6. Candidate Sampling", colorMat2, WIN_COLS, WIN_ROWS, 7);
           particle_detect = colorMat2;
 
         	CV_Assert(thMat.type() == CV_8U || thMat.type() == CV_64F || thMat.type() == CV_32F);
@@ -405,7 +409,7 @@ namespace LaneDetector {
 
         	for(int i = 0; i < PARTICLE_NUM; i++)
         	{
-        	//	std::cout << "weight, a0, a1, a2: " << leftParticles[i].weight << "," <<leftParticles[i].a0 << "," << leftParticles[i].a1 << "," << leftParticles[i].a2 << std::endl;
+        		//std::cout << "weight, a0, a1, a2: " << leftParticles[i].weight << "," <<leftParticles[i].a0 << "," << leftParticles[i].a1 << "," << leftParticles[i].a2 << std::endl;
 
         	    	//!left
         	    	A0_l += leftParticles[i].a0 * leftParticles[i].weight;
@@ -419,11 +423,11 @@ namespace LaneDetector {
         	A1_l /= PARTICLE_NUM;
         	A2_l /= PARTICLE_NUM;
 
-        //	std::cout <<  "A0_l, A1_l, A2_l" << A0_l << "," << A1_l << "," << A2_l << std::endl;
+        	//std::cout <<  "A0_l, A1_l, A2_l" << A0_l << "," << A1_l << "," << A2_l << std::endl;
         	std::vector<cv::Point2d> sampledPoints;
         	cv::Mat coefs_l = (cv::Mat_<double>(3,1) << A0_l, A1_l, A2_l);
         	IPMDrawCurve(coefs_l, colorMat, sampledPoints, CV_RGB(100,100,0));
-        //	cv::imshow("left", colorMat); //cv::waitKey();
+        	//cv::imshow("left", colorMat); //cv::waitKey();
 
         	for(int i = 0; i < k_r; i++)
         	{
@@ -432,19 +436,19 @@ namespace LaneDetector {
         	    	A0_r += rightParticles[i].a0 * rightParticles[i].weight;
         	    	A1_r += rightParticles[i].a1 * rightParticles[i].weight;
         	    	A2_r += rightParticles[i].a2 * rightParticles[i].weight;
-//        	    	//! Method 1, Average
-//        	    	A0_r += rightParticles[i].a0;
-//        	    	A1_r += rightParticles[i].a1;
-//        	    	A2_r += rightParticles[i].a2;
+        	    	//! Method 1, Average
+       	    	A0_r += rightParticles[i].a0;
+       	    	A1_r += rightParticles[i].a1;
+       	    	A2_r += rightParticles[i].a2;
         	}
         	 	A0_r /= PARTICLE_NUM;
         	 	A1_r /= PARTICLE_NUM;
         	 	A2_r /= PARTICLE_NUM;
 
-		std::vector<cv::Point2d> sampledPoints2;
+	      	std::vector<cv::Point2d> sampledPoints2;
         	cv::Mat coefs_r = (cv::Mat_<double>(3,1) << A0_r, A1_r, A2_r);
         	IPMDrawCurve(coefs_r, colorMat, sampledPoints2, CV_RGB(0,100,100));
-        //	cv::imshow("right", colorMat); //cv::waitKey();
+        	//cv::imshow("right", colorMat); //cv::waitKey();
 
         	/* Show the first step tracking result */
         	/* Weighted Average Results */
@@ -463,7 +467,7 @@ namespace LaneDetector {
         	double laneWidth_temp;
         	MeasureLaneWidth(leftSampledPoints_temp, rightSampledPoints_temp, laneDetectorConf, laneWidth_temp);
 
-        //	imShowSub("7.Tracking_1", colorMat, WIN_COLS, WIN_ROWS, 8);
+        	imShowSub("7.Tracking_1", colorMat, WIN_COLS, WIN_ROWS, 8);
 
         	/* * Utilize the inherent property, the same distance between two lanes
          	* First use the last measured laneWidth to generate the candidated ones
@@ -501,7 +505,7 @@ namespace LaneDetector {
         	int maxSum = fitSum0 >= fitSum1 ? fitSum0 : fitSum1;
         	maxSum = maxSum >= fitSum2 ? maxSum : fitSum2;
 
-        	char * text_ORI = new char[50];
+        	char *text_ORI = new char[50];
         	sprintf(text_ORI, "ORIN: %d, L: %d, R: %d, laneWidth: %.3f", fitSum0, (int)maxFitNum_l, (int)maxFitNum_r, laneWidth_temp);
         	cv::putText(colorMat, text_ORI, cv::Point(5, 10), cv::FONT_HERSHEY_SIMPLEX, 0.35, CV_RGB(0, 255, 0));
         	delete text_ORI;
@@ -550,7 +554,7 @@ namespace LaneDetector {
         	cv::putText(colorMat, text_width, cv::Point(5, 50), cv::FONT_HERSHEY_SIMPLEX, 0.35, CV_RGB(0, 255, 0));
         	delete text_width;
 
-        //	imShowSub("8.Tracking_2", colorMat, WIN_COLS, WIN_ROWS, 9);
+        	imShowSub("8.Tracking_2", colorMat, WIN_COLS, WIN_ROWS, 9);
           particle_track = colorMat;
 
         	double costTime = ((double)cv::getTickCount() - startTime)/cv::getTickFrequency();
