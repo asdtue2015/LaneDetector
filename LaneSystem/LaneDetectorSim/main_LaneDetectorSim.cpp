@@ -250,6 +250,7 @@ namespace LaneDetectorSim {
 									ProcessLaneImage_IPM(laneMat, laneDetectorConf, startTime, laneKalmanFilter, laneKalmanMeasureMat, laneKalmanIdx, hfLanes, lastHfLanes,
 				             	lastLateralOffset, lateralOffset, isChangeLane, detectLaneFlag,  idx, execTime, preHfLanes, changeDone, YAW_ANGLE, PITCH_ANGLE,
 								      cameraInfo,  lanesConf, IPM_OUT, IPM_cont, particle_detect, particle_track, IPM_HK);
+											cv::imshow("Lane System", laneMat);
 											//  cv::imshow("IPM_OUT", IPM_OUT);
 											//  cv::imshow("IPM_CONTOUR", IPM_cont);
 											 //cv::imshow("PARTICLE_DETECT", particle_detect);
